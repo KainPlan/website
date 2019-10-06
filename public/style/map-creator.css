@@ -55,3 +55,6 @@ html .tools > div div:hover, body .tools > div div:hover {
   transform: scale(1.2);
   opacity: 0.7;
 }
+html .tools > div div.active-tool, body .tools > div div.active-tool {
+  color: #FF3C98;
+}

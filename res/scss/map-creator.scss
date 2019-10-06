@@ -58,6 +58,10 @@ html, body {
                     transform: scale(1.2);
                     opacity: .7;
                 }
+
+                &.active-tool {
+                    color: #FF3C98;
+                }
             }
         }
     }
