@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta charset="utf-8" />
+    <title>map-creator</title>
+
+    <link rel="stylesheet" type="text/css" href="/style/map-creator.css" />
+    <script defer src="https://kit.fontawesome.com/eeafe44cad.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="canvas-wrapper">
+        <canvas id="main-canvas"></canvas>
+    </div>
+
+    <div class="debug">
+        Scale: <span id="scale-out">1 (100%)</span><br />
+        Ox: <span id="ox-out">0</span><br />
+        Oy: <span id="oy-out">0</span><br />
+    </div>
+
+    <div class="tools">
+        <div>
+            <div id="pan-tool" title="Pan">
+                <i class="fas fa-mouse-pointer"></i>
+            </div>
+            <div id="move-tool" title="Move">
+                <i class="fas fa-arrows-alt"></i>
+            </div>
+            <div id="node-tool" title="Add node">
+                <i class="fas fa-circle"></i>
+            </div>
+            <div id="conn-tool" title="Add connection">
+                <i class="fas fa-long-arrow-alt-right"></i>
+            </div>
+        </div>
+    </div>
+
+    <script src="/scripts/Node.js"></script>
+    <script src="/scripts/map_creator.js"></script>
+</body>
+
+</html>
