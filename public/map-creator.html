@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <meta charset="utf-8" />
     <title>map-creator</title>
@@ -16,14 +16,12 @@
         <canvas id="main-canvas"></canvas>
     </div>
 
-    <div class="debug">
-        Scale: <span id="scale-out">1 (100%)</span><br />
-        Ox: <span id="ox-out">0</span><br />
-        Oy: <span id="oy-out">0</span><br />
-    </div>
+    <div class="side-bar">
+        <div class="debug">
+            Scale: <span id="scale-out">1 (100%)</span><br />
+        </div>
 
-    <div class="tools">
-        <div>
+        <div class="tools">
             <div id="pan-tool" class="active-tool" title="Pan">
                 <i class="fas fa-mouse-pointer"></i>
             </div>
@@ -39,9 +37,13 @@
             <div id="conn-tool" title="Add connection">
                 <i class="fas fa-long-arrow-alt-right"></i>
             </div>
+            <div id="del-tool" title="Delete">
+                <i class="fas fa-cut"></i>
+            </div>
         </div>
     </div>
-
+    
+    <script src="/scripts/Edge.js"></script>
     <script src="/scripts/Node.js"></script>
     <script src="/scripts/EndNode.js"></script>
     <script src="/scripts/map_creator.js"></script>

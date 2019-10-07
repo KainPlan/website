@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
     padding: 0;
     margin: 0;
 
@@ -15,43 +16,39 @@ html, body {
         touch-action: none;
     }
 
-    .debug {
-        display: inline-block;
-        padding: 15px;
+    .side-bar {
         position: fixed;
         top: 15px;
-        right: 15px;
-        background-color: rgba(255,255,255,.5);
-        border: 2.5px solid #f2f2f2;
-        border-radius: 4px;
-        font-family: 'Ubuntu Mono', monospace;
-        
-        span {
-            font-family: inherit;
-        }
-    }
-
-    .tools {
-        display: inline-block;
-        padding: 15px;
-        position: fixed;
         bottom: 15px;
-        left: 15px; right: 15px;
-        background-color: rgba(255,255,255,.95);
+        right: 15px;
+        background-color: rgba(255, 255, 255, .95);
         border: 2.5px solid #f2f2f2;
-        border-radius: 1.5px;
-        font-family: 'Ubuntu Mono', monospace;
+        max-width: 200px;
 
-        & > div {
-            width: 100%;
+        .debug {
+            display: block;
+            padding: 15px;
+            font-family: 'Ubuntu Mono', monospace;
+            border-bottom: 2px solid #f2f2f2;
+
+            span {
+                font-family: inherit;
+            }
+        }
+
+        .tools {
             display: flex;
-            justify-content: space-around;
+            padding: 15px;
+            font-family: 'Ubuntu Mono', monospace;
+            justify-content: space-between;
+            flex-wrap: wrap;
 
             div {
                 display: inline-block;
-                font-size: 2.3em;
                 transition: .3s ease;
                 color: #000;
+                font-size: 2em;
+                margin: 5px;
 
                 &:hover {
                     cursor: pointer;

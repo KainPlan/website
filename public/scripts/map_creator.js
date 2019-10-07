@@ -11,11 +11,10 @@ window.onload = () => {
         goal: document.getElementById('goal-tool'),
         node: document.getElementById('node-tool'),
         conn: document.getElementById('conn-tool'),
+        del: document.getElementById('del-tool'),
     };
 
-    let scale_out = document.getElementById('scale-out'),
-        ox_out = document.getElementById('ox-out'),
-        oy_out = document.getElementById('oy-out');
+    let scale_out = document.getElementById('scale-out');
 
     let conf = {
         scale: 1,
@@ -24,16 +23,14 @@ window.onload = () => {
         ox: 0,
         oy: 0,
         map: {
-            elements: [],
-            width: 600,
-            height: 400,
+            nodes: [],
+            width: 750,
+            height: 500,
             background: new Image(),
-            node_radius: 1.5,
         },
         tools: {
-            color: '#FF3C98',
-            back_color: 'rgba(255, 60, 152, .2)',
             mode: 'pan',
+            from: null,
             last_click: Date.now()
         },
         m2px: 5,
@@ -47,9 +44,6 @@ window.onload = () => {
 
         conf.ox = 0;
         conf.oy = 0;
-
-        ox_out.innerHTML = conf.ox;
-        oy_out.innerHTML = conf.oy;
 
         cab = can.getBoundingClientRect();
     };
@@ -98,37 +92,95 @@ window.onload = () => {
         conf.ox = nox;
         conf.oy = noy;
 
-        ox_out.innerHTML = conf.ox;
-        oy_out.innerHTML = conf.oy;
         refresh();
+    }
+
+    function get_node(x, y) {
+        for (let n of conf.map.nodes) {
+            if (
+                x >= n.x - n.radius &&
+                x <= n.x + n.radius &&
+                y >= n.y - n.radius &&
+                y <= n.y + n.radius
+            ) {
+                return n;
+            }
+        }
+
+        return null;
+    }
+
+    function canv_to_map(x, y) {
+        return [
+            (x - conf.ox) / conf.m2px / conf.scale,
+            (y - conf.oy) / conf.m2px / conf.scale
+        ];
+    }
+
+    function map_to_canv(u) {
+        return u * conf.m2px * conf.scale;
     }
 
     let gen_ev = {
         on_mousedown: (e, trgt) => {
             switch (conf.tools.mode) {
-                case 'pan':
-                    trgt.p_list.push(e);
-                    break;
-                case 'node':
+                case 'pan': {
+                    let n = get_node(...canv_to_map(e.clientX - cab.left, e.clientY - cab.top));
+                    if (n) {
+                        if (Date.now() - conf.tools.last_click < 50)
+                            return;
+                        window.alert(n);
+                    } else {
+                        trgt.p_list.push(e);
+                    }
+                }
+                break;
+                case 'node': {
                     if (Date.now() - conf.tools.last_click < 50)
                         return;
-                    conf.map.elements.push(new Node(
+                    conf.map.nodes.push(new Node(
                         (e.clientX - cab.left - conf.ox) / conf.m2px / conf.scale,
                         (e.clientY - cab.top - conf.oy) / conf.m2px / conf.scale
                     ));
                     refresh();
-                    break;
-                case 'goal':
+                }    
+                break;
+                case 'goal': {
                     if (Date.now() - conf.tools.last_click < 50)
                         return;
-                    conf.map.elements.push(new EndNode(
+                    conf.map.nodes.push(new EndNode(
                         (e.clientX - cab.left - conf.ox) / conf.m2px / conf.scale,
                         (e.clientY - cab.top - conf.oy) / conf.m2px / conf.scale,
                         window.prompt('Enter end-point title: '),
                         window.prompt('Enter end-point description: ')
                     ))
                     refresh();
-                    break;
+                }    
+                break;
+                case 'conn': {
+                    let node = get_node(...canv_to_map(e.clientX - cab.left, e.clientY - cab.top));
+                    if (node && conf.tools.from) {
+                        conf.tools.from.add_outgoing_conn(node);
+                        node.add_incoming_conn(conf.tools.from);
+                    } else if (node) {
+                        conf.tools.from = node;
+                    }
+                    refresh();
+                }
+                break;
+                case 'del': {
+                    let node = get_node(...canv_to_map(e.clientX - cab.left, e.clientY - cab.top));
+                    if (node) {
+                        for (let i = 0; i < conf.map.nodes.length; i++) {
+                            if (node === conf.map.nodes[i]) {
+                                conf.map.nodes.splice(i, 1);
+                                break;
+                            }
+                        }
+                    }
+                    refresh();
+                }
+                break;
             }
             conf.tools.last_click = Date.now();
         },
@@ -268,6 +320,7 @@ window.onload = () => {
 
     function change_mouse_mode(to) {
         conf.tools.mode = to;
+        conf.tools.from = null;
         document.getElementsByClassName('active-tool')[0].classList.remove('active-tool');
         tools[to].classList.add('active-tool');
     }
@@ -297,23 +350,31 @@ window.onload = () => {
         ctx.strokeStyle = prev_style;
     }
 
-    function draw_elements() {
+    function draw_nodes() {
         let prev_style = ctx.strokeStyle
-            prev_fill_style = ctx.fillStyle,
+        prev_fill_style = ctx.fillStyle,
             prev_line_width = ctx.lineWidth;
 
-        ctx.strokeStyle = conf.tools.color;
-        ctx.fillStyle = conf.tools.back_color;
         ctx.lineWidth = 3;
-        conf.map.elements.forEach(n => {
+        conf.map.nodes.forEach(n => {
             ctx.beginPath();
-            ctx.ellipse(n.x * conf.m2px * conf.scale,
-                n.y * conf.m2px * conf.scale,
-                conf.map.node_radius * conf.m2px * conf.scale,
-                conf.map.node_radius * conf.m2px * conf.scale,
+            ctx.strokeStyle = n.stroke;
+            ctx.fillStyle = n.fill;
+            ctx.ellipse(map_to_canv(n.x),
+                map_to_canv(n.y),
+                map_to_canv(n.radius),
+                map_to_canv(n.radius),
                 0, 0, 2 * Math.PI);
             ctx.stroke();
             ctx.fill();
+
+            n.edges.filter(e => e.from === n).forEach(e => {
+                ctx.beginPath();
+                ctx.strokeStyle = e.color;
+                ctx.moveTo(map_to_canv(e.from.x), map_to_canv(e.from.y));
+                ctx.lineTo(map_to_canv(e.to.x), map_to_canv(e.to.y));
+                ctx.stroke();
+            });
         });
 
         ctx.fillStyle = prev_fill_style;
@@ -329,8 +390,8 @@ window.onload = () => {
         ctx.drawImage(conf.map.background, 0, 0,
             conf.map.width * conf.m2px * conf.scale,
             conf.map.height * conf.m2px * conf.scale);
-        draw_grid();
-        draw_elements();
+        // draw_grid();
+        draw_nodes();
 
         console.timeEnd('main_loop');
     }
