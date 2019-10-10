@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css?family=Ubuntu&display=swap');
+
+html, body{
+    margin: 0px;
+    padding: 0px;    
+
+    ::placeholder{
+        color: gray;
+        opacity: 1;
+    }
+}
+
+.login {    
+    border: 1px solid white;
+    width: 25%;
+    margin-left: 37.5%;
+    margin-top: 12.5%;
+    border-radius: 15px;
+    text-align: center;
+    padding: 30px;
+    height: 450px;
+    background-color: #1A1B3B;
+    
+    span{
+        font-size: 50px;
+        font-family: 'Ubuntu', 'sans-serif';
+        color: white;
+        letter-spacing: 5px;
+    }
+
+    input{
+        border: none;
+        background-color: #ffffff00;
+        display: block;
+        font-size: 27.5px;
+        border-bottom: 1px solid #cecece;
+        margin: 0 auto;
+        padding: 5px 2px;                        
+
+        &:focus{
+            outline: none;
+            border-bottom: 1px solid #000;
+        }
+    }
+
+    button{
+
+    }
+
+}
