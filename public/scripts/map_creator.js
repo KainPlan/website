@@ -14,6 +14,11 @@ window.onload = () => {
         del: document.getElementById('del-tool'),
     };
 
+    let ftools = {
+        up: document.getElementById('floor-up'),
+        down: document.getElementById('floor-down'),
+    };
+
     let scale_out = document.getElementById('scale-out');
 
     let conf = {
@@ -26,7 +31,14 @@ window.onload = () => {
             nodes: [],
             width: 750,
             height: 500,
-            background: new Image(),
+            background: {
+                srcs: [
+                    '/media/map_0.png',
+                    '/media/map_1.png',
+                ],
+                objs: [],
+            },
+            current_floor: 0,
         },
         tools: {
             mode: 'pan',
@@ -37,17 +49,12 @@ window.onload = () => {
         clock_rate: 10, // [clock_rate] = Hz
     };
 
-    window.onresize = () => {
-        cpb = cpa.getBoundingClientRect();
-        can.width = cpb.width - 10;
-        can.height = Math.min(cpb.height - 10, conf.map.height * conf.m2px);
+    for (let i = 0; i < conf.map.background.srcs.length; i++) {
+        conf.map.background.objs.push(new Image());
+        conf.map.nodes.push(new Array());
+    }
 
-        conf.ox = 0;
-        conf.oy = 0;
-
-        cab = can.getBoundingClientRect();
-    };
-    window.onresize();
+    // ---------------------------------------------------------------------------------------------------------------------- //
 
     function zoom(ds, cx, cy) {
         let psc = conf.scale;
@@ -96,7 +103,7 @@ window.onload = () => {
     }
 
     function get_node(x, y) {
-        for (let n of conf.map.nodes) {
+        for (let n of conf.map.nodes[conf.map.current_floor]) {
             if (
                 x >= n.x - n.radius &&
                 x <= n.x + n.radius &&
@@ -121,6 +128,20 @@ window.onload = () => {
         return u * conf.m2px * conf.scale;
     }
 
+    // ---------------------------------------------------------------------------------------------------------------------- //
+
+    window.onresize = () => {
+        cpb = cpa.getBoundingClientRect();
+        can.width = cpb.width - 10;
+        can.height = Math.min(cpb.height - 10, conf.map.height * conf.m2px);
+
+        conf.ox = 0;
+        conf.oy = 0;
+
+        cab = can.getBoundingClientRect();
+        refresh();
+    };
+
     let gen_ev = {
         on_mousedown: (e, trgt) => {
             switch (conf.tools.mode) {
@@ -135,10 +156,18 @@ window.onload = () => {
                     }
                 }
                 break;
+                case 'move': {
+                    let n = get_node(...canv_to_map(e.clientX - cab.left, e.clientY - cab.top));
+                    if (n) {
+                        trgt.mv_node = n;
+                        mouse_ev.mv_node = n;
+                    }
+                }
+                break;
                 case 'node': {
                     if (Date.now() - conf.tools.last_click < 50)
                         return;
-                    conf.map.nodes.push(new Node(
+                    conf.map.nodes[conf.map.current_floor].push(new Node(
                         (e.clientX - cab.left - conf.ox) / conf.m2px / conf.scale,
                         (e.clientY - cab.top - conf.oy) / conf.m2px / conf.scale
                     ));
@@ -148,7 +177,7 @@ window.onload = () => {
                 case 'goal': {
                     if (Date.now() - conf.tools.last_click < 50)
                         return;
-                    conf.map.nodes.push(new EndNode(
+                    conf.map.nodes[conf.map.current_floor].push(new EndNode(
                         (e.clientX - cab.left - conf.ox) / conf.m2px / conf.scale,
                         (e.clientY - cab.top - conf.oy) / conf.m2px / conf.scale,
                         window.prompt('Enter end-point title: '),
@@ -159,7 +188,9 @@ window.onload = () => {
                 break;
                 case 'conn': {
                     let node = get_node(...canv_to_map(e.clientX - cab.left, e.clientY - cab.top));
-                    if (node && conf.tools.from) {
+                    if (Date.now() - conf.tools.last_click < 50)
+                        return;
+                    if (node && conf.tools.from && node !== conf.tools.from) {
                         conf.tools.from.add_outgoing_conn(node);
                         node.add_incoming_conn(conf.tools.from);
                     } else if (node) {
@@ -171,9 +202,9 @@ window.onload = () => {
                 case 'del': {
                     let node = get_node(...canv_to_map(e.clientX - cab.left, e.clientY - cab.top));
                     if (node) {
-                        for (let i = 0; i < conf.map.nodes.length; i++) {
-                            if (node === conf.map.nodes[i]) {
-                                conf.map.nodes.splice(i, 1);
+                        for (let i = 0; i < conf.map.nodes[conf.map.current_floor].length; i++) {
+                            if (node === conf.map.nodes[conf.map.current_floor][i]) {
+                                conf.map.nodes[conf.map.current_floor].splice(i, 1);
                                 break;
                             }
                         }
@@ -190,6 +221,7 @@ window.onload = () => {
         p_list: [],
         prev_x: -1,
         prev_y: -1,
+        mv_node: null,
 
         rm_event: e => {
             for (let i = 0; i < touch_ev.p_list.length; i++) {
@@ -228,11 +260,17 @@ window.onload = () => {
                 mouse_ev.prev_x = c_x;
                 mouse_ev.prev_y = c_y;
             }
+
+            if (mouse_ev.mv_node) {
+                [mouse_ev.mv_node.x, mouse_ev.mv_node.y] = canv_to_map(e.clientX - cab.left, e.clientY - cab.top);
+                refresh();
+            }
         },
         on_mouseup: e => {
             mouse_ev.rm_event(e);
             mouse_ev.prev_x = -1;
             mouse_ev.prev_y = -1;
+            mouse_ev.mv_node = null;
         },
     };
 
@@ -249,6 +287,7 @@ window.onload = () => {
         prev_diff: -1,
         prev_x: -1,
         prev_y: -1,
+        mv_node: null,
 
         rm_event: e => {
             for (let i = 0; i < touch_ev.p_list.length; i++) {
@@ -301,12 +340,18 @@ window.onload = () => {
                 touch_ev.prev_x = c_x;
                 touch_ev.prev_y = c_y;
             }
+
+            if (touch_ev.mv_node) {
+                [touch_ev.mv_node.x, touch_ev.mv_node.y] = canv_to_map(e.clientX - cab.left, e.clientY - cab.top);
+                refresh();
+            }
         },
         on_pointerup: e => {
             touch_ev.rm_event(e);
             touch_ev.prev_diff = -1;
             touch_ev.prev_x = -1;
             touch_ev.prev_y = -1;
+            touch_ev.mv_node = null;
         },
     }
 
@@ -330,6 +375,36 @@ window.onload = () => {
             change_mouse_mode(t);
         }
     }
+
+    ftools.up.onclick = () => {
+        conf.map.current_floor++;
+
+        if (conf.map.current_floor >= conf.map.background.srcs.length-1) {
+            conf.map.current_floor = conf.map.background.srcs.length-1;
+            ftools.up.classList.add('disabled');
+        } else {
+            ftools.up.classList.remove('disabled');
+        }
+        
+        ftools.down.classList.remove('disabled');
+        refresh();
+    };
+    
+    ftools.down.onclick = () => {
+        conf.map.current_floor--;
+        
+        if (conf.map.current_floor <= 0) {
+            conf.map.current_floor = 0;
+            ftools.down.classList.add('disabled');
+        } else {
+            ftools.down.classList.remove('disabled');
+        }
+
+        ftools.up.classList.remove('disabled');
+        refresh();
+    };
+
+    // ---------------------------------------------------------------------------------------------------------------------- //
 
     function draw_grid() {
         let prev_style = ctx.strokeStyle;
@@ -356,7 +431,7 @@ window.onload = () => {
             prev_line_width = ctx.lineWidth;
 
         ctx.lineWidth = 3;
-        conf.map.nodes.forEach(n => {
+        conf.map.nodes[conf.map.current_floor].forEach(n => {
             ctx.beginPath();
             ctx.strokeStyle = n.stroke;
             ctx.fillStyle = n.fill;
@@ -383,22 +458,24 @@ window.onload = () => {
     }
 
     function refresh() {
-        console.time('main_loop');
+        console.time('refresh');
 
         ctx.clearRect(0, 0, can.width + conf.map.width * conf.m2px * conf.scale,
             can.height + conf.map.height * conf.m2px * conf.scale);
-        ctx.drawImage(conf.map.background, 0, 0,
+        ctx.drawImage(conf.map.background.objs[conf.map.current_floor], 0, 0,
             conf.map.width * conf.m2px * conf.scale,
             conf.map.height * conf.m2px * conf.scale);
         // draw_grid();
         draw_nodes();
 
-        console.timeEnd('main_loop');
+        console.timeEnd('refresh');
     }
 
-    conf.map.background.onload = () => {
-        refresh();
-        // window.setInterval(main_loop, 1000/conf.clock_rate);
+    conf.map.background.objs[0].onload = () => {
+        window.onresize();
     };
-    conf.map.background.src = '/media/map_first_floor.png';
+
+    for (let [i, src] of conf.map.background.srcs.entries()) {
+        conf.map.background.objs[i].src = src;
+    }
 };

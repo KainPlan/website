@@ -31,8 +31,8 @@ _Mapping the HTBLA Kaindorf_
     - [ ] Backend user-info
   - [x] Intermediary nodes
   - [x] Endpoints
-  - [ ] Move nodes
-  - [ ] Connect nodes
+  - [x] Move nodes
+  - [x] Connect nodes
   - [ ] Save & update functionality
 - [ ] Route-planning
   - [ ] Selection start & end

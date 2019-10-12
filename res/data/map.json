@@ -1,0 +1,14 @@
+{
+    "version": "0.0.1",
+    "nodes": [],
+    "width": 750,
+    "height": 500,
+    "background": {
+        "srcs": [
+            "/media/map_0.png",
+            "/media/map_1.png"
+        ],
+        "objs": []
+    },
+    "current_floor": 0
+}

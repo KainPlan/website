@@ -61,5 +61,38 @@ body {
                 }
             }
         }
+        
+        .floor-tools {
+            display: flex;
+            justify-content: space-between;
+            position: absolute;
+            bottom: 0;
+            padding: 15px;
+            box-sizing: border-box;
+            width: 100%;
+            border-top: 2px solid #f2f2f2;
+
+            div {
+                display: inline-block;
+                font-size: 1.6em;
+                transition: .3s ease;
+
+                &:hover {
+                    cursor: pointer;
+                    opacity: .7;
+                    transform: scale(1.15);
+                }
+
+                &.disabled {
+                    opacity: .4;
+                }
+
+                &.disabled:hover {
+                    cursor: default;
+                    opacity: .4;
+                    transform: scale(1);
+                }
+            }
+        }
     }
 }
