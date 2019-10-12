@@ -16,6 +16,11 @@
         <canvas id="main-canvas"></canvas>
     </div>
 
+    <div id="node-info">
+        <div id="node-info-title" contenteditable="true" spellcheck="false">Title</div>
+        <div id="node-info-desc" contenteditable="true" spellcheck="false">Description</div>
+    </div>
+
     <div class="side-bar">
         <div class="debug">
             Scale: <span id="scale-out">1 (100%)</span><br />
@@ -45,6 +50,9 @@
         <div class="floor-tools">
             <div id="floor-up" title="Floor above">
                 <i class="fas fa-chevron-circle-up"></i>
+            </div>
+            <div id="floor-out" title="Current floor">
+                0
             </div>
             <div id="floor-down" class="disabled" title="Floor below">
                 <i class="fas fa-chevron-circle-down"></i>

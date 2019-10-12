@@ -1,3 +1,6 @@
+@import url("https://fonts.googleapis.com/css?family=Ubuntu&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Open+Sans&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Ubuntu+Mono&display=swap");
 html,
 body {
   padding: 0;
@@ -15,15 +18,51 @@ body .canvas-wrapper {
   user-select: none;
   touch-action: none;
 }
+html #node-info,
+body #node-info {
+  display: none;
+  position: fixed;
+  top: 25px;
+  left: 25px;
+  background-color: rgba(255, 255, 255, 0.975);
+  padding: 7.5px;
+  border-radius: 3px;
+  border: 1.5px solid #f2f2f2;
+}
+html #node-info #node-info-title,
+body #node-info #node-info-title {
+  font-family: "Ubuntu", sans-serif;
+  font-size: 1.3em;
+  padding-bottom: 2.5px;
+  margin-bottom: 2.5px;
+  border-bottom: 2px dashed #f4f4f4;
+}
+html #node-info #node-info-desc,
+body #node-info #node-info-desc {
+  font-family: "Open Sans", sans-serif;
+  font-size: 0.9em;
+}
+html #node-info div,
+body #node-info div {
+  transition: 0.3s ease;
+}
+html #node-info div:hover,
+body #node-info div:hover {
+  opacity: 0.8;
+}
+html #node-info div:focus,
+body #node-info div:focus {
+  outline: none;
+  transform: scale(1.04);
+}
 html .side-bar,
 body .side-bar {
   position: fixed;
-  top: 15px;
   bottom: 15px;
   right: 15px;
   background-color: rgba(255, 255, 255, 0.95);
   border: 2.5px solid #f2f2f2;
-  max-width: 200px;
+  max-width: 175px;
 }
 html .side-bar .debug,
 body .side-bar .debug {
@@ -51,6 +90,8 @@ body .side-bar .tools div {
   color: #000;
   font-size: 2em;
   margin: 5px;
+  text-align: center;
+  vertical-align: middle;
 }
 html .side-bar .tools div:hover,
 body .side-bar .tools div:hover {
@@ -66,32 +107,37 @@ html .side-bar .floor-tools,
 body .side-bar .floor-tools {
   display: flex;
   justify-content: space-between;
-  position: absolute;
-  bottom: 0;
+  align-items: center;
   padding: 15px;
   box-sizing: border-box;
   width: 100%;
   border-top: 2px solid #f2f2f2;
 }
-html .side-bar .floor-tools div,
-body .side-bar .floor-tools div {
+html .side-bar .floor-tools div:not(#floor-out),
+body .side-bar .floor-tools div:not(#floor-out) {
   display: inline-block;
   font-size: 1.6em;
   transition: 0.3s ease;
 }
-html .side-bar .floor-tools div:hover,
-body .side-bar .floor-tools div:hover {
+html .side-bar .floor-tools div:not(#floor-out):hover,
+body .side-bar .floor-tools div:not(#floor-out):hover {
   cursor: pointer;
   opacity: 0.7;
   transform: scale(1.15);
 }
-html .side-bar .floor-tools div.disabled,
-body .side-bar .floor-tools div.disabled {
+html .side-bar .floor-tools div:not(#floor-out).disabled,
+body .side-bar .floor-tools div:not(#floor-out).disabled {
   opacity: 0.4;
 }
-html .side-bar .floor-tools div.disabled:hover,
-body .side-bar .floor-tools div.disabled:hover {
+html .side-bar .floor-tools div:not(#floor-out).disabled:hover,
+body .side-bar .floor-tools div:not(#floor-out).disabled:hover {
   cursor: default;
   opacity: 0.4;
   transform: scale(1);
+}
+html .side-bar .floor-tools #floor-out,
+body .side-bar .floor-tools #floor-out {
+  display: inline-block;
+  font-size: 1.6em;
+  font-family: "Times New Roman", serif;
 }
