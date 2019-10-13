@@ -12,6 +12,8 @@ window.onload = () => {
         node: document.getElementById('node-tool'),
         conn: document.getElementById('conn-tool'),
         del: document.getElementById('del-tool'),
+        flr: document.getElementById('flr-tool'),
+        ble: document.getElementById('ble-tool'),
     };
 
     let ftools = {
@@ -28,6 +30,11 @@ window.onload = () => {
         desc: document.getElementById('node-info-desc')
     };
 
+    let stairs_info = {
+        _: document.getElementById('stairs-info'),
+        height: document.getElementById('stairs-info-height'),
+    };
+
     let key_codes = {
         _: document.getElementById('key-code-wrapper'),
         close: document.getElementById('close-key-codes'),
@@ -41,6 +48,7 @@ window.onload = () => {
         oy: 0,
         map: {
             nodes: [],
+            beacons: [],
             width: 1820,
             height: 1280,
             background: {
@@ -65,6 +73,7 @@ window.onload = () => {
     for (let i = 0; i < conf.map.background.srcs.length; i++) {
         conf.map.background.objs.push(new Image());
         conf.map.nodes.push(new Array());
+        conf.map.beacons.push(new Array());
     }
 
     // ---------------------------------------------------------------------------------------------------------------------- //
@@ -130,6 +139,21 @@ window.onload = () => {
         return null;
     }
 
+    function get_beacon(x, y) {
+        for (let b of conf.map.beacons[conf.map.current_floor]) {
+            if (
+                x >= b.x - b.radius &&
+                x <= b.x + b.radius &&
+                y >= b.y - b.radius &&
+                y <= b.y + b.radius
+            ) {
+                return b;
+            }
+        }
+
+        return null;
+    }
+
     function canv_to_map(x, y) {
         return [
             (x - conf.ox) / conf.m2px / conf.scale,
@@ -155,6 +179,8 @@ window.onload = () => {
         }
 
         if (n instanceof EndNode) {
+            hide_stairs_info();
+
             node_info._.style.display = 'inline-block';
             node_info._.style.left = map_to_canv(n.x) + conf.ox + cab.left + "px";
             node_info._.style.top = map_to_canv(n.y) + conf.oy + cab.top + "px";
@@ -205,6 +231,35 @@ window.onload = () => {
         node_info._.style.display = 'none';
     }
 
+    function disp_stairs_info(n) {
+        function check_stairs_info_position() {
+            let sib = stairs_info._.getBoundingClientRect();
+            if (sib.bottom > window.innerHeight)
+                stairs_info._.style.top = window.innerHeight - sib.height - 5 + "px";
+            if (sib.right > window.innerWidth)
+                stairs_info._.style.left = window.innerWidth - sib.width - 5 + "px";
+        }
+
+        if (n instanceof StairsNode) {
+            hide_node_info();
+
+            stairs_info._.style.display = 'inline-block';
+            stairs_info._.style.left = map_to_canv(n.x) + conf.ox + cab.left + "px";
+            stairs_info._.style.top = map_to_canv(n.y) + conf.oy + cab.top + "px";
+
+            check_stairs_info_position();
+            stairs_info.height = n.height || '';
+
+            stairs_info.height.onchange = () => {
+                n.stairs.length = +stairs_info.height.value;
+            };
+        }
+    }
+
+    function hide_stairs_info() {
+        stairs_info._.style.display = 'none';
+    }
+
     function update_floor_status() {
         if (conf.map.current_floor <= 0) {
             conf.map.current_floor = 0;
@@ -219,6 +274,15 @@ window.onload = () => {
         } else {
             ftools.up.classList.remove('disabled');
         }
+
+        mouse_ev.reset_all();
+        touch_ev.reset_all();
+
+        hide_key_codes();
+        hide_node_info();
+        hide_stairs_info();
+
+        conf.tools.from = null;
 
         floor_out.innerHTML = conf.map.current_floor;
         refresh();
@@ -256,17 +320,19 @@ window.onload = () => {
                             return;
                         console.log(n);
                         disp_node_info(n);
+                        disp_stairs_info(n);
                     } else {
                         trgt.p_list.push(e);
                         hide_node_info();
+                        hide_stairs_info();
                     }
                 }
                 break;
             case 'move': {
-                let n = get_node(...canv_to_map(e.clientX - cab.left, e.clientY - cab.top));
+                let [x, y] = canv_to_map(e.clientX - cab.left, e.clientY - cab.top),
+                    n = get_node(x, y) || get_beacon(x, y);
                 if (n) {
                     trgt.mv_node = n;
-                    mouse_ev.mv_node = n;
                 }
             }
             break;
@@ -275,8 +341,8 @@ window.onload = () => {
                     Date.now() - conf.tools.last_click < 50)
                     return;
                 conf.map.nodes[conf.map.current_floor].push(new Node(
-                    (e.clientX - cab.left - conf.ox) / conf.m2px / conf.scale,
-                    (e.clientY - cab.top - conf.oy) / conf.m2px / conf.scale
+                    ...canv_to_map(e.clientX - cab.left, e.clientY - cab.top),
+                    conf.map.current_floor
                 ));
                 refresh();
             }
@@ -288,8 +354,8 @@ window.onload = () => {
                 hide_node_info();
 
                 let en = new EndNode(
-                    (e.clientX - cab.left - conf.ox) / conf.m2px / conf.scale,
-                    (e.clientY - cab.top - conf.oy) / conf.m2px / conf.scale,
+                    ...canv_to_map(e.clientX - cab.left, e.clientY - cab.top),
+                    conf.map.current_floor,
                     'Title',
                     'Description',
                 );
@@ -304,9 +370,20 @@ window.onload = () => {
                 if (Date.now() - conf.tools.last_click < 50)
                     return;
                 if (node && conf.tools.from && node !== conf.tools.from) {
-                    conf.tools.from.add_outgoing_conn(node);
-                    node.add_incoming_conn(conf.tools.from);
-                    conf.tools.from = null;
+                    let not_included = true;
+
+                    node.edges.forEach(e => {
+                        if (e.to === conf.tools.from) {
+                            not_included = false;
+                            return;
+                        }
+                    });
+                
+                    if (not_included) {
+                        conf.tools.from.add_con(node);
+                        node.add_con(conf.tools.from);
+                        conf.tools.from = null;
+                    }
                 } else if (node) {
                     conf.tools.from = node;
                 }
@@ -315,22 +392,71 @@ window.onload = () => {
             break;
             case 'del': {
                 let node = get_node(...canv_to_map(e.clientX - cab.left, e.clientY - cab.top));
+
                 if (node) {
+                    if (node instanceof StairsNode) {
+                        let trgt_flr = node.stairs.to.z;
+                        for (let i = 0; i < conf.map.nodes[trgt_flr].length; i++) {
+                            if (node.stairs.to === conf.map.nodes[trgt_flr][i]) {
+                                for (let conn of node.stairs.to.edges) {
+                                    for (let j = conn.to.edges.length - 1; j >= 0; j--) {
+                                        if (conn.to.edges[j].to === node.stairs.to) {
+                                            conn.to.edges.splice(j, 1);
+                                        }
+                                    }
+                                }
+                                conf.map.nodes[trgt_flr].splice(i, 1);
+                                break;
+                            }
+                        }
+                    }
+
                     for (let i = 0; i < conf.map.nodes[conf.map.current_floor].length; i++) {
                         if (node === conf.map.nodes[conf.map.current_floor][i]) {
                             for (let conn of node.edges) {
-                                let dest = conn.to !== node ? conn.to : conn.from;
-                                for (let j = dest.edges.length - 1; j >= 0; j--) {
-                                    if ([dest.edges[j].from, dest.edges[j].to].includes(node))
-                                        dest.edges.splice(j, 1);
+                                for (let j = conn.to.edges.length - 1; j >= 0; j--) {
+                                    if (conn.to.edges[j].to === node) {
+                                        conn.to.edges.splice(j, 1);
+                                    }
                                 }
                             }
-
                             conf.map.nodes[conf.map.current_floor].splice(i, 1);
                             break;
                         }
                     }
                 }
+                refresh();
+            }
+            break;
+            case 'flr': {
+                if (get_node(...canv_to_map(e.clientX - cab.left, e.clientY - cab.top)) 
+                    || Date.now() - conf.tools.last_click < 50
+                    || conf.map.current_floor === conf.map.nodes.length-1)
+                    return;
+
+                let bsn = new StairsNode(
+                    ...canv_to_map(e.clientX - cab.left, e.clientY - cab.top), 
+                    conf.map.current_floor
+                );
+                let tsn = new StairsNode(bsn.x, bsn.y, conf.map.current_floor+1, bsn);
+                bsn.add_stairs(tsn);
+
+                conf.map.nodes[conf.map.current_floor].push(bsn);
+                conf.map.nodes[conf.map.current_floor+1].push(tsn);
+
+                disp_stairs_info(bsn);
+                refresh();
+            }
+            break;
+            case 'ble': {
+                if (get_beacon(...canv_to_map(e.clientX - cab.left, e.clientY - cab.top)) 
+                    || Date.now() - conf.tools.last_click < 50)
+                    return;
+
+                conf.map.beacons[conf.map.current_floor].push(new BeaconNode(
+                    ...canv_to_map(e.clientX - cab.left, e.clientY - cab.top),
+                    conf.map.current_floor
+                ));
                 refresh();
             }
             break;
@@ -394,6 +520,10 @@ window.onload = () => {
                 mouse_ev.prev_y = c_y;
             } else if (mouse_ev.mv_node) {
                 [mouse_ev.mv_node.x, mouse_ev.mv_node.y] = canv_to_map(e.clientX - cab.left, e.clientY - cab.top);
+                if (mouse_ev.mv_node instanceof StairsNode) {
+                    [mouse_ev.mv_node.stairs.to.x, mouse_ev.mv_node.stairs.to.y] = 
+                        canv_to_map(e.clientX - cab.left, e.clientY - cab.top);
+                }
                 refresh();
             } else if (conf.tools.from) {
                 refresh();
@@ -492,8 +622,10 @@ window.onload = () => {
                 touch_ev.prev_y = c_y;
             } else if (touch_ev.mv_node) {
                 [touch_ev.mv_node.x, touch_ev.mv_node.y] = canv_to_map(e.clientX - cab.left, e.clientY - cab.top);
-                refresh();
-            } else if (conf.tools.from) {
+                if (touch_ev.mv_node instanceof StairsNode) {
+                    [touch_ev.mv_node.stairs.to.x, touch_ev.mv_node.stairs.to.y] = 
+                        canv_to_map(e.clientX - cab.left, e.clientY - cab.top);
+                }
                 refresh();
             }
         },
@@ -515,6 +647,8 @@ window.onload = () => {
         conf.tools.from = null;
 
         hide_node_info();
+        hide_stairs_info();
+
         mouse_ev.reset_all();
         touch_ev.reset_all();
 
@@ -547,6 +681,12 @@ window.onload = () => {
         if (e.keyCode === 27) {
             hide_key_codes();
             hide_node_info();
+            hide_stairs_info();
+
+            if (conf.tools.mode === 'conn') {
+                conf.tools.from = null;
+                refresh();
+            } 
         } else if (e.ctrlKey && !e.altKey) {
             switch (e.key) {
                 case '?': {
@@ -593,6 +733,14 @@ window.onload = () => {
                 case '5':
                     change_mouse_mode('del');
                     break;
+                case 's':
+                case '6':
+                    change_mouse_mode('flr');
+                    break;
+                case 'b':
+                case '7':
+                    change_mouse_mode('ble');
+                    break;
             }
         }
     };
@@ -624,6 +772,7 @@ window.onload = () => {
             prev_line_width = ctx.lineWidth;
 
         ctx.lineWidth = 3;
+        let past_nodes = [];
         conf.map.nodes[conf.map.current_floor].forEach(n => {
             ctx.beginPath();
             ctx.strokeStyle = n.stroke;
@@ -636,13 +785,39 @@ window.onload = () => {
             ctx.stroke();
             ctx.fill();
 
-            n.edges.filter(e => e.from === n).forEach(e => {
+            n.edges.filter(e => !past_nodes.includes(e.to) && e.to.z === n.z).forEach(e => {
                 ctx.beginPath();
                 ctx.strokeStyle = e.color;
-                ctx.moveTo(map_to_canv(e.from.x), map_to_canv(e.from.y));
+                ctx.moveTo(map_to_canv(n.x), map_to_canv(n.y));
                 ctx.lineTo(map_to_canv(e.to.x), map_to_canv(e.to.y));
                 ctx.stroke();
             });
+
+            past_nodes.push(n);
+        });
+
+        ctx.fillStyle = prev_fill_style;
+        ctx.strokeStyle = prev_style;
+        ctx.lineWidth = prev_line_width;
+    }
+
+    function draw_beacons() {
+        let prev_style = ctx.strokeStyle
+        prev_fill_style = ctx.fillStyle,
+            prev_line_width = ctx.lineWidth;
+
+        ctx.lineWidth = 3;
+        conf.map.beacons[conf.map.current_floor].forEach(b => {
+            ctx.beginPath();
+            ctx.strokeStyle = b.stroke;
+            ctx.fillStyle = b.fill;
+            ctx.ellipse(map_to_canv(b.x),
+                map_to_canv(b.y),
+                map_to_canv(b.radius),
+                map_to_canv(b.radius),
+                0, 0, 2 * Math.PI);
+            ctx.stroke();
+            ctx.fill();
         });
 
         ctx.fillStyle = prev_fill_style;
@@ -658,8 +833,10 @@ window.onload = () => {
         ctx.drawImage(conf.map.background.objs[conf.map.current_floor], 0, 0,
             conf.map.width * conf.m2px * conf.scale,
             conf.map.height * conf.m2px * conf.scale);
+
         // draw_grid();
         draw_nodes();
+        draw_beacons();
 
         console.timeEnd('refresh');
     }

@@ -21,6 +21,13 @@
         <div id="node-info-desc" contenteditable="true" spellcheck="false">Description</div>
     </div>
 
+    <div id="stairs-info">
+        <div>
+            <label for="stairs-info-height">Height</label>
+            <input id="stairs-info-height" type="number" placeholder="Height ... " />
+        </div>
+    </div>
+
     <div id="key-code-wrapper">
         <div class="key-codes">
             <div class="close-wrapper">
@@ -78,6 +85,22 @@
                 </div>
                 <div>
                     <div>
+                        <span class="key">s</span> or <span class="key">6</span>
+                    </div>
+                    <div>
+                        Select staircase tool
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <span class="key">b</span> or <span class="key">7</span>
+                    </div>
+                    <div>
+                        Select BLE beacon tool
+                    </div>
+                </div>
+                <div>
+                    <div>
                         <span class="key">Ctrl</span> + <span class="key">?</span>
                     </div>
                     <div>
@@ -110,34 +133,40 @@
         </div>
 
         <div class="tools">
-            <div id="pan-tool" class="active-tool" title="Pan">
+            <div id="pan-tool" class="active-tool" title="Pan (d)">
                 <i class="fas fa-mouse-pointer"></i>
             </div>
-            <div id="move-tool" title="Move">
+            <div id="move-tool" title="Move (m)">
                 <i class="fas fa-arrows-alt"></i>
             </div>
-            <div id="goal-tool" title="Endpoint">
+            <div id="goal-tool" title="Endpoint (e)">
                 <i class="fas fa-monument"></i>
             </div>
-            <div id="node-tool" title="Add node">
+            <div id="node-tool" title="Add node (n)">
                 <i class="fas fa-circle"></i>
             </div>
-            <div id="conn-tool" title="Add connection">
+            <div id="conn-tool" title="Add connection (c)">
                 <i class="fas fa-long-arrow-alt-right"></i>
             </div>
-            <div id="del-tool" title="Delete">
+            <div id="del-tool" title="Delete (r)">
                 <i class="fas fa-cut"></i>
+            </div>
+            <div id="flr-tool" title="Add staircase (s)">
+                <i class="fas fa-hiking"></i>
+            </div>
+            <div id="ble-tool" title="Add BLE beacon (b)">
+                <i class="fas fa-broadcast-tower"></i>
             </div>
         </div>
 
         <div class="floor-tools">
-            <div id="floor-up" title="Floor above">
+            <div id="floor-up" title="Floor above (Ctrl + +)">
                 <i class="fas fa-chevron-circle-up"></i>
             </div>
             <div id="floor-out" title="Current floor">
                 0
             </div>
-            <div id="floor-down" class="disabled" title="Floor below">
+            <div id="floor-down" class="disabled" title="Floor below (Ctrl + -)">
                 <i class="fas fa-chevron-circle-down"></i>
             </div>
         </div>
@@ -146,6 +175,8 @@
     <script src="/scripts/Edge.js"></script>
     <script src="/scripts/Node.js"></script>
     <script src="/scripts/EndNode.js"></script>
+    <script src="/scripts/StairsNode.js"></script>
+    <script src="/scripts/BeaconNode.js"></script>
     <script src="/scripts/map_creator.js"></script>
 </body>
 

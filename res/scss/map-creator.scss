@@ -65,6 +65,48 @@ body {
         }
     }
 
+    #stairs-info {
+        display: none;
+        position: fixed;
+        top: 25px;
+        left: 25px;
+        background-color: rgba(255, 255, 255, .975);
+        padding: 7.5px;
+        border-radius: 3px;
+        border: 1.5px solid #f2f2f2;
+
+        div {
+            display: flex;
+            justify-content: stretch;
+            align-items: baseline;
+            width: 100%;
+            
+            label {
+                display: inline-block;
+                margin-right: 5px;
+            }
+    
+            input {
+                display: inline-block;
+                width: 100%;
+                font-family: 'Ubuntu Mono', monospace;
+                margin: 2.5px 0;
+                border: none;
+                font-size: 0.9em;
+                transition: .3s ease;
+    
+                &:hover {
+                    opacity: .8;
+                }
+    
+                &:focus {
+                    outline: none;
+                    transform: scale(1.03);
+                }
+            }
+        }
+    }
+
     #key-code-wrapper {
         z-index: 1;
         position: fixed;

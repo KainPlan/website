@@ -67,6 +67,48 @@ body #node-info > div:focus {
   outline: none;
   transform: scale(1.03);
 }
+html #stairs-info,
+body #stairs-info {
+  display: none;
+  position: fixed;
+  top: 25px;
+  left: 25px;
+  background-color: rgba(255, 255, 255, 0.975);
+  padding: 7.5px;
+  border-radius: 3px;
+  border: 1.5px solid #f2f2f2;
+}
+html #stairs-info div,
+body #stairs-info div {
+  display: flex;
+  justify-content: stretch;
+  align-items: baseline;
+  width: 100%;
+}
+html #stairs-info div label,
+body #stairs-info div label {
+  display: inline-block;
+  margin-right: 5px;
+}
+html #stairs-info div input,
+body #stairs-info div input {
+  display: inline-block;
+  width: 100%;
+  font-family: "Ubuntu Mono", monospace;
+  margin: 2.5px 0;
+  border: none;
+  font-size: 0.9em;
+  transition: 0.3s ease;
+}
+html #stairs-info div input:hover,
+body #stairs-info div input:hover {
+  opacity: 0.8;
+}
+html #stairs-info div input:focus,
+body #stairs-info div input:focus {
+  outline: none;
+  transform: scale(1.03);
+}
 html #key-code-wrapper,
 body #key-code-wrapper {
   z-index: 1;
