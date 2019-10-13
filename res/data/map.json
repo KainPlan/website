@@ -1,8 +1,8 @@
 {
     "version": "0.0.1",
     "nodes": [],
-    "width": 750,
-    "height": 500,
+    "width": 1820,
+    "height": 1280,
     "background": {
         "srcs": [
             "/media/map_0.png",

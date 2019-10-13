@@ -28,19 +28,24 @@ window.onload = () => {
         desc: document.getElementById('node-info-desc')
     };
 
+    let key_codes = {
+        _: document.getElementById('key-code-wrapper'),
+        close: document.getElementById('close-key-codes'),
+    };
+
     let conf = {
         scale: 1,
-        min_scale: 0.5,
-        max_scale: 2,
+        min_scale: 0.2,
+        max_scale: 1,
         ox: 0,
         oy: 0,
         map: {
             nodes: [],
-            width: 750,
-            height: 500,
+            width: 1820,
+            height: 1280,
             background: {
                 srcs: [
-                    '/media/map_0.png',
+                    '/media/map_0.jpg',
                     '/media/map_1.png',
                 ],
                 objs: [],
@@ -136,11 +141,25 @@ window.onload = () => {
         return u * conf.m2px * conf.scale;
     }
 
+    function is_printable_char(e) {
+        return (e.key.match(/^[\w\s.]$/) || e.keyCode === 13) && e.keyCode !== 9;
+    }
+
     function disp_node_info(n) {
+        function check_node_info_position() {
+            let nib = node_info._.getBoundingClientRect();
+            if (nib.bottom > window.innerHeight)
+                node_info._.style.top = window.innerHeight - nib.height - 5 + "px";
+            if (nib.right > window.innerWidth)
+                node_info._.style.left = window.innerWidth - nib.width - 5 + "px";
+        }
+
         if (n instanceof EndNode) {
             node_info._.style.display = 'inline-block';
             node_info._.style.left = map_to_canv(n.x) + conf.ox + cab.left + "px";
             node_info._.style.top = map_to_canv(n.y) + conf.oy + cab.top + "px";
+
+            check_node_info_position();
 
             node_info.title.innerHTML = n.title;
             node_info.desc.innerHTML = n.desc;
@@ -155,6 +174,21 @@ window.onload = () => {
                     node_info.desc.innerHTML = '';
                 };
             }
+
+            node_info.title.onkeydown = e => {
+                if (node_info.title.innerHTML.length >= 64 && is_printable_char(e)) {
+                    e.preventDefault();
+                } else {
+                    check_node_info_position();
+                }
+            };
+            node_info.desc.onkeydown = e => {
+                if (node_info.desc.innerHTML.length >= 512 && is_printable_char(e)) {
+                    e.preventDefault();
+                } else {
+                    check_node_info_position();
+                }
+            };
 
             node_info.title.onblur = () => {
                 n.title = node_info.title.innerHTML;
@@ -171,16 +205,16 @@ window.onload = () => {
         node_info._.style.display = 'none';
     }
 
-    function update_floor_status() {   
+    function update_floor_status() {
         if (conf.map.current_floor <= 0) {
             conf.map.current_floor = 0;
             ftools.down.classList.add('disabled');
         } else {
             ftools.down.classList.remove('disabled');
-        } 
-        
-        if (conf.map.current_floor >= conf.map.background.srcs.length-1) {
-            conf.map.current_floor = conf.map.background.srcs.length-1;
+        }
+
+        if (conf.map.current_floor >= conf.map.background.srcs.length - 1) {
+            conf.map.current_floor = conf.map.background.srcs.length - 1;
             ftools.up.classList.add('disabled');
         } else {
             ftools.up.classList.remove('disabled');
@@ -190,12 +224,20 @@ window.onload = () => {
         refresh();
     }
 
+    function show_key_codes() {
+        key_codes._.style.display = 'flex';
+    }
+
+    function hide_key_codes() {
+        key_codes._.style.display = 'none';
+    }
+
     // ---------------------------------------------------------------------------------------------------------------------- //
 
     window.onresize = () => {
         cpb = cpa.getBoundingClientRect();
-        can.width = cpb.width - 10;
-        can.height = Math.min(cpb.height - 10, conf.map.height * conf.m2px);
+        can.width = cpb.width - 2;
+        can.height = Math.min(cpb.height - 2, conf.map.height * conf.m2px);
 
         conf.ox = 0;
         conf.oy = 0;
@@ -220,78 +262,78 @@ window.onload = () => {
                     }
                 }
                 break;
-                case 'move': {
-                    let n = get_node(...canv_to_map(e.clientX - cab.left, e.clientY - cab.top));
-                    if (n) {
-                        trgt.mv_node = n;
-                        mouse_ev.mv_node = n;
-                    }
+            case 'move': {
+                let n = get_node(...canv_to_map(e.clientX - cab.left, e.clientY - cab.top));
+                if (n) {
+                    trgt.mv_node = n;
+                    mouse_ev.mv_node = n;
                 }
-                break;
-                case 'node': {
-                    if (get_node(...canv_to_map(e.clientX - cab.left, e.clientY - cab.top)) 
-                        || Date.now() - conf.tools.last_click < 50)
-                        return;
-                    conf.map.nodes[conf.map.current_floor].push(new Node(
-                        (e.clientX - cab.left - conf.ox) / conf.m2px / conf.scale,
-                        (e.clientY - cab.top - conf.oy) / conf.m2px / conf.scale
-                    ));
-                    refresh();
-                }    
-                break;
-                case 'goal': {
-                    if (get_node(...canv_to_map(e.clientX - cab.left, e.clientY - cab.top)) 
-                        || Date.now() - conf.tools.last_click < 50)
-                        return;
-                    hide_node_info();
+            }
+            break;
+            case 'node': {
+                if (get_node(...canv_to_map(e.clientX - cab.left, e.clientY - cab.top)) ||
+                    Date.now() - conf.tools.last_click < 50)
+                    return;
+                conf.map.nodes[conf.map.current_floor].push(new Node(
+                    (e.clientX - cab.left - conf.ox) / conf.m2px / conf.scale,
+                    (e.clientY - cab.top - conf.oy) / conf.m2px / conf.scale
+                ));
+                refresh();
+            }
+            break;
+            case 'goal': {
+                if (get_node(...canv_to_map(e.clientX - cab.left, e.clientY - cab.top)) ||
+                    Date.now() - conf.tools.last_click < 50)
+                    return;
+                hide_node_info();
 
-                    let en = new EndNode(
-                        (e.clientX - cab.left - conf.ox) / conf.m2px / conf.scale,
-                        (e.clientY - cab.top - conf.oy) / conf.m2px / conf.scale,
-                        'Title',
-                        'Description',
-                    );
+                let en = new EndNode(
+                    (e.clientX - cab.left - conf.ox) / conf.m2px / conf.scale,
+                    (e.clientY - cab.top - conf.oy) / conf.m2px / conf.scale,
+                    'Title',
+                    'Description',
+                );
 
-                    conf.map.nodes[conf.map.current_floor].push(en);
-                    disp_node_info(en);
-                    refresh();
-                }    
-                break;
-                case 'conn': {
-                    let node = get_node(...canv_to_map(e.clientX - cab.left, e.clientY - cab.top));
-                    if (Date.now() - conf.tools.last_click < 50)
-                        return;
-                    if (node && conf.tools.from && node !== conf.tools.from) {
-                        conf.tools.from.add_outgoing_conn(node);
-                        node.add_incoming_conn(conf.tools.from);
-                        conf.tools.from = null;
-                    } else if (node) {
-                        conf.tools.from = node;
-                    }
-                    refresh();
+                conf.map.nodes[conf.map.current_floor].push(en);
+                disp_node_info(en);
+                refresh();
+            }
+            break;
+            case 'conn': {
+                let node = get_node(...canv_to_map(e.clientX - cab.left, e.clientY - cab.top));
+                if (Date.now() - conf.tools.last_click < 50)
+                    return;
+                if (node && conf.tools.from && node !== conf.tools.from) {
+                    conf.tools.from.add_outgoing_conn(node);
+                    node.add_incoming_conn(conf.tools.from);
+                    conf.tools.from = null;
+                } else if (node) {
+                    conf.tools.from = node;
                 }
-                break;
-                case 'del': {
-                    let node = get_node(...canv_to_map(e.clientX - cab.left, e.clientY - cab.top));
-                    if (node) {
-                        for (let i = 0; i < conf.map.nodes[conf.map.current_floor].length; i++) {
-                            if (node === conf.map.nodes[conf.map.current_floor][i]) {
-                                for (let conn of node.edges) {
-                                    let dest = conn.to !== node ? conn.to : conn.from;
-                                    for (let j = dest.edges.length-1; j >= 0; j--) {
-                                        if ([dest.edges[j].from, dest.edges[j].to].includes(node))
-                                            dest.edges.splice(j, 1);
-                                    }
+                refresh();
+            }
+            break;
+            case 'del': {
+                let node = get_node(...canv_to_map(e.clientX - cab.left, e.clientY - cab.top));
+                if (node) {
+                    for (let i = 0; i < conf.map.nodes[conf.map.current_floor].length; i++) {
+                        if (node === conf.map.nodes[conf.map.current_floor][i]) {
+                            for (let conn of node.edges) {
+                                let dest = conn.to !== node ? conn.to : conn.from;
+                                for (let j = dest.edges.length - 1; j >= 0; j--) {
+                                    if ([dest.edges[j].from, dest.edges[j].to].includes(node))
+                                        dest.edges.splice(j, 1);
                                 }
-
-                                conf.map.nodes[conf.map.current_floor].splice(i, 1);
-                                break;
                             }
+
+                            conf.map.nodes[conf.map.current_floor].splice(i, 1);
+                            break;
                         }
                     }
-                    refresh();
                 }
-                break;
+                refresh();
+            }
+            break;
             }
             conf.tools.last_click = Date.now();
         },
@@ -490,10 +532,69 @@ window.onload = () => {
         conf.map.current_floor++;
         update_floor_status();
     };
-    
+
     ftools.down.onclick = () => {
         conf.map.current_floor--;
         update_floor_status();
+    };
+
+    key_codes.close.onclick = hide_key_codes;
+
+    window.onkeydown = e => {
+        if (document.activeElement !== document.body)
+            return;
+
+        if (e.keyCode === 27) {
+            hide_key_codes();
+            hide_node_info();
+        } else if (e.ctrlKey && !e.altKey) {
+            switch (e.key) {
+                case '?': {
+                    e.preventDefault();
+                    if (key_codes._.style.display === 'none') {
+                        show_key_codes();
+                    } else {
+                        hide_key_codes();
+                    }
+                }
+                break;
+            case '+':
+                e.preventDefault();
+                ftools.up.click();
+                break;
+            case '-':
+                e.preventDefault();
+                ftools.down.click();
+                break;
+            }
+        } else if (!e.ctrlKey && !e.altKey) {
+            switch (e.key) {
+                case 'd':
+                case '0':
+                    change_mouse_mode('pan');
+                    break;
+                case 'm':
+                case '1':
+                    change_mouse_mode('move');
+                    break;
+                case 'e':
+                case '2':
+                    change_mouse_mode('goal');
+                    break;
+                case 'n':
+                case '3':
+                    change_mouse_mode('node');
+                    break;
+                case 'c':
+                case '4':
+                    change_mouse_mode('conn');
+                    break;
+                case 'r':
+                case '5':
+                    change_mouse_mode('del');
+                    break;
+            }
+        }
     };
 
     // ---------------------------------------------------------------------------------------------------------------------- //

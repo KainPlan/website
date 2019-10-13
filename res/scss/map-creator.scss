@@ -10,6 +10,12 @@ body {
     width: 100%;
     height: 100%;
 
+    font-family: 'Open Sans', sans-serif;
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Ubuntu', sans-serif;
+    }
+
     .canvas-wrapper {
         width: 100%;
         height: 100%;
@@ -29,6 +35,8 @@ body {
         padding: 7.5px;
         border-radius: 3px;
         border: 1.5px solid #f2f2f2;
+        min-width: 50px;
+        max-width: 300px;
 
         #node-info-title {
             font-family: 'Ubuntu', sans-serif;
@@ -37,12 +45,13 @@ body {
             margin-bottom: 2.5px;
             border-bottom: 2px dashed #f4f4f4;
         }
+
         #node-info-desc {
             font-family: 'Open Sans', sans-serif;
             font-size: 0.9em;
         }
 
-        div {
+        & > div {
             transition: .3s ease;
 
             &:hover {
@@ -51,7 +60,82 @@ body {
 
             &:focus {
                 outline: none;
-                transform: scale(1.04);
+                transform: scale(1.03);
+            }
+        }
+    }
+
+    #key-code-wrapper {
+        z-index: 1;
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, .3);
+        display: none;
+        width: 100%;
+        box-sizing: border-box;
+        height: 100%;
+        justify-content: center;
+        align-items: center;
+
+        .key-codes {
+            display: block;
+            box-sizing: border-box;
+            width: 65%;
+            height: 85%;
+            background-color: #fff;
+
+            .close-wrapper {
+                width: 100%;
+                height: 10%;
+                box-sizing: border-box;
+                font-size: 1.6em;
+                padding: 15px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                i {
+                    transition: .3s ease;
+
+                    &:hover {
+                        cursor: pointer;
+                        color: #FF2A19;
+                        transform: rotate(180deg) scale(1.1);
+                    }
+                }
+            }
+
+            .shortcut-div {
+                width: 100%;
+                height: 90%;
+                overflow: auto;
+
+                &>div {
+                    width: 100%;
+                    box-sizing: border-box;
+                    padding: 15px;
+                    display: flex;
+                    justify-content: space-between;
+
+                    &>div {
+                        display: inline-block;
+
+                        .key {
+                            background-color: #444;
+                            color: #fff;
+                            padding: 2.5px 5px;
+                            border-radius: 3px;
+                            font-family: 'Ubuntu Mono', monospace;
+                        }
+                    }
+                }
+
+                &>div:nth-child(even) {
+                    background-color: #f6f6f6;
+                }
             }
         }
     }
@@ -85,7 +169,7 @@ body {
 
             div {
                 display: inline-block;
-                transition: .3s ease;
+                transition: .25s ease;
                 color: #000;
                 font-size: 2em;
                 margin: 5px;
@@ -94,7 +178,7 @@ body {
 
                 &:hover {
                     cursor: pointer;
-                    transform: scale(1.2);
+                    transform: scale(1.2) rotate(7.5deg);
                     opacity: .7;
                 }
 
@@ -103,7 +187,7 @@ body {
                 }
             }
         }
-        
+
         .floor-tools {
             display: flex;
             justify-content: space-between;
@@ -142,6 +226,15 @@ body {
                 font-size: 1.6em;
                 font-family: 'Times New Roman', serif;
             }
+        }
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .key-code-wrapper {
+        #key-codes {
+            width: 90% !important;
+            height: 90% !important;
         }
     }
 }
