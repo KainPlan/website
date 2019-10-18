@@ -1,10 +1,25 @@
-html, body {
+@import url("https://fonts.googleapis.com/css?family=Ubuntu&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Open+Sans&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Ubuntu+Mono&display=swap");
+html,
+body {
   padding: 0;
   margin: 0;
   width: 100%;
   height: 100%;
+  font-family: "Open Sans", sans-serif;
 }
-html .canvas-wrapper, body .canvas-wrapper {
+html h1, html h2, html h3, html h4, html h5, html h6,
+body h1,
+body h2,
+body h3,
+body h4,
+body h5,
+body h6 {
+  font-family: "Ubuntu", sans-serif;
+}
+html .canvas-wrapper,
+body .canvas-wrapper {
   width: 100%;
   height: 100%;
   display: flex;
@@ -13,48 +28,252 @@ html .canvas-wrapper, body .canvas-wrapper {
   user-select: none;
   touch-action: none;
 }
-html .debug, body .debug {
-  display: inline-block;
-  padding: 15px;
+html #node-info,
+body #node-info {
+  display: none;
   position: fixed;
-  top: 15px;
-  right: 15px;
-  background-color: rgba(255, 255, 255, 0.5);
-  border: 2.5px solid #f2f2f2;
-  border-radius: 4px;
+  top: 25px;
+  left: 25px;
+  background-color: rgba(255, 255, 255, 0.975);
+  padding: 7.5px;
+  border-radius: 3px;
+  border: 1.5px solid #f2f2f2;
+  min-width: 50px;
+  max-width: 300px;
+}
+html #node-info #node-info-title,
+body #node-info #node-info-title {
+  font-family: "Ubuntu", sans-serif;
+  font-size: 1.3em;
+  padding-bottom: 2.5px;
+  margin-bottom: 2.5px;
+  border-bottom: 2px dashed #f4f4f4;
+}
+html #node-info #node-info-desc,
+body #node-info #node-info-desc {
+  font-family: "Open Sans", sans-serif;
+  font-size: 0.9em;
+}
+html #node-info > div,
+body #node-info > div {
+  transition: 0.3s ease;
+}
+html #node-info > div:hover,
+body #node-info > div:hover {
+  opacity: 0.8;
+}
+html #node-info > div:focus,
+body #node-info > div:focus {
+  outline: none;
+  transform: scale(1.03);
+}
+html #stairs-info,
+body #stairs-info {
+  display: none;
+  position: fixed;
+  top: 25px;
+  left: 25px;
+  background-color: rgba(255, 255, 255, 0.975);
+  padding: 7.5px;
+  border-radius: 3px;
+  border: 1.5px solid #f2f2f2;
+}
+html #stairs-info div,
+body #stairs-info div {
+  display: flex;
+  justify-content: stretch;
+  align-items: baseline;
+  width: 100%;
+}
+html #stairs-info div label,
+body #stairs-info div label {
+  display: inline-block;
+  margin-right: 5px;
+}
+html #stairs-info div input,
+body #stairs-info div input {
+  display: inline-block;
+  width: 100%;
+  font-family: "Ubuntu Mono", monospace;
+  margin: 2.5px 0;
+  border: none;
+  font-size: 0.9em;
+  transition: 0.3s ease;
+}
+html #stairs-info div input:hover,
+body #stairs-info div input:hover {
+  opacity: 0.8;
+}
+html #stairs-info div input:focus,
+body #stairs-info div input:focus {
+  outline: none;
+  transform: scale(1.03);
+}
+html #key-code-wrapper,
+body #key-code-wrapper {
+  z-index: 1;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: none;
+  width: 100%;
+  box-sizing: border-box;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+html #key-code-wrapper .key-codes,
+body #key-code-wrapper .key-codes {
+  display: block;
+  box-sizing: border-box;
+  width: 65%;
+  height: 85%;
+  background-color: #fff;
+}
+html #key-code-wrapper .key-codes .close-wrapper,
+body #key-code-wrapper .key-codes .close-wrapper {
+  width: 100%;
+  height: 10%;
+  box-sizing: border-box;
+  font-size: 1.6em;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+html #key-code-wrapper .key-codes .close-wrapper i,
+body #key-code-wrapper .key-codes .close-wrapper i {
+  transition: 0.3s ease;
+}
+html #key-code-wrapper .key-codes .close-wrapper i:hover,
+body #key-code-wrapper .key-codes .close-wrapper i:hover {
+  cursor: pointer;
+  color: #FF2A19;
+  transform: rotate(180deg) scale(1.1);
+}
+html #key-code-wrapper .key-codes .shortcut-div,
+body #key-code-wrapper .key-codes .shortcut-div {
+  width: 100%;
+  height: 90%;
+  overflow: auto;
+}
+html #key-code-wrapper .key-codes .shortcut-div > div,
+body #key-code-wrapper .key-codes .shortcut-div > div {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+html #key-code-wrapper .key-codes .shortcut-div > div > div,
+body #key-code-wrapper .key-codes .shortcut-div > div > div {
+  display: inline-block;
+}
+html #key-code-wrapper .key-codes .shortcut-div > div > div .key,
+body #key-code-wrapper .key-codes .shortcut-div > div > div .key {
+  background-color: #444;
+  color: #fff;
+  padding: 2.5px 5px;
+  border-radius: 3px;
   font-family: "Ubuntu Mono", monospace;
 }
-html .debug span, body .debug span {
-  font-family: inherit;
+html #key-code-wrapper .key-codes .shortcut-div > div:nth-child(even),
+body #key-code-wrapper .key-codes .shortcut-div > div:nth-child(even) {
+  background-color: #f6f6f6;
 }
-html .tools, body .tools {
-  display: inline-block;
-  padding: 15px;
+html .side-bar,
+body .side-bar {
   position: fixed;
   bottom: 15px;
-  left: 15px;
   right: 15px;
   background-color: rgba(255, 255, 255, 0.95);
   border: 2.5px solid #f2f2f2;
-  border-radius: 1.5px;
+  max-width: 175px;
+}
+html .side-bar .debug,
+body .side-bar .debug {
+  display: block;
+  padding: 15px;
   font-family: "Ubuntu Mono", monospace;
+  border-bottom: 2px solid #f2f2f2;
 }
-html .tools > div, body .tools > div {
-  width: 100%;
+html .side-bar .debug span,
+body .side-bar .debug span {
+  font-family: inherit;
+}
+html .side-bar .tools,
+body .side-bar .tools {
   display: flex;
-  justify-content: space-around;
+  padding: 15px;
+  font-family: "Ubuntu Mono", monospace;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
-html .tools > div div, body .tools > div div {
+html .side-bar .tools div,
+body .side-bar .tools div {
   display: inline-block;
-  font-size: 2.3em;
-  transition: 0.3s ease;
+  transition: 0.25s ease;
   color: #000;
+  font-size: 2em;
+  margin: 5px;
+  text-align: center;
+  vertical-align: middle;
 }
-html .tools > div div:hover, body .tools > div div:hover {
+html .side-bar .tools div:hover,
+body .side-bar .tools div:hover {
   cursor: pointer;
-  transform: scale(1.2);
+  transform: scale(1.2) rotate(7.5deg);
   opacity: 0.7;
 }
-html .tools > div div.active-tool, body .tools > div div.active-tool {
+html .side-bar .tools div.active-tool,
+body .side-bar .tools div.active-tool {
   color: #FF3C98;
+}
+html .side-bar .floor-tools,
+body .side-bar .floor-tools {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  box-sizing: border-box;
+  width: 100%;
+  border-top: 2px solid #f2f2f2;
+}
+html .side-bar .floor-tools div:not(#floor-out),
+body .side-bar .floor-tools div:not(#floor-out) {
+  display: inline-block;
+  font-size: 1.6em;
+  transition: 0.3s ease;
+}
+html .side-bar .floor-tools div:not(#floor-out):hover,
+body .side-bar .floor-tools div:not(#floor-out):hover {
+  cursor: pointer;
+  opacity: 0.7;
+  transform: scale(1.15);
+}
+html .side-bar .floor-tools div:not(#floor-out).disabled,
+body .side-bar .floor-tools div:not(#floor-out).disabled {
+  opacity: 0.4;
+}
+html .side-bar .floor-tools div:not(#floor-out).disabled:hover,
+body .side-bar .floor-tools div:not(#floor-out).disabled:hover {
+  cursor: default;
+  opacity: 0.4;
+  transform: scale(1);
+}
+html .side-bar .floor-tools #floor-out,
+body .side-bar .floor-tools #floor-out {
+  display: inline-block;
+  font-size: 1.6em;
+  font-family: "Times New Roman", serif;
+}
+
+@media only screen and (max-width: 600px) {
+  .key-code-wrapper #key-codes {
+    width: 90% !important;
+    height: 90% !important;
+  }
 }
