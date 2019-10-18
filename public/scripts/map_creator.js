@@ -493,7 +493,7 @@ window.onload = () => {
 
         on_zoom: e => {
             e.preventDefault();
-            zoom(e.deltaY * 0.01, e.clientX - cab.left, e.clientY - cab.top);
+            zoom(e.deltaY < 0 ? -0.05 : 0.05, e.clientX - cab.left, e.clientY - cab.top);
         },
         on_mousedown: e => {
             gen_ev.on_mousedown(e, mouse_ev);
