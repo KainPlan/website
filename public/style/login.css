@@ -3,38 +3,67 @@ html, body {
   margin: 0px;
   padding: 0px;
 }
+html body, body body {
+  background-image: url(/media/geometric-4076402.png);
+  background-size: auto;
+}
 html ::placeholder, body ::placeholder {
-  color: gray;
+  color: #cecece;
+  font-size: 15px;
   opacity: 1;
 }
 
 .login {
-  border: 1px solid white;
-  width: 25%;
-  margin-left: 37.5%;
+  width: 20%;
+  margin-left: 40%;
   margin-top: 12.5%;
-  border-radius: 15px;
+  border-radius: 50px 5px 50px 5px;
   text-align: center;
   padding: 30px;
   height: 450px;
-  background-color: #1A1B3B;
+  background-image: linear-gradient(to bottom right, #5601c5, #9250FF);
+  -webkit-box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.75);
 }
-.login span {
+.login div {
   font-size: 50px;
   font-family: "Ubuntu", "sans-serif";
   color: white;
   letter-spacing: 5px;
+  margin-bottom: 50px;
 }
 .login input {
   border: none;
+  color: #cecece;
   background-color: #ffffff00;
   display: block;
-  font-size: 27.5px;
-  border-bottom: 1px solid #cecece;
-  margin: 0 auto;
+  font-size: 20px;
+  border-bottom: 1px solid #b3b3b3;
+  margin: 15px auto;
   padding: 5px 2px;
+  padding-bottom: 1px;
+  transition-duration: 0.2s;
 }
 .login input:focus {
   outline: none;
-  border-bottom: 1px solid #000;
+  border-bottom: 1px solid #3b3b3b;
+}
+.login button {
+  margin-top: 20px;
+  background: none;
+  border: 1px solid white;
+  padding: 6px 24px;
+  border-radius: 3px;
+  color: white;
+  font-size: 20px;
+  mix-blend-mode: color-dodge;
+  transition-duration: 0.2s;
+}
+.login button:focus {
+  outline: none;
+}
+.login button:hover {
+  background-color: white;
+  color: black;
+  mix-blend-mode: screen;
+  cursor: pointer;
 }
