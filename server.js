@@ -29,9 +29,13 @@ app.use(express.json());
 app.use(cookieParser());
 app.use('/', express.static('public/'));
 
-app.get('/api/get-map', (req, res) => {
+app.get('/api/map/:version?', (req, res) => {
+    let mconf = require('./res/maps/conf.json');
+    if (!req.params.version) {
+        req.params.version = mconf.current_version;
+    }
     res.setHeader('Content-Type', 'application/json');
-    res.sendFile(path.join(__dirname, 'res/data/map.json'));
+    res.sendFile(path.join(__dirname, path.normalize(`res/maps/${req.params.version}.json`).replace(/^(\.\.(\/|\\|$))+/, '')));
 });
 
 app.post('/api/login', (req, res) => {
