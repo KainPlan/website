@@ -29,52 +29,57 @@ app.use(express.json());
 app.use(cookieParser());
 app.use('/', express.static('public/'));
 
+app.get('/api/map/', (req, res) => {
+    res.send('asdf');
+});
+
 app.get('/api/map/:version?', (req, res) => {
-    let mconf = require('./res/maps/conf.json');
-    if (!req.params.version) {
-        req.params.version = mconf.current_version;
-    }
-    res.setHeader('Content-Type', 'application/json');
-    res.sendFile(path.join(__dirname, path.normalize(`res/maps/${req.params.version}.json`).replace(/^(\.\.(\/|\\|$))+/, '')));
+    sess.verify_request(req, res, err => {
+        if (err) {
+            if (err.message !== 'error 500') res.redirect('/');
+        } else {
+            let mconf = require('./res/maps/conf.json');
+            if (!req.params.version) {
+                req.params.version = mconf.current_version;
+            }
+            res.setHeader('Content-Type', 'application/json');
+            res.sendFile(path.join(__dirname, path.normalize(`res/maps/${req.params.version}.json`).replace(/^(\.\.(\/|\\|$))+/, '')));
+        }
+    });
 });
 
 app.post('/api/login', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
-    if (!req.body.uname || !req.body.pwd || req.body.uname.length === 0 || req.body.pwd.length === 0) {
-        res.status(400);
-        res.send('{"msg": "No username / password!"}');
-    } else {
-        db.get_user(req.body.uname, (err, user) => {
-            if (err) {
-                logger.error({
-                    message: err,
-                    code: 500,
-                });
-                res.status(500);
-                res.send('{"msg": "Internal server error!"}');
-            } else if (!user) {
+    sess.verify_request(req, res, err => {
+        if (!err) {
+            res.send('{"msg": "Already logged in!"}');
+        } else {
+            if (!req.body.uname || !req.body.pwd || req.body.uname.length === 0 || req.body.pwd.length === 0) {
                 res.status(400);
-                res.send('{"msg": "User doesn\'t exist!"}');
+                res.send('{"msg": "No username / password!"}');
             } else {
-                bcrypt.compare(req.body.pwd, user.pwd, (err, same) => {
+                db.get_user(req.body.uname, (err, user) => {
                     if (err) {
                         logger.error({
                             message: err,
                             code: 500,
                         });
-                        res.sendStatus(500);
+                        res.status(500);
                         res.send('{"msg": "Internal server error!"}');
+                    } else if (!user) {
+                        res.status(400);
+                        res.send('{"msg": "User doesn\'t exist!"}');
                     } else {
-                        if (same) {
-                            sess.get_w_uname(req.connection.remoteAddress, user.uname, (err, s) => {
-                                if (err) {
-                                    logger.error({
-                                        message: err,
-                                        code: 500,
-                                    });
-                                    res.status(500);
-                                    res.send('{"msg": "Internal server error!"}');
-                                } else if (!s) {
+                        bcrypt.compare(req.body.pwd, user.pwd, (err, same) => {
+                            if (err) {
+                                logger.error({
+                                    message: err,
+                                    code: 500,
+                                });
+                                res.sendStatus(500);
+                                res.send('{"msg": "Internal server error!"}');
+                            } else {
+                                if (same) {
                                     sess.new(req.connection.remoteAddress, user.uname, (err, s) => {
                                         if (err) {
                                             logger.error({
@@ -84,25 +89,21 @@ app.post('/api/login', (req, res) => {
                                             res.status(500);
                                             res.send('{"msg": "Internal server error!"}');
                                         } else {
-                                            res.cookie('token', s.get_token());
-                                            res.send('{"msg": "Welcome back!"}');
+                                            res.cookie('token', s.token);
+                                            res.send('{"success": true, "msg": "Welcome back!"}');
                                         }
-                                    });     
+                                    });    
                                 } else {
-                                    sess.use(req.connection.remoteAddress, s.get_token());
-                                    res.cookie('token', s.get_token());
-                                    res.send('{"msg": "Welcome back!"}');
+                                    res.status(400);
+                                    res.send('{"msg": "Wrong password!"}');
                                 }
-                            });
-                        } else {
-                            res.status(400);
-                            res.send('{"msg": "Wrong password!"}');
-                        }
+                            }
+                        });
                     }
                 });
             }
-        });
-    }
+        }
+    });
 });
 
 app.use('/', (req, res, next) => {

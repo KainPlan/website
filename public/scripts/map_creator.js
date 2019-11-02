@@ -700,13 +700,25 @@ window.onload = () => {
                     }
                 }
                 break;
-            case '+':
-                e.preventDefault();
-                ftools.up.click();
+                case '+':
+                    e.preventDefault();
+                    ftools.up.click();
                 break;
-            case '-':
-                e.preventDefault();
-                ftools.down.click();
+                case '-':
+                    e.preventDefault();
+                    ftools.down.click();
+                break;
+                case 's':
+                    e.preventDefault();
+                    window.alert('It\'s-a me!');
+                break;
+                case 'S':
+                    e.preventDefault();
+                    window.alert('oh yeah! it\'s all coming together now!');
+                break;
+                case 'o':
+                    e.preventDefault();
+                    window.alert('My name Jeff!');
                 break;
             }
         } else if (!e.ctrlKey && !e.altKey) {
