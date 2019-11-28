@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta charset="utf-8" />
+    <title>map-creator</title>
+
+    <link rel="stylesheet" type="text/css" href="/style/map-creator.css" />
+    <script defer src="https://kit.fontawesome.com/eeafe44cad.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="canvas-wrapper">
+        <canvas id="main-canvas"></canvas>
+    </div>
+
+    <div id="node-info">
+        <div id="node-info-title" contenteditable="true" spellcheck="false">Title</div>
+        <div id="node-info-desc" contenteditable="true" spellcheck="false">Description</div>
+    </div>
+
+    <div id="stairs-info">
+        <div>
+            <label for="stairs-info-height">Height</label>
+            <input id="stairs-info-height" type="number" placeholder="Height ... " />
+        </div>
+    </div>
+
+    <div id="key-code-wrapper">
+        <div class="key-codes">
+            <div class="close-wrapper">
+                <h3>Keyboard Shortcuts</h3>
+                <i id="close-key-codes" class="far fa-times-circle" title="Close"></i>
+            </div>
+            <div class="shortcut-div">
+                <div>
+                    <div>
+                        <span class="key">d</span> or <span class="key">0</span>
+                    </div>
+                    <div>
+                        Select mouse tool
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <span class="key">m</span> or <span class="key">1</span>
+                    </div>
+                    <div>
+                        Select move tool
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <span class="key">e</span> or <span class="key">2</span>
+                    </div>
+                    <div>
+                        Select endpoint tool
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <span class="key">n</span> or <span class="key">3</span>
+                    </div>
+                    <div>
+                        Select node tool
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <span class="key">c</span> or <span class="key">4</span>
+                    </div>
+                    <div>
+                        Select connection tool
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <span class="key">r</span> or <span class="key">5</span>
+                    </div>
+                    <div>
+                        Select remove tool
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <span class="key">s</span> or <span class="key">6</span>
+                    </div>
+                    <div>
+                        Select staircase tool
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <span class="key">b</span> or <span class="key">7</span>
+                    </div>
+                    <div>
+                        Select BLE beacon tool
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <span class="key">Ctrl</span> + <span class="key">+</span>
+                    </div>
+                    <div>
+                        Move to higher floor
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <span class="key">Ctrl</span> + <span class="key">-</span>
+                    </div>
+                    <div>
+                        Move to lower floor
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <span class="key">Ctrl</span> + <span class="key">Shift</span> + <span class="key">?</span>
+                    </div>
+                    <div>
+                        Displays all possible shortcuts
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="side-bar">
+        <div class="debug">
+            Scale: <span id="scale-out">1 (100%)</span><br />
+        </div>
+
+        <div class="tools">
+            <div id="pan-tool" class="active-tool" title="Pan (d)">
+                <i class="fas fa-mouse-pointer"></i>
+            </div>
+            <div id="move-tool" title="Move (m)">
+                <i class="fas fa-arrows-alt"></i>
+            </div>
+            <div id="goal-tool" title="Endpoint (e)">
+                <i class="fas fa-monument"></i>
+            </div>
+            <div id="node-tool" title="Add node (n)">
+                <i class="fas fa-circle"></i>
+            </div>
+            <div id="conn-tool" title="Add connection (c)">
+                <i class="fas fa-long-arrow-alt-right"></i>
+            </div>
+            <div id="del-tool" title="Delete (r)">
+                <i class="fas fa-cut"></i>
+            </div>
+            <div id="flr-tool" title="Add staircase (s)">
+                <i class="fas fa-hiking"></i>
+            </div>
+            <div id="ble-tool" title="Add BLE beacon (b)">
+                <i class="fas fa-broadcast-tower"></i>
+            </div>
+        </div>
+
+        <div class="floor-tools">
+            <div id="floor-up" title="Floor above (Ctrl + +)">
+                <i class="fas fa-chevron-circle-up"></i>
+            </div>
+            <div id="floor-out" title="Current floor">
+                0
+            </div>
+            <div id="floor-down" class="disabled" title="Floor below (Ctrl + -)">
+                <i class="fas fa-chevron-circle-down"></i>
+            </div>
+        </div>
+    </div>
+
+    <script src="/scripts/Edge.js"></script>
+    <script src="/scripts/Node.js"></script>
+    <script src="/scripts/EndNode.js"></script>
+    <script src="/scripts/StairsNode.js"></script>
+    <script src="/scripts/BeaconNode.js"></script>
+    <script src="/scripts/map_creator.js"></script>
+</body>
+
+</html>
