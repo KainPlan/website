@@ -492,8 +492,10 @@ window.onload = () => {
         },
 
         on_zoom: e => {
-            e.preventDefault();
-            zoom(e.deltaY < 0 ? -0.05 : 0.05, e.clientX - cab.left, e.clientY - cab.top);
+            if (!(conf.scale === conf.max_scale && conf.deltaY < 0)) {
+                e.preventDefault();
+                zoom(e.deltaY < 0 ? -0.05 : 0.05, e.clientX - cab.left, e.clientY - cab.top);
+            }
         },
         on_mousedown: e => {
             gen_ev.on_mousedown(e, mouse_ev);
@@ -600,7 +602,7 @@ window.onload = () => {
                     dy = Math.abs(y0 - y1),
                     curr_diff = Math.max(dx, dy);
 
-                if (touch_ev.prev_diff >= 0) {
+                if (touch_ev.prev_diff >= 0 && !(conf.scale === conf.max_scale && conf.deltaY < 0)) {
                     let comp_diff = touch_ev.prev_diff - curr_diff;
                     zoom(comp_diff * 0.02,
                         Math.min(x0, x1) - cab.left + dx / 2,
@@ -698,13 +700,25 @@ window.onload = () => {
                     }
                 }
                 break;
-            case '+':
-                e.preventDefault();
-                ftools.up.click();
+                case '+':
+                    e.preventDefault();
+                    ftools.up.click();
                 break;
-            case '-':
-                e.preventDefault();
-                ftools.down.click();
+                case '-':
+                    e.preventDefault();
+                    ftools.down.click();
+                break;
+                case 's':
+                    e.preventDefault();
+                    window.alert('It\'s-a me!');
+                break;
+                case 'S':
+                    e.preventDefault();
+                    window.alert('oh yeah! it\'s all coming together now!');
+                break;
+                case 'o':
+                    e.preventDefault();
+                    window.alert('My name Jeff!');
                 break;
             }
         } else if (!e.ctrlKey && !e.altKey) {
