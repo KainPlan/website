@@ -1,71 +1,169 @@
-@import url("https://fonts.googleapis.com/css?family=Ubuntu&display=swap");
-@import url("https://fonts.googleapis.com/css?family=Ubuntu+Mono&display=swap");
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+
 html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  font-family: "Ubuntu", sans-serif;
+    padding: 0;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
 }
-html .nav, body .nav {
-  position: fixed;
-  top: 15px;
-  left: 15px;
-  border: 1px solid #cecece;
-  border-radius: 5px;
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #fff;
+    z-index: 2;
+    display: flex;
+    width: 100%;
+    height: 5em;
+    box-sizing: border-box;
+    padding: 5px 25px;
+    align-items: center;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
+    box-shadow: 0px 2px 4px #cecece;
+    transition: .2s ease;
 }
-html .nav .input-div, body .nav .input-div {
-  width: 100%;
-  box-sizing: border-box;
-  display: flex;
-  background-color: #fff;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 7.5px;
-  border-radius: 5px;
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Open Sans';
 }
-html .nav .input-div *, body .nav .input-div * {
-  display: inline-block;
+
+.lets-go-div {
+    display: inline-block;
+    min-width: 110px;
+    background-size: 200% 100%;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0,0,0,0) 50%, #622dff 50%, #622dff 100%);
+    background-position: 0 0;
+    transition: .15s ease;
+    padding: 5px;
+    border-radius: 3px;
+    box-sizing: border-box;
 }
-html .nav input, body .nav input {
-  border: none;
-  padding: 7.5px 10px;
-  font-family: "Ubuntu", sans-serif;
-  font-size: 1em;
-  margin: 0;
-  box-sizing: border-box;
+
+.lets-go-div i {
+    margin-left: 5px;
 }
-html .nav input:first, body .nav input:first {
-  border-bottom: 1px solid #cecece;
-  border-radius: 5px 5px 0px 0px;
+
+@media only screen and (max-width: 600px) {        
+    .top-logo {
+        width: 30% !important;
+    }
 }
-html .nav input:last, body .nav input:last {
-  border-radius: 0px 0px 5px 5px;
+
+.lets-go-div:hover {
+    cursor: pointer;
+    background-position: 100% 0;
+    color: #fff;
+    transform: scale(1.1);
 }
-html .nav input:focus, body .nav input:focus {
-  outline: none;
+
+.lets-go-div a {
+    text-decoration: none;
+    color: inherit;
 }
-html .nav input:focus + i, body .nav input:focus + i {
-  color: blue;
+
+.lets-go-div:focus {
+    outline: none;
 }
-html .canvas-wrapper, body .canvas-wrapper {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+
+.top-main {
+    position: relative;
 }
-html .debug, body .debug {
-  display: inline-block;
-  padding: 15px;
-  position: fixed;
-  bottom: 15px;
-  left: 15px;
-  background-color: rgba(255, 255, 255, 0.5);
-  border: 2.5px solid #f2f2f2;
-  border-radius: 4px;
-  font-family: "Ubuntu Mono", monospace;
+
+.top-logo {
+    width: 10em;
+    height: auto;
+    z-index: 1;
 }
-html .debug span, body .debug span {
-  font-family: inherit;
+
+.top-background-vid {
+    position: absolute;
+    left: 0; right: 0;
+    width: 100%;
+    z-index: 0;
+    filter: blur(2.5px);
+}
+
+.top-foreground {
+    display: flex;
+    justify-content: center;
+    z-index: 1;
+    width: 100%;
+    background-color: rgba(255,255,255,.5);
+    box-sizing: border-box;
+    padding: 1.6em;
+}
+
+.top-main-inner {
+    display: flex;
+    position: relative;
+    overflow: hidden;
+}
+
+#scroll-top-main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 50%;
+    font-size: 2em;
+    width: 1.5em;
+    height: 1.5em;
+    color: #222;
+    transition: .3s ease;
+}
+
+.scroll-down-container {
+    width: 100%;
+    height: 3em;
+    position: absolute;
+    bottom: -1.5em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#scroll-top-main:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+#scroll-top-main:focus {
+    outline: none;
+}
+
+q {
+    font-family: 'Open Sans', monospace;
+}
+
+.quote-div {
+    margin: 2em 0;
+    padding: 0 2em;
+    text-align: center;
+}
+
+.quote-div q {
+    font-size: 1.6em;
+    display: block;
+}
+
+q::before {
+    content: "";
+}
+
+q::after {
+    content: "";
+}
+
+.quote-div span {
+    display: block;
+    font-size: .8em;
+    color: #222;
+    margin-left: 5px;
+}
+
+article {
+    padding-top: 5em;
 }

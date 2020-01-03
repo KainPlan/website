@@ -1,0 +1,7 @@
+User-Agent: *
+Disallow: /scripts/
+Disallow: /style/
+Disallow: /media/
+Disallow: /map-creator.html
+Disallow: /404.html
+Disallow: /favicon.ico

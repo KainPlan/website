@@ -5,6 +5,10 @@ window.onload = () => {
         cpa = can.parentElement,
         cpb = cpa.getBoundingClientRect();
 
+    mapi.can = can;
+    mapi.cab = cab;
+    mapi.ctx = ctx;
+
     let tools = {
         pan: document.getElementById('pan-tool'),
         move: document.getElementById('move-tool'),
@@ -21,8 +25,7 @@ window.onload = () => {
         down: document.getElementById('floor-down'),
     };
 
-    let scale_out = document.getElementById('scale-out'),
-        floor_out = document.getElementById('floor-out');
+    let floor_out = document.getElementById('floor-out');
 
     let node_info = {
         _: document.getElementById('node-info'),
@@ -40,34 +43,13 @@ window.onload = () => {
         close: document.getElementById('close-key-codes'),
     };
 
-    let conf = {
-        scale: 1,
-        min_scale: 0.2,
-        max_scale: 1,
-        ox: 0,
-        oy: 0,
-        map: {
-            nodes: [],
-            beacons: [],
-            width: 1820,
-            height: 1280,
-            background: {
-                srcs: [
-                    '/media/map_0.jpg',
-                    '/media/map_1.png',
-                ],
-                objs: [],
-            },
-            current_floor: 0,
-        },
-        tools: {
-            mode: 'pan',
-            from: null,
-            last_click: Date.now(),
-            conn_color: 'rgba(227, 27, 11, .5)',
-        },
-        m2px: 5,
-        clock_rate: 10, // [clock_rate] = Hz
+    let conf = mapi.conf;
+    conf.tools = {
+        mode: 'pan',
+        from: null,
+        last_click: Date.now(),
+        conn_color: 'rgba(227, 27, 11, .5)',
+        unsaved: false,
     };
 
     for (let i = 0; i < conf.map.background.srcs.length; i++) {
@@ -78,50 +60,8 @@ window.onload = () => {
 
     // ---------------------------------------------------------------------------------------------------------------------- //
 
-    function zoom(ds, cx, cy) {
-        let psc = conf.scale;
-
-        conf.scale -= ds;
-        conf.scale = Math.round(conf.scale * 100) / 100;
-
-        if (conf.scale < conf.min_scale)
-            conf.scale = conf.min_scale;
-        else if (conf.scale > conf.max_scale)
-            conf.scale = conf.max_scale;
-
-        scale_out.innerHTML = `${conf.scale} (${Math.round(conf.scale * 100)}%)`;
-        pan(
-            ((cx - conf.ox) / psc) * conf.scale + conf.ox - cx,
-            ((cy - conf.oy) / psc) * conf.scale + conf.oy - cy
-        );
-        refresh();
-    }
-
-    function pan(dx, dy) {
-        let nox = conf.ox - dx,
-            noy = conf.oy - dy;
-
-        if (nox > 0) {
-            nox = 0;
-        } else if (nox < Math.min(-conf.map.width * conf.m2px * conf.scale + can.width, 0)) {
-            nox = Math.min(-conf.map.width * conf.m2px * conf.scale + can.width, 0);
-        }
-
-        if (noy > 0) {
-            noy = 0;
-        } else if (noy < Math.min(-conf.map.height * conf.m2px * conf.scale + can.height, 0)) {
-            noy = Math.min(-conf.map.height * conf.m2px * conf.scale + can.height, 0);
-        }
-
-        dx = nox - conf.ox;
-        dy = noy - conf.oy;
-
-        ctx.translate(dx, dy);
-
-        conf.ox = nox;
-        conf.oy = noy;
-
-        refresh();
+    function format_date(d) {
+        return `${d.getHours().toString().padStart(2,0)}:${d.getMinutes().toString().padStart(2,0)} ${d.getDate().toString().padStart(2,0)}.${(d.getMonth()+1).toString().padStart(2,0)}.${d.getFullYear()}`;
     }
 
     function get_node(x, y) {
@@ -154,17 +94,6 @@ window.onload = () => {
         return null;
     }
 
-    function canv_to_map(x, y) {
-        return [
-            (x - conf.ox) / conf.m2px / conf.scale,
-            (y - conf.oy) / conf.m2px / conf.scale
-        ];
-    }
-
-    function map_to_canv(u) {
-        return u * conf.m2px * conf.scale;
-    }
-
     function is_printable_char(e) {
         return (e.key.match(/^[\w\s.]$/) || e.keyCode === 13) && e.keyCode !== 9;
     }
@@ -182,8 +111,8 @@ window.onload = () => {
             hide_stairs_info();
 
             node_info._.style.display = 'inline-block';
-            node_info._.style.left = map_to_canv(n.x) + conf.ox + cab.left + "px";
-            node_info._.style.top = map_to_canv(n.y) + conf.oy + cab.top + "px";
+            node_info._.style.left = mapi.map_to_canv(n.x) + conf.ox + cab.left + "px";
+            node_info._.style.top = mapi.map_to_canv(n.y) + conf.oy + cab.top + "px";
 
             check_node_info_position();
 
@@ -244,11 +173,11 @@ window.onload = () => {
             hide_node_info();
 
             stairs_info._.style.display = 'inline-block';
-            stairs_info._.style.left = map_to_canv(n.x) + conf.ox + cab.left + "px";
-            stairs_info._.style.top = map_to_canv(n.y) + conf.oy + cab.top + "px";
+            stairs_info._.style.left = mapi.map_to_canv(n.x) + conf.ox + cab.left + "px";
+            stairs_info._.style.top = mapi.map_to_canv(n.y) + conf.oy + cab.top + "px";
 
             check_stairs_info_position();
-            stairs_info.height = n.height || '';
+            stairs_info.height.value = n.height || '';
 
             stairs_info.height.onchange = () => {
                 n.stairs.length = +stairs_info.height.value;
@@ -314,11 +243,10 @@ window.onload = () => {
         on_mousedown: (e, trgt) => {
             switch (conf.tools.mode) {
                 case 'pan': {
-                    let n = get_node(...canv_to_map(e.clientX - cab.left, e.clientY - cab.top));
+                    let n = get_node(...mapi.canv_to_map(e.clientX - cab.left, e.clientY - cab.top));
                     if (n) {
                         if (Date.now() - conf.tools.last_click < 50)
                             return;
-                        console.log(n);
                         disp_node_info(n);
                         disp_stairs_info(n);
                     } else {
@@ -329,7 +257,7 @@ window.onload = () => {
                 }
                 break;
             case 'move': {
-                let [x, y] = canv_to_map(e.clientX - cab.left, e.clientY - cab.top),
+                let [x, y] = mapi.canv_to_map(e.clientX - cab.left, e.clientY - cab.top),
                     n = get_node(x, y) || get_beacon(x, y);
                 if (n) {
                     trgt.mv_node = n;
@@ -337,24 +265,25 @@ window.onload = () => {
             }
             break;
             case 'node': {
-                if (get_node(...canv_to_map(e.clientX - cab.left, e.clientY - cab.top)) ||
+                if (get_node(...mapi.canv_to_map(e.clientX - cab.left, e.clientY - cab.top)) ||
                     Date.now() - conf.tools.last_click < 50)
                     return;
                 conf.map.nodes[conf.map.current_floor].push(new Node(
-                    ...canv_to_map(e.clientX - cab.left, e.clientY - cab.top),
+                    ...mapi.canv_to_map(e.clientX - cab.left, e.clientY - cab.top),
                     conf.map.current_floor
                 ));
+                conf.tools.unsaved = true;
                 refresh();
             }
             break;
             case 'goal': {
-                if (get_node(...canv_to_map(e.clientX - cab.left, e.clientY - cab.top)) ||
+                if (get_node(...mapi.canv_to_map(e.clientX - cab.left, e.clientY - cab.top)) ||
                     Date.now() - conf.tools.last_click < 50)
                     return;
                 hide_node_info();
 
                 let en = new EndNode(
-                    ...canv_to_map(e.clientX - cab.left, e.clientY - cab.top),
+                    ...mapi.canv_to_map(e.clientX - cab.left, e.clientY - cab.top),
                     conf.map.current_floor,
                     'Title',
                     'Description',
@@ -362,11 +291,12 @@ window.onload = () => {
 
                 conf.map.nodes[conf.map.current_floor].push(en);
                 disp_node_info(en);
+                conf.tools.unsaved = true;
                 refresh();
             }
             break;
             case 'conn': {
-                let node = get_node(...canv_to_map(e.clientX - cab.left, e.clientY - cab.top));
+                let node = get_node(...mapi.canv_to_map(e.clientX - cab.left, e.clientY - cab.top));
                 if (Date.now() - conf.tools.last_click < 50)
                     return;
                 if (node && conf.tools.from && node !== conf.tools.from) {
@@ -384,6 +314,7 @@ window.onload = () => {
                         node.add_con(conf.tools.from);
                         conf.tools.from = null;
                     }
+                    conf.tools.unsaved = true;
                 } else if (node) {
                     conf.tools.from = node;
                 }
@@ -391,7 +322,7 @@ window.onload = () => {
             }
             break;
             case 'del': {
-                let node = get_node(...canv_to_map(e.clientX - cab.left, e.clientY - cab.top));
+                let node = get_node(...mapi.canv_to_map(e.clientX - cab.left, e.clientY - cab.top));
 
                 if (node) {
                     if (node instanceof StairsNode) {
@@ -424,18 +355,19 @@ window.onload = () => {
                             break;
                         }
                     }
+                    conf.tools.unsaved = true;
                 }
                 refresh();
             }
             break;
             case 'flr': {
-                if (get_node(...canv_to_map(e.clientX - cab.left, e.clientY - cab.top)) 
+                if (get_node(...mapi.canv_to_map(e.clientX - cab.left, e.clientY - cab.top)) 
                     || Date.now() - conf.tools.last_click < 50
                     || conf.map.current_floor === conf.map.nodes.length-1)
                     return;
 
                 let bsn = new StairsNode(
-                    ...canv_to_map(e.clientX - cab.left, e.clientY - cab.top), 
+                    ...mapi.canv_to_map(e.clientX - cab.left, e.clientY - cab.top), 
                     conf.map.current_floor
                 );
                 let tsn = new StairsNode(bsn.x, bsn.y, conf.map.current_floor+1, bsn);
@@ -445,18 +377,20 @@ window.onload = () => {
                 conf.map.nodes[conf.map.current_floor+1].push(tsn);
 
                 disp_stairs_info(bsn);
+                conf.tools.unsaved = true;
                 refresh();
             }
             break;
             case 'ble': {
-                if (get_beacon(...canv_to_map(e.clientX - cab.left, e.clientY - cab.top)) 
+                if (get_beacon(...mapi.canv_to_map(e.clientX - cab.left, e.clientY - cab.top)) 
                     || Date.now() - conf.tools.last_click < 50)
                     return;
 
                 conf.map.beacons[conf.map.current_floor].push(new BeaconNode(
-                    ...canv_to_map(e.clientX - cab.left, e.clientY - cab.top),
+                    ...mapi.canv_to_map(e.clientX - cab.left, e.clientY - cab.top),
                     conf.map.current_floor
                 ));
+                conf.tools.unsaved = true;
                 refresh();
             }
             break;
@@ -494,7 +428,7 @@ window.onload = () => {
         on_zoom: e => {
             if (!(conf.scale === conf.max_scale && conf.deltaY < 0)) {
                 e.preventDefault();
-                zoom(e.deltaY < 0 ? -0.05 : 0.05, e.clientX - cab.left, e.clientY - cab.top);
+                mapi.zoom(e.deltaY < 0 ? -0.05 : 0.05, e.clientX - cab.left, e.clientY - cab.top);
             }
         },
         on_mousedown: e => {
@@ -515,43 +449,39 @@ window.onload = () => {
                 if (mouse_ev.prev_x >= 0) {
                     let mov_x = mouse_ev.prev_x - c_x,
                         mov_y = mouse_ev.prev_y - c_y;
-                    pan(mov_x, mov_y);
+                    mapi.pan(mov_x, mov_y);
                 }
 
                 mouse_ev.prev_x = c_x;
                 mouse_ev.prev_y = c_y;
             } else if (mouse_ev.mv_node) {
-                [mouse_ev.mv_node.x, mouse_ev.mv_node.y] = canv_to_map(e.clientX - cab.left, e.clientY - cab.top);
+                [mouse_ev.mv_node.x, mouse_ev.mv_node.y] = mapi.canv_to_map(e.clientX - cab.left, e.clientY - cab.top);
+                mouse_ev.mv_node.update_id();
                 if (mouse_ev.mv_node instanceof StairsNode) {
                     [mouse_ev.mv_node.stairs.to.x, mouse_ev.mv_node.stairs.to.y] = 
-                        canv_to_map(e.clientX - cab.left, e.clientY - cab.top);
+                        mapi.canv_to_map(e.clientX - cab.left, e.clientY - cab.top);
+                    mouse_ev.mv_node.stairs.to.update_id();
                 }
+                conf.tools.unsaved = true;
                 refresh();
             } else if (conf.tools.from) {
                 refresh();
                 let prev_style = ctx.strokeStyle,
                     prev_weight = ctx.lineWidth;
-                ctx.moveTo(map_to_canv(conf.tools.from.x), map_to_canv(conf.tools.from.y));
+                ctx.moveTo(mapi.map_to_canv(conf.tools.from.x), mapi.map_to_canv(conf.tools.from.y));
                 ctx.lineTo(e.clientX - cab.left - conf.ox, e.clientY - cab.top - conf.oy);
                 ctx.lineWidth = 3;
                 ctx.strokeStyle = conf.tools.conn_color;
                 ctx.stroke();
                 ctx.strokeStyle = prev_style;
                 ctx.lineWidth = prev_weight;
+                conf.tools.unsaved = true;
             }
         },
         on_mouseup: e => {
             mouse_ev.rm_event(e);
         },
     };
-
-    can.onwheel = mouse_ev.on_zoom;
-    can.onmousedown = mouse_ev.on_mousedown;
-    can.onmousemove = mouse_ev.on_mousemove;
-
-    can.onmouseup = mouse_ev.on_mouseup;
-    can.onmouseleave = mouse_ev.on_mouseup;
-    can.onmouseout = mouse_ev.on_mouseup;
 
     let touch_ev = {
         p_list: [],
@@ -604,7 +534,7 @@ window.onload = () => {
 
                 if (touch_ev.prev_diff >= 0 && !(conf.scale === conf.max_scale && conf.deltaY < 0)) {
                     let comp_diff = touch_ev.prev_diff - curr_diff;
-                    zoom(comp_diff * 0.02,
+                    mapi.zoom(comp_diff * 0.02,
                         Math.min(x0, x1) - cab.left + dx / 2,
                         Math.min(y0, y1) - cab.top + dy / 2);
                 }
@@ -617,17 +547,20 @@ window.onload = () => {
                 if (touch_ev.prev_x >= 0) {
                     let mov_x = touch_ev.prev_x - c_x,
                         mov_y = touch_ev.prev_y - c_y;
-                    pan(mov_x, mov_y);
+                    mapi.pan(mov_x, mov_y);
                 }
 
                 touch_ev.prev_x = c_x;
                 touch_ev.prev_y = c_y;
             } else if (touch_ev.mv_node) {
-                [touch_ev.mv_node.x, touch_ev.mv_node.y] = canv_to_map(e.clientX - cab.left, e.clientY - cab.top);
+                [touch_ev.mv_node.x, touch_ev.mv_node.y] = mapi.canv_to_map(e.clientX - cab.left, e.clientY - cab.top);
+                touch_ev.mv_node.update_id();
                 if (touch_ev.mv_node instanceof StairsNode) {
                     [touch_ev.mv_node.stairs.to.x, touch_ev.mv_node.stairs.to.y] = 
-                        canv_to_map(e.clientX - cab.left, e.clientY - cab.top);
+                        mapi.canv_to_map(e.clientX - cab.left, e.clientY - cab.top);
+                    touch_ev.mv_node.stairs.to.update_id();
                 }
+                conf.tools.unsaved = true;
                 refresh();
             }
         },
@@ -635,14 +568,6 @@ window.onload = () => {
             touch_ev.rm_event(e);
         },
     }
-
-    can.onpointerdown = touch_ev.on_pointerdown;
-    can.onpointermove = touch_ev.on_pointermove;
-
-    can.onpointerup = touch_ev.on_pointerup;
-    can.onpointercancel = touch_ev.on_pointerup;
-    can.onpointerout = touch_ev.on_pointerup;
-    can.onpointerleave = touch_ev.on_pointerup;
 
     function change_mouse_mode(to) {
         conf.tools.mode = to;
@@ -710,15 +635,15 @@ window.onload = () => {
                 break;
                 case 's':
                     e.preventDefault();
-                    window.alert('It\'s-a me!');
+                    save_map();
                 break;
                 case 'S':
                     e.preventDefault();
-                    window.alert('oh yeah! it\'s all coming together now!');
+                    save_map_as();
                 break;
                 case 'o':
                     e.preventDefault();
-                    window.alert('My name Jeff!');
+                    open_map();
                 break;
             }
         } else if (!e.ctrlKey && !e.altKey) {
@@ -791,10 +716,10 @@ window.onload = () => {
             ctx.beginPath();
             ctx.strokeStyle = n.stroke;
             ctx.fillStyle = n.fill;
-            ctx.ellipse(map_to_canv(n.x),
-                map_to_canv(n.y),
-                map_to_canv(n.radius),
-                map_to_canv(n.radius),
+            ctx.ellipse(mapi.map_to_canv(n.x),
+                mapi.map_to_canv(n.y),
+                mapi.map_to_canv(n.radius),
+                mapi.map_to_canv(n.radius),
                 0, 0, 2 * Math.PI);
             ctx.stroke();
             ctx.fill();
@@ -802,8 +727,8 @@ window.onload = () => {
             n.edges.filter(e => !past_nodes.includes(e.to) && e.to.z === n.z).forEach(e => {
                 ctx.beginPath();
                 ctx.strokeStyle = e.color;
-                ctx.moveTo(map_to_canv(n.x), map_to_canv(n.y));
-                ctx.lineTo(map_to_canv(e.to.x), map_to_canv(e.to.y));
+                ctx.moveTo(mapi.map_to_canv(n.x), mapi.map_to_canv(n.y));
+                ctx.lineTo(mapi.map_to_canv(e.to.x), mapi.map_to_canv(e.to.y));
                 ctx.stroke();
             });
 
@@ -825,10 +750,10 @@ window.onload = () => {
             ctx.beginPath();
             ctx.strokeStyle = b.stroke;
             ctx.fillStyle = b.fill;
-            ctx.ellipse(map_to_canv(b.x),
-                map_to_canv(b.y),
-                map_to_canv(b.radius),
-                map_to_canv(b.radius),
+            ctx.ellipse(mapi.map_to_canv(b.x),
+                mapi.map_to_canv(b.y),
+                mapi.map_to_canv(b.radius),
+                mapi.map_to_canv(b.radius),
                 0, 0, 2 * Math.PI);
             ctx.stroke();
             ctx.fill();
@@ -854,12 +779,236 @@ window.onload = () => {
 
         console.timeEnd('refresh');
     }
+    mapi.refresh = refresh;
 
-    conf.map.background.objs[0].onload = () => {
-        window.onresize();
-    };
+    mapi.gen_ev = gen_ev;
+    mapi.mouse_ev = mouse_ev;
+    mapi.touch_ev = touch_ev;
 
-    for (let [i, src] of conf.map.background.srcs.entries()) {
-        conf.map.background.objs[i].src = src;
+    function show_loading() {
+        document.getElementById('loading-back').style.display = 'flex';
     }
+    
+    function stop_loading() {
+        window.setTimeout(() => {
+            document.getElementById('loading-back').style.display = 'none';
+        }, 150);
+    }
+
+    function update_map_description(name) {
+        document.getElementById('map-name').innerHTML = name;
+        document.getElementById('map-version').innerHTML = conf.map.version;
+    }
+
+    function save_map_as() {
+        document.getElementById('map-saver-back').style.display = 'block';
+        let sv_bt = document.getElementById('map-saver-save');
+        sv_bt.classList.add('disabled');
+        sv_bt.onclick = () => {};
+
+        document.getElementById('close-map-saver').onclick = () => {
+            document.getElementById('map-saver-back').style.display = 'none';
+        };
+
+        fetch('/api/maps')
+        .then(res => res.json())
+        .then(res => {
+            if (!res.success) {
+                document.getElementById('close-map-saver').click();
+            } else {
+                let target = document.getElementById('map-saver-items');
+                target.innerHTML = '';
+                res.maps.forEach(m => {
+                    let s = document.createElement('span');
+                    s.innerHTML = m.name;
+                    s.onclick = () => {
+                        in_name.value = m.name;
+                        fetch(`/api/version/${m.name}`)
+                        .then(res => res.json())
+                        .then(res => {
+                            if (!res.success) {
+                                document.getElementById('close-map-saver').click();
+                            } else {
+                                in_vers.value = res.version.substr(0, res.version.lastIndexOf('.')+1) + (+res.version.split('.')[res.version.split('.').length-1] + 1);
+                                check_inputs();
+                            }
+                        });
+                    };
+                    target.appendChild(s);
+                });
+
+                let mnames = res.maps.map(m => m.name.toLowerCase()),
+                    in_name = document.getElementById('map-saver-name'),
+                    in_vers = document.getElementById('map-saver-version'),
+                    emsg = document.getElementById('map-saver-err-content'),
+                    wmsg = document.getElementById('map-saver-wrn-content');
+
+                let show_err_msg = (msg, trgt) => {
+                        sv_bt.classList.remove('warning');
+                        sv_bt.classList.add('disabled');
+                        trgt.classList.add('illegal');
+                        emsg.parentElement.style.display = 'block';
+                        emsg.innerHTML = msg;    
+                    },
+                    hide_err_msg = () => {
+                        sv_bt.classList.remove('disabled');
+                        in_name.classList.remove('illegal');
+                        in_vers.classList.remove('illegal');
+                        emsg.parentElement.style.display = 'none';    
+                    };
+
+                let show_wrn_msg = (msg, trgt) => {
+                        sv_bt.classList.add('warning');
+                        trgt.classList.add('warning');
+                        wmsg.parentElement.style.display = 'block';
+                        wmsg.innerHTML = msg;
+                    },
+                    hide_wrn_msg = () => {
+                        sv_bt.classList.remove('warning');
+                        in_name.classList.remove('warning');
+                        in_vers.classList.remove('warning');
+                        wmsg.parentElement.style.display = 'none';    
+                    };
+
+                let check_inputs = () => {
+                    sv_bt.onclick = () => {};
+
+                    hide_err_msg();
+                    hide_wrn_msg();
+
+                    if (in_name.value.match(/[^\w\d-]/g)) {
+                        show_err_msg(`Kartenname darf nur aus Buchstaben, Zahlen, '_' und '-' bestehen!`, in_name);
+                        return;
+                    } else if (in_name.value.length > 64) {
+                        show_err_msg(`Kartenname darf aus maximal 64 Zeichen bestehen!`, in_name);
+                        return;
+                    } 
+                    
+                    if (in_vers.value.match(/[^\d.]/g)) {
+                        show_err_msg(`Version darf nur aus Zahlen und Punkten bestehen!`, in_vers);
+                        return;
+                    } else if (in_vers.value.match(/\.\.+/g)) {
+                        show_err_msg(`Version darf nicht zwei aufeinanderfolgende Punkte beinhalten!`, in_vers);
+                        return;
+                    } else if (in_vers.value.match(/(?:^\.|\.$)/g)) {
+                        show_err_msg(`Version darf nicht mit einem Punkt beginnen oder enden!`, in_vers);
+                        return;
+                    }
+
+                    let actually_save = () => {
+                        conf.map.version = in_vers.value;
+                        update_map_description(in_name.value);
+                        localStorage.setItem('map_name', in_name.value);
+                        document.getElementById('close-map-saver').click();
+                        show_loading();
+                        mapi.save(`/api/map/${in_name.value}`, inc_v=false, () => {
+                            stop_loading();
+                        });
+                        conf.tools.unsaved = false;
+                    };
+                    
+                    if (in_name.value.length > 0 && in_vers.value.length > 0) {
+                        if (mnames.includes(in_name.value.toLowerCase())) {
+                            show_wrn_msg(`Kartenname existiert bereits!`, in_name);
+
+                            fetch(`/api/version/${in_name.value}`)
+                            .then(res => res.json())
+                            .then(res => {
+                                if (!res.success) {
+                                    document.getElementById('close-map-saver').click();
+                                } else if (window.compareVersions(res.version, in_vers.value) >= 0) {
+                                    show_err_msg(`Version muss größer als aktuelle Version sein (${res.version})!`, in_vers);
+                                    return;
+                                } else {
+                                    sv_bt.onclick = actually_save;
+                                }
+                            });
+                        } else {
+                            sv_bt.onclick = actually_save;
+                        }
+                    }
+                };
+                    
+                in_name.onkeyup = check_inputs;
+                in_vers.onkeyup = check_inputs;
+            }
+        });
+    }
+    document.getElementById('save-map-as').onclick = () => save_map_as();
+
+    function save_map() {
+        if (!localStorage.getItem('map_name')) {
+            save_map_as();
+        } else {
+            show_loading();
+            mapi.save(`/api/map/${localStorage.getItem('map_name')}`, true, () => {
+                stop_loading();
+            });
+            update_map_description(localStorage.getItem('map_name'));
+            conf.tools.unsaved = false;
+        }
+    }
+    document.getElementById('save-map').onclick = () => save_map();
+
+    function open_map(closeable=true) {
+        document.getElementById('map-opener-back').style.display = 'block';
+        let op_bt = document.getElementById('map-opener-open');
+        op_bt.classList.add('disabled');
+        op_bt.onclick = () => {};
+
+        if (!closeable) {
+            document.getElementById('close-map-opener').style.display = 'none';
+        } else {
+            document.getElementById('close-map-opener').style.display = 'block';
+            document.getElementById('close-map-opener').onclick = () => {
+                document.getElementById('map-opener-back').style.display = 'none';
+            };
+        }
+
+        fetch('/api/maps')
+        .then(res => res.json())
+        .then(res => {
+            if (!res.success) {
+                window.location.assign('/');
+            } else {
+                let target = document.getElementById('map-opener-items');
+                target.innerHTML = '';
+                res.maps.forEach(m => {
+                    let d = document.createElement('div');
+                    d.classList.add('map-opener-item');
+                    d.innerHTML = `<span>${m.name}</span><span>${format_date(new Date(m.timestamp))}</span>`;
+                    d.onclick = () => {
+                        new Array(...document.querySelectorAll('.map-opener-item.selected')).forEach(e => e.classList.remove('selected'));
+                        d.classList.add('selected');
+                        op_bt.classList.remove('disabled');
+                        op_bt.onclick = () => {
+                            show_loading();
+                            mapi.load(`/api/map/${m.name}`, res => {
+                                stop_loading();
+                                if (!res.success) {
+                                    open_map();
+                                } else {
+                                    document.getElementById('map-opener-back').style.display = 'none';
+                                    update_map_description(m.name);
+                                    localStorage.setItem('map_name', m.name);
+                                }
+                            });
+                        };
+                    };
+                    target.appendChild(d);
+                });
+            }
+        });
+    }
+    open_map(closeable=false);
+    document.getElementById('open-map').onclick = () => open_map();
+
+    window.onbeforeunload = e => {
+        if (conf.tools.unsaved) {
+            e.preventDefault();
+            let msg = 'Die Karte könnte ungespeicherte Änderungen aufweisen. Sind Sie sicher, dass sie die Seite verlassen wollen?';
+            (e || window.event).returnValue = msg;
+            return msg;
+        }
+    };
 };

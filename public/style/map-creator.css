@@ -28,6 +28,364 @@ body .canvas-wrapper {
   user-select: none;
   touch-action: none;
 }
+html .nav,
+body .nav {
+  border: 2px solid #f2f2f2;
+  box-shadow: 1px 1px 5px #f2f2f2;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 5px 0;
+  display: flex;
+  justify-content: stretch;
+  align-items: stretch;
+  color: #444;
+  border-radius: 4px;
+  background-color: #fff;
+}
+html .nav a,
+body .nav a {
+  color: inherit;
+  text-decoration: none;
+}
+html .nav .icon,
+body .nav .icon {
+  display: flex;
+  align-items: center;
+  font-size: 1.4em;
+  transition: 0.3s ease;
+}
+html .nav .icon:hover,
+body .nav .icon:hover {
+  cursor: pointer;
+  color: #622dff;
+}
+html .nav > *,
+body .nav > * {
+  display: inline-block;
+  padding: 0 7.5px;
+  border-right: 1.5px solid #f2f2f2;
+}
+html .nav > *:last-child,
+body .nav > *:last-child {
+  border-right: none;
+}
+html .nav .title,
+body .nav .title {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+  flex-grow: 1;
+}
+html .nav .title #map-name,
+body .nav .title #map-name {
+  margin: 0;
+  margin-right: 2.5px;
+  font-size: 1.35em;
+}
+html .nav .title #map-version,
+body .nav .title #map-version {
+  font-size: 0.8em;
+}
+html .dialogue-back,
+body .dialogue-back {
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: none;
+}
+html .dialogue-back .dialogue,
+body .dialogue-back .dialogue {
+  position: relative;
+  background-color: #fff;
+  border: 2px solid #f2f2f2;
+  padding: 25px;
+  width: 60%;
+  margin: 0 auto;
+  margin-top: 25px;
+  box-sizing: border-box;
+}
+html .dialogue-back .dialogue .close-dialogue,
+body .dialogue-back .dialogue .close-dialogue {
+  position: absolute;
+  top: -0.45em;
+  right: -0.45em;
+  background: radial-gradient(#fff, rgba(0, 0, 0, 0));
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.8em;
+  transition: 0.3s ease;
+  color: #222;
+}
+html .dialogue-back .dialogue .close-dialogue:hover,
+body .dialogue-back .dialogue .close-dialogue:hover {
+  cursor: pointer;
+  color: #f22;
+  transform: rotate(180deg);
+}
+html .dialogue-back .dialogue .dialogue-sub-btn,
+body .dialogue-back .dialogue .dialogue-sub-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2.5px 5px;
+  border-radius: 4px;
+  transition: 0.3s ease;
+  background: linear-gradient(to right, #fff 0%, #fff 50%, #622dff 50%, #622dff 100%);
+  background-size: 200% 100%;
+  background-position: 0 0;
+  border: 2px solid #f2f2f2;
+  color: #f2f2f2;
+}
+html .dialogue-back .dialogue .dialogue-sub-btn:not(.disabled),
+body .dialogue-back .dialogue .dialogue-sub-btn:not(.disabled) {
+  border: 2px solid #622dff;
+  color: #622dff;
+}
+html .dialogue-back .dialogue .dialogue-sub-btn:not(.disabled):hover,
+body .dialogue-back .dialogue .dialogue-sub-btn:not(.disabled):hover {
+  cursor: pointer;
+  background-position: 100% 0;
+  color: #fff;
+}
+html #map-opener-back .map-opener h3,
+body #map-opener-back .map-opener h3 {
+  margin: 0;
+}
+html #map-opener-back .map-opener #map-opener-items,
+body #map-opener-back .map-opener #map-opener-items {
+  margin-top: 15px;
+  padding: 0 5px;
+  max-height: 40%;
+  overflow-y: auto;
+}
+html #map-opener-back .map-opener #map-opener-items .map-opener-item,
+body #map-opener-back .map-opener #map-opener-items .map-opener-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 5px;
+  border-left: 1.5px solid #fff;
+  transition: 0.3s ease;
+}
+html #map-opener-back .map-opener #map-opener-items .map-opener-item:not(:nth-child(even)),
+body #map-opener-back .map-opener #map-opener-items .map-opener-item:not(:nth-child(even)) {
+  background-color: #fafafa;
+}
+html #map-opener-back .map-opener #map-opener-items .map-opener-item:hover,
+body #map-opener-back .map-opener #map-opener-items .map-opener-item:hover {
+  cursor: pointer;
+  border-color: #622dff;
+  background-color: #f2f2f2;
+}
+html #map-opener-back .map-opener #map-opener-items .map-opener-item > span,
+body #map-opener-back .map-opener #map-opener-items .map-opener-item > span {
+  display: inline-block;
+  width: 50%;
+  overflow-x: auto;
+}
+html #map-opener-back .map-opener #map-opener-items .map-opener-item > span:last-child,
+body #map-opener-back .map-opener #map-opener-items .map-opener-item > span:last-child {
+  text-align: right;
+}
+html #map-opener-back .map-opener #map-opener-items .map-opener-item.selected,
+body #map-opener-back .map-opener #map-opener-items .map-opener-item.selected {
+  border-color: #622dff;
+  background-color: #f2f2f2;
+}
+html #map-opener-back .map-opener .btn-container,
+body #map-opener-back .map-opener .btn-container {
+  display: flex;
+  justify-content: flex-end;
+  user-select: none;
+  margin-top: 10px;
+}
+html #map-saver-back .map-saver #map-saver-items,
+body #map-saver-back .map-saver #map-saver-items {
+  background-color: #fafafa;
+  padding: 10px;
+  max-height: 45%;
+  overflow-y: auto;
+}
+html #map-saver-back .map-saver #map-saver-items > span,
+body #map-saver-back .map-saver #map-saver-items > span {
+  display: inline-block;
+  margin-right: 10px;
+  border: 1.5px solid #ccc;
+  padding: 2.5px 5px;
+  border-radius: 4px;
+  color: #444;
+  background-color: #fafafa;
+  transition: 0.3s ease;
+}
+html #map-saver-back .map-saver #map-saver-items > span:last-child,
+body #map-saver-back .map-saver #map-saver-items > span:last-child {
+  margin-right: 0;
+}
+html #map-saver-back .map-saver #map-saver-items > span:hover,
+body #map-saver-back .map-saver #map-saver-items > span:hover {
+  cursor: default;
+  background-color: #f6f6f6;
+}
+html #map-saver-back .map-saver .btn-container,
+body #map-saver-back .map-saver .btn-container {
+  display: flex;
+  justify-content: stretch;
+  align-items: stretch;
+  margin-top: 10px;
+}
+html #map-saver-back .map-saver .btn-container .input-group,
+body #map-saver-back .map-saver .btn-container .input-group {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  padding-right: 7.5px;
+}
+html #map-saver-back .map-saver .btn-container .input-group .input-group-inputs,
+body #map-saver-back .map-saver .btn-container .input-group .input-group-inputs {
+  flex-grow: 1;
+  display: flex;
+  justify-content: stretch;
+  align-items: center;
+}
+html #map-saver-back .map-saver .btn-container .input-group .input-group-inputs #map-saver-name, html #map-saver-back .map-saver .btn-container .input-group .input-group-inputs #map-saver-version,
+body #map-saver-back .map-saver .btn-container .input-group .input-group-inputs #map-saver-name,
+body #map-saver-back .map-saver .btn-container .input-group .input-group-inputs #map-saver-version {
+  font-family: "Roboto", sans-serif;
+  font-size: 1.05em;
+  padding: 5px;
+  border: 1.5px solid #f2f2f2;
+  border-radius: 3px;
+  color: #444;
+  min-width: 0;
+}
+html #map-saver-back .map-saver .btn-container .input-group .input-group-inputs #map-saver-name:focus, html #map-saver-back .map-saver .btn-container .input-group .input-group-inputs #map-saver-version:focus,
+body #map-saver-back .map-saver .btn-container .input-group .input-group-inputs #map-saver-name:focus,
+body #map-saver-back .map-saver .btn-container .input-group .input-group-inputs #map-saver-version:focus {
+  outline: none;
+}
+html #map-saver-back .map-saver .btn-container .input-group .input-group-inputs #map-saver-name.illegal, html #map-saver-back .map-saver .btn-container .input-group .input-group-inputs #map-saver-version.illegal,
+body #map-saver-back .map-saver .btn-container .input-group .input-group-inputs #map-saver-name.illegal,
+body #map-saver-back .map-saver .btn-container .input-group .input-group-inputs #map-saver-version.illegal {
+  color: #f66;
+  border-color: #f66;
+}
+html #map-saver-back .map-saver .btn-container .input-group .input-group-inputs #map-saver-name.warning, html #map-saver-back .map-saver .btn-container .input-group .input-group-inputs #map-saver-version.warning,
+body #map-saver-back .map-saver .btn-container .input-group .input-group-inputs #map-saver-name.warning,
+body #map-saver-back .map-saver .btn-container .input-group .input-group-inputs #map-saver-version.warning {
+  color: #fb4;
+  border-color: #fb4;
+}
+html #map-saver-back .map-saver .btn-container .input-group .input-group-inputs #map-saver-name,
+body #map-saver-back .map-saver .btn-container .input-group .input-group-inputs #map-saver-name {
+  flex-grow: 1;
+  margin-right: 5px;
+}
+html #map-saver-back .map-saver .btn-container .input-group .map-saver-err-msg, html #map-saver-back .map-saver .btn-container .input-group .map-saver-wrn-msg,
+body #map-saver-back .map-saver .btn-container .input-group .map-saver-err-msg,
+body #map-saver-back .map-saver .btn-container .input-group .map-saver-wrn-msg {
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+  padding: 5px;
+  font-size: 0.9em;
+  background-color: #fdd;
+  border-radius: 3px;
+  color: #f44;
+  display: none;
+}
+html #map-saver-back .map-saver .btn-container .input-group .map-saver-err-msg i, html #map-saver-back .map-saver .btn-container .input-group .map-saver-wrn-msg i,
+body #map-saver-back .map-saver .btn-container .input-group .map-saver-err-msg i,
+body #map-saver-back .map-saver .btn-container .input-group .map-saver-wrn-msg i {
+  margin-right: 5px;
+}
+html #map-saver-back .map-saver .btn-container .input-group .map-saver-wrn-msg,
+body #map-saver-back .map-saver .btn-container .input-group .map-saver-wrn-msg {
+  background-color: #ffc;
+  color: #fb2;
+}
+html #map-saver-back .map-saver .btn-container #map-saver-save.warning,
+body #map-saver-back .map-saver .btn-container #map-saver-save.warning {
+  background: linear-gradient(to right, #fff 0%, #fff 50%, #fb4 50%, #fb4 100%) !important;
+  background-size: 200% 100% !important;
+  border: 2px solid #fb4 !important;
+  color: #fb4 !important;
+}
+html #map-saver-back .map-saver .btn-container #map-saver-save.warning:hover,
+body #map-saver-back .map-saver .btn-container #map-saver-save.warning:hover {
+  cursor: pointer !important;
+  background-position: 100% 0 !important;
+  color: #fff !important;
+}
+html #loading-back,
+body #loading-back {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.25);
+  z-index: 2;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+html #loading-back #loading,
+body #loading-back #loading {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+@keyframes rect-rotate {
+  0% {
+    transform: rotate(0);
+  }
+  50%, 100% {
+    transform: rotate(180deg);
+  }
+}
+@keyframes fill-rect {
+  0%, 50% {
+    height: 0;
+  }
+  100% {
+    height: inherit;
+  }
+}
+html #loading-back #loading .loading-anim,
+body #loading-back #loading .loading-anim {
+  z-index: 3;
+  color: #fff;
+  height: 48px;
+  width: 48px;
+  position: relative;
+  border: 4px solid;
+  display: inline-block;
+  animation: rect-rotate 1s linear infinite;
+}
+html #loading-back #loading .loading-anim::after,
+body #loading-back #loading .loading-anim::after {
+  content: "";
+  height: 0;
+  width: inherit;
+  display: block;
+  background: rgba(255, 255, 255, 0.5);
+  animation: fill-rect 1s linear infinite;
+}
+html #loading-back #loading span,
+body #loading-back #loading span {
+  margin-top: 15px;
+  color: #fff;
+}
 html #node-info,
 body #node-info {
   display: none;
@@ -192,6 +550,7 @@ body .side-bar {
   background-color: rgba(255, 255, 255, 0.95);
   border: 2.5px solid #f2f2f2;
   max-width: 175px;
+  box-shadow: 1px 1px 5px #f2f2f2;
 }
 html .side-bar .debug,
 body .side-bar .debug {
@@ -271,7 +630,24 @@ body .side-bar .floor-tools #floor-out {
   font-family: "Times New Roman", serif;
 }
 
+@media only screen and (max-width: 1000px) {
+  .map-saver .btn-container {
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .map-saver .btn-container #map-saver-save {
+    margin-top: 15px;
+  }
+}
 @media only screen and (max-width: 600px) {
+  .nav {
+    right: 10px;
+  }
+
+  .dialogue {
+    width: 90% !important;
+  }
+
   .key-code-wrapper #key-codes {
     width: 90% !important;
     height: 90% !important;

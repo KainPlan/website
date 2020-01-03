@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>KainPlan</title>
+
+    <link rel="stylesheet" type="text/css" href="style/map.css"> 
+    <script defer src="https://kit.fontawesome.com/eeafe44cad.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <canvas id="main-canvas"></canvas>
+    <div class="nav-container">
+        <div id="nav-from">
+            <i id="close-nav-from" class="fas fa-times"></i>
+            <div class="labelled-input">
+                <input id="from-in" type="text" autocomplete="none" spellcheck="false" />
+                <label>Wo befinden Sie sich?</label>
+            </div>
+            <i id="pick-from" class="fas fa-map-marker-alt"></i>
+        </div>
+        <div class="nav">      
+            <i id="open-sidebar" class="fas fa-bars"></i> 
+            <div class="labelled-input">
+                <input id="search-in" type="text" autocomplete="none" spellcheck="false" />
+                <label>Was suchen Sie?</label>
+            </div>
+            <i id="search" class="fas fa-search"></i>
+        </div> 
+        <div id="nav-results">
+        </div>
+    </div>
+    <div id="point-container">
+        <div id="point-img"></div>
+        <div class="point-info">
+            <div class="point-head-container">
+                <div>
+                    <h3 id="point-title">Unbekannt</h3>
+                    <p id="point-floor">Erdgeschoss</p>
+                </div>
+                <i id="route" class="fas fa-route" title="Route anzeigen"></i>
+            </div>
+            <p id="point-desc">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+            <i id="close-point-container" class="fas fa-chevron-down"></i>
+        </div>
+    </div>
+    <div class="bottom-controls-container">
+        <div id="point-container-mb">
+            <div class="point-info-mb">
+                <h3 id="point-title-mb">Unbekannt</h3>
+                <p id="point-floor-mb">Erdgeschoss</p>
+            </div>
+            <i id="route-mb" class="fas fa-route"></i>
+        </div>
+        <div id="floors-container">
+            <i></i>
+            <i class="current"></i>
+        </div>
+    </div>
+    <div id="sb-back">
+        <div id="loading">
+            <div class="loading-anim"></div>
+            <span>Lädt ...</span>
+        </div>
+    </div>
+    <div id="sidebar">
+        <i id="close-sidebar" class="fas fa-angle-double-left"></i>
+        <div class="sb-login">
+            <h1 class="sb-title">KainPlan</h1>
+            <div class="sb-login-back">
+                {{#if uname}}
+                <div class="sb-uname">{{uname}}</div>
+                {{else}}
+                <a id="login" href="/login">Anmelden</a>
+                {{/if}}
+            </div>
+        </div>
+        <div class="sb-items">
+            <a class="sb-item" href="/">
+                <i class="fas fa-home"></i>
+                <span>Startseite</span>
+            </a>
+            {{#if is_admin}}
+            <a class="sb-item" href="/map-creator">
+                <i class="fas fa-edit"></i>
+                <span>Map-Creator</span>
+            </a>
+            {{/if}}
+        </div>
+    </div>
+
+    <script src="/scripts/Edge.js"></script>
+    <script src="/scripts/Node.js"></script>
+    <script src="/scripts/EndNode.js"></script>
+    <script src="/scripts/StairsNode.js"></script>
+    <script src="/scripts/BeaconNode.js"></script>
+    <script src="/scripts/mapi.js"></script>
+    <script src="/scripts/map.js"></script>
+</body>
+</html>

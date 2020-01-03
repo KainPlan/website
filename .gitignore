@@ -3,3 +3,4 @@ package-lock.json
 conf.json
 lib/*.json
 *.log
+server.log

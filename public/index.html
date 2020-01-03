@@ -1,24 +1,57 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">   
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>KainPlan</title>
-
-    <link rel="stylesheet" type="text/css" href="/style/index.css"> 
+    
+    <link rel="stylesheet" type="text/css" href="style/index.css" />
     <script defer src="https://kit.fontawesome.com/eeafe44cad.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="nav">       
-        <div class="input-div">
-            <i class="fas fa-map-marker-alt"></i>
-            <input type="text" placeholder="Start" id="start">
-        </div> 
-        <div class="input-div">
-            <i class="fas fa-flag-checkered" ></i>
-            <input type="text" placeholder="Ziel" id="dest">
+    <header>
+        <h1 id="main-title"></h1>
+        <div class="lets-go-div"><a href="/map">Los geht's <i class="fas fa-external-link-alt"></i></a></div>
+    </header>
+    
+    <article>
+        <div class="top-main">
+            <div class="top-main-inner">
+                <video class="top-background-vid" autoplay muted loop>
+                    <source src="media/back_banner_vid.mp4" type="video/mp4" />
+                </video>
+                <div class="top-foreground">
+                    <img class="top-logo" src="media/logo_and_text.png" />
+                </div>
+            </div>
+            <div class="scroll-down-container">
+                <i id="scroll-top-main" class="fas fa-angle-double-down"></i>
+            </div>  
         </div>
-    </div> 
+        <div class="quote-div" id="top-quote">
+            <q>Unsere Schule - kartografiert</q>
+            <p>Moderne Navigationssoftware, die Ihnen hilft, immer den richtigen Pfad durch unser Schulgebäude zu finden.</p>
+        </div>
+        <div class="quote-div">
+            <q>Neue Aspekte der Schule entdecken - mit KainPlan</q>
+        </div>
+        <div class="quote-div">
+            <q>Seitdem wir KainPlan verwenden, haben wir uns nie wieder verlaufen!</q><span>Hänsel und Gretel, 2019</span>
+        </div>
+        <div class="quote-div">
+            <q>Eine UI so minimalistisch - sogar die Schulkatze könnte sie verwenden</q>
+        </div>
+        <div class="quote-div">
+            <q>Verringert die Anzahl benötigter sozialer Interaktionen um das Ziel zu erreichen</q>
+        </div>
+    </article>
+    
+    <footer>
+    
+    </footer>
+    
+    <script src="scripts/tenfingers.js"></script>
+    <script src="scripts/index.js"></script>
 </body>
 </html>

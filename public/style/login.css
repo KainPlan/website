@@ -1,20 +1,16 @@
-@import url("https://fonts.googleapis.com/css?family=Ubuntu&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Roboto&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Open+Sans&display=swap");
 html, body {
   margin: 0px;
   padding: 0px;
 }
-html body, body body {
-  background-image: url(/media/watercolour-1336856.jpg);
-  background-size: auto;
-  background-position: -80px -230px;
+html *, body * {
+  font-family: "Roboto", sans-serif;
 }
-html ::placeholder, body ::placeholder {
-  color: #cecece;
-  font-size: 15px;
-  opacity: 1;
+html h1, html h2, html h3, html h4, html h5, html h6, body h1, body h2, body h3, body h4, body h5, body h6 {
+  font-family: "Open Sans", sans-serif;
 }
-
-.login {
+html #login-form, body #login-form {
   width: 20%;
   margin-left: 40%;
   margin-top: 12.5%;
@@ -25,27 +21,14 @@ html ::placeholder, body ::placeholder {
   background-image: linear-gradient(to bottom right, #5601c5, #9250FF);
   -webkit-box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.75);
 }
-.login div {
+html #login-form h1, body #login-form h1 {
   font-size: 50px;
-  font-family: "Ubuntu", "sans-serif";
   color: white;
   letter-spacing: 5px;
-  margin-bottom: 50px;
+  margin: 0;
+  margin-bottom: 40px;
 }
-.login .message {
-  margin-top: 70px;
-}
-.login .message span {
-  font-size: 18px;
-  color: #ed4337;
-  color: green;
-  font-family: "Comic Sans MS", "sans-serif";
-  letter-spacing: 10px;
-  margin-bottom: 0px;
-  padding: 40px 20px;
-  border-radius: 20px 5px;
-}
-.login input {
+html #login-form input, body #login-form input {
   border: none;
   color: #cecece;
   background-color: #ffffff00;
@@ -56,12 +39,18 @@ html ::placeholder, body ::placeholder {
   padding: 5px 2px;
   padding-bottom: 1px;
   transition-duration: 0.2s;
+  font-family: "Roboto", sans-serif;
 }
-.login input:focus {
+html #login-form input:focus, body #login-form input:focus {
   outline: none;
   border-bottom: 1px solid #3b3b3b;
 }
-.login button {
+html #login-form input::placeholder, body #login-form input::placeholder {
+  color: #cecece;
+  font-size: 15px;
+  opacity: 1;
+}
+html #login-form #btn, body #login-form #btn {
   margin-top: 20px;
   background: none;
   border: 1px solid white;
@@ -72,12 +61,25 @@ html ::placeholder, body ::placeholder {
   mix-blend-mode: color-dodge;
   transition-duration: 0.2s;
 }
-.login button:focus {
+html #login-form #btn:focus, body #login-form #btn:focus {
   outline: none;
 }
-.login button:hover {
+html #login-form #btn:hover, body #login-form #btn:hover {
   background-color: white;
   color: black;
   mix-blend-mode: screen;
   cursor: pointer;
+}
+html .message, body .message {
+  text-align: center;
+  margin-top: 25px;
+}
+html .message span, body .message span {
+  font-size: 1.2em;
+}
+
+body {
+  background-image: url(/media/watercolour-1336856.jpg);
+  background-size: auto;
+  background-position: -80px -230px;
 }

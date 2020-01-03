@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 
 let pass = process.argv[2] ? process.argv[2] : 'test1234',
-    rounds = process.argv[3] ? +process.argv[3] : 12;
+	rounds = process.argv[3] ? +process.argv[3] : 12;
 let stime = Date.now();
 
 bcrypt.genSalt(rounds, (err, salt) => {

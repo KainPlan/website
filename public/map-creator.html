@@ -16,14 +16,81 @@
         <canvas id="main-canvas"></canvas>
     </div>
 
+    <div class="nav">
+        <a id="exit-creator" class="icon" title="Zurück zur Übersicht" href="/map"><i class="fas fa-arrow-circle-left"></i></a>
+        <div class="title">
+            <h3 id="map-name"></h3>
+            <span id="map-version"></span>
+        </div>
+        <div id="save-map" class="icon" title="Karte speichern [Strg + s]">
+            <i class="far fa-save"></i>
+        </div>
+        <div id="save-map-as" class="icon" title="Karte speichern als [Strg + Umschalt + s]">
+            <i class="fas fa-save"></i>
+        </div>
+        <div id="open-map" class="icon" title="Karte öffnen [Strg + o]">
+            <i class="far fa-folder-open"></i>
+        </div>
+    </div>
+
+    <div id="map-opener-back" class="dialogue-back">
+        <div class="map-opener dialogue">
+            <i id="close-map-opener" class="far fa-times-circle close-dialogue"></i>
+            <h3>Karte öffnen ... </h3>
+            <div id="map-opener-items"> 
+            </div>
+            <div class="btn-container">
+                <div id="map-opener-open" class="dialogue-sub-btn disabled">
+                    Öffnen
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="map-saver-back" class="dialogue-back">
+        <div class="map-saver dialogue">
+            <i id="close-map-saver" class="far fa-times-circle close-dialogue"></i>
+            <h3>Karte speichern als ... </h3>
+            <div id="map-saver-items">
+                <span>default</span><span>test</span>
+            </div>
+            <div class="btn-container">
+                <div class="input-group">
+                    <div class="input-group-inputs">
+                        <input type="text" id="map-saver-name" placeholder="Kartenname ... " title="Name" autocomplete="off" spellcheck="false" />
+                        <input type="text" id="map-saver-version" placeholder="Kartenversion ... " title="Version" autocomplete="off" spellcheck="false" />
+                    </div>
+                    <span class="map-saver-err-msg">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span id="map-saver-err-content"></span> 
+                    </span>
+                    <span class="map-saver-wrn-msg">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span id="map-saver-wrn-content"></span> 
+                    </span>
+                </div>
+                <div id="map-saver-save" class="dialogue-sub-btn disabled">
+                    Speichern
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loading-back">
+        <div id="loading">
+            <div class="loading-anim"></div>
+            <span>Lädt ...</span>
+        </div>
+    </div>
+
     <div id="node-info">
-        <div id="node-info-title" contenteditable="true" spellcheck="false">Title</div>
-        <div id="node-info-desc" contenteditable="true" spellcheck="false">Description</div>
+        <div id="node-info-title" contenteditable="true" spellcheck="false">Titel</div>
+        <div id="node-info-desc" contenteditable="true" spellcheck="false">Beschreibung</div>
     </div>
 
     <div id="stairs-info">
         <div>
-            <label for="stairs-info-height">Height</label>
+            <label for="stairs-info-height">Höhe</label>
             <input id="stairs-info-height" type="number" placeholder="Height ... " />
         </div>
     </div>
@@ -31,72 +98,72 @@
     <div id="key-code-wrapper">
         <div class="key-codes">
             <div class="close-wrapper">
-                <h3>Keyboard Shortcuts</h3>
+                <h3>Tastaturkombinationen</h3>
                 <i id="close-key-codes" class="far fa-times-circle" title="Close"></i>
             </div>
             <div class="shortcut-div">
                 <div>
                     <div>
-                        <span class="key">d</span> or <span class="key">0</span>
+                        <span class="key">d</span> oder <span class="key">0</span>
                     </div>
                     <div>
-                        Select mouse tool
-                    </div>
-                </div>
-                <div>
-                    <div>
-                        <span class="key">m</span> or <span class="key">1</span>
-                    </div>
-                    <div>
-                        Select move tool
+                        Maus-Werkzeug auswählen
                     </div>
                 </div>
                 <div>
                     <div>
-                        <span class="key">e</span> or <span class="key">2</span>
+                        <span class="key">m</span> oder <span class="key">1</span>
                     </div>
                     <div>
-                        Select endpoint tool
-                    </div>
-                </div>
-                <div>
-                    <div>
-                        <span class="key">n</span> or <span class="key">3</span>
-                    </div>
-                    <div>
-                        Select node tool
+                        Verschieben auswählen
                     </div>
                 </div>
                 <div>
                     <div>
-                        <span class="key">c</span> or <span class="key">4</span>
+                        <span class="key">e</span> oder <span class="key">2</span>
                     </div>
                     <div>
-                        Select connection tool
-                    </div>
-                </div>
-                <div>
-                    <div>
-                        <span class="key">r</span> or <span class="key">5</span>
-                    </div>
-                    <div>
-                        Select remove tool
+                        Endpunkt-Werkzeug auswählen
                     </div>
                 </div>
                 <div>
                     <div>
-                        <span class="key">s</span> or <span class="key">6</span>
+                        <span class="key">n</span> oder <span class="key">3</span>
                     </div>
                     <div>
-                        Select staircase tool
+                        Knoten-Werkzeug auswählen
                     </div>
                 </div>
                 <div>
                     <div>
-                        <span class="key">b</span> or <span class="key">7</span>
+                        <span class="key">c</span> oder <span class="key">4</span>
                     </div>
                     <div>
-                        Select BLE beacon tool
+                        Verbinden auswählen
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <span class="key">r</span> oder <span class="key">5</span>
+                    </div>
+                    <div>
+                        Entfernen auswählen
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <span class="key">s</span> oder <span class="key">6</span>
+                    </div>
+                    <div>
+                        Stiegen-Werkzeug auswählen
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <span class="key">b</span> oder <span class="key">7</span>
+                    </div>
+                    <div>
+                        BLE-Werkzeug auswählen
                     </div>
                 </div>
                 <div>
@@ -104,7 +171,7 @@
                         <span class="key">Ctrl</span> + <span class="key">+</span>
                     </div>
                     <div>
-                        Move to higher floor
+                        Zu oberem Geschoss wechseln
                     </div>
                 </div>
                 <div>
@@ -112,7 +179,7 @@
                         <span class="key">Ctrl</span> + <span class="key">-</span>
                     </div>
                     <div>
-                        Move to lower floor
+                        Zu unterem Geschoss wechseln
                     </div>
                 </div>
                 <div>
@@ -120,7 +187,7 @@
                         <span class="key">Ctrl</span> + <span class="key">Shift</span> + <span class="key">?</span>
                     </div>
                     <div>
-                        Displays all possible shortcuts
+                        Alle Tastaturkombinationen anzeigen
                     </div>
                 </div>
             </div>
@@ -128,10 +195,6 @@
     </div>
 
     <div class="side-bar">
-        <div class="debug">
-            Scale: <span id="scale-out">1 (100%)</span><br />
-        </div>
-
         <div class="tools">
             <div id="pan-tool" class="active-tool" title="Pan (d)">
                 <i class="fas fa-mouse-pointer"></i>
@@ -172,11 +235,13 @@
         </div>
     </div>
 
+    <script src="/scripts/compare-versions.js"></script>
     <script src="/scripts/Edge.js"></script>
     <script src="/scripts/Node.js"></script>
     <script src="/scripts/EndNode.js"></script>
     <script src="/scripts/StairsNode.js"></script>
     <script src="/scripts/BeaconNode.js"></script>
+    <script src="/scripts/mapi.js"></script>
     <script src="/scripts/map_creator.js"></script>
 </body>
 

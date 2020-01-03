@@ -9,19 +9,17 @@
     <link rel="stylesheet" type="text/css" href="/style/login.css"/>
 </head>
 <body>
-    Kainplan
-    <div class="login">
-        <div>Login</div>
+    <form id="login-form">
+        <h1>Login</h1>
         <input type="text" id="user" placeholder="Benutzer"/>
         <input type="password" id="pwd" placeholder="Passwort"/>
-        <button id="btn">Login</button>        
-    </div>
+        <input id="btn" type="submit" value="Login" />      
+    </form>
 
     <div class="message">
         <span id="log_msg">
-            Wrong user and/or password
         </span>
     </div>
-
+    <script src="/scripts/login.js"></script>
 </body>
 </html>
