@@ -5,7 +5,10 @@ window.onload = () => {
         sb_dur = 80;
 
     let si = document.getElementById('search-in'),
+        clear_si = document.getElementById('clear-search-in'),
         suggs = document.getElementById('nav-results');
+
+    si.value = '';
 
     mapi.can = document.getElementById('main-canvas');
     mapi.ctx = mapi.can.getContext('2d');
@@ -22,7 +25,10 @@ window.onload = () => {
     let nav_from = document.getElementById('nav-from'),
         close_nav_from = document.getElementById('close-nav-from'),
         from_in = document.getElementById('from-in'),
+        clear_from_in = document.getElementById('clear-from-in'),
         pick_from = document.getElementById('pick-from');
+
+    nav_from.value = '';
 
     close_nav_from.onclick = () => {
         nav_from.style.display = 'none';
@@ -292,7 +298,7 @@ window.onload = () => {
             }
             si.onblur = () => {
                 window.setTimeout(() => {
-                    if (document.activeElement !== from_in) {
+                    if (![from_in, clear_si, clear_from_in].includes(document.activeElement)) {
                         anim_suggs_out(() => {
                             document.getElementById('open-sidebar').style.display = 'inherit';
                             document.getElementById('search').style.display = 'inherit';
@@ -302,8 +308,7 @@ window.onload = () => {
             }
             from_in.onblur = () => {
                 window.setTimeout(() => {
-                    console.log(document.activeElement);
-                    if (document.activeElement !== si) {
+                    if (![si, clear_from_in, clear_si].includes(document.activeElement)) {
                         anim_suggs_out(() => {
                             document.getElementById('close-nav-from').style.display = 'inherit';
                             document.getElementById('pick-from').style.display = 'inherit';
@@ -311,8 +316,8 @@ window.onload = () => {
                     }
                 }, 50);
             }
-        
-            si.onkeyup = e => {
+
+            function check_si(e={keyCode:0,}) {
                 if (si.value.length > 0) {
                     si.parentElement.getElementsByTagName('label')[0].classList.add('label-top');
                 } else {
@@ -337,9 +342,9 @@ window.onload = () => {
                     display_point_info(n);
                     route_if_possible();
                 });
-            };
+            }
 
-            from_in.onkeyup = e => {
+            function check_from_in(e={keyCode:0,}) {
                 if (from_in.value.length > 0) {
                     from_in.parentElement.getElementsByTagName('label')[0].classList.add('label-top');
                 } else {
@@ -363,7 +368,22 @@ window.onload = () => {
                     mapi.pan_into_view(n);
                     route_if_possible();
                 });
-            };
+            }
+
+            clear_si.onclick = () => {
+                si.value = '';
+                check_si();
+                si.focus();
+            }
+
+            clear_from_in.onclick = () => {
+                from_in.value = '';
+                check_from_in();
+                from_in.focus();
+            }
+        
+            si.onkeyup = check_si;
+            from_in.onkeyup = check_from_in;
         
             document.getElementById('search').onclick = () => {
                 si.focus();

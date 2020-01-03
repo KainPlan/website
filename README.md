@@ -3,7 +3,7 @@ _Mapping the HTBLA Kaindorf_
 
 ---
 
-![Banner](public/media/logo/twitter_header_photo_2.png)
+![Banner](public/media/logo-banner.png)
 
 ## About
 
@@ -11,32 +11,33 @@ _Mapping the HTBLA Kaindorf_
 
 ## To Do
 
-- [ ] Modern Design
-- [ ] Backend map storage
-  - [ ] Portable map format
-  - [ ] Frontend access
+- [x] Modern Design
+- [x] Backend map storage
+  - [x] Portable map format
+  - [x] Frontend access
 - [ ] Maps
   - [x] Ground floor
   - [ ] 1st floor
-- [ ] Map viewer
+- [x] Map viewer
   - [x] Pan functionality
     - [x] Panning limits
   - [x] Zoom functionality
     - [x] Centered-Zoom
-  - [ ] Loading map-data
-  - [ ] Displaying map-data
+  - [x] Loading map-data
+  - [x] Displaying map-data
 - [ ] Map creator
-  - [ ] Authorized access only
-    - [ ] Login-based access
+  - [x] Authorized access only
+    - [x] Login-based access
     - [ ] Backend user-info
   - [x] Intermediary nodes
   - [x] Endpoints
   - [x] Move nodes
   - [x] Connect nodes
-  - [ ] Save & update functionality
-- [ ] Route-planning
-  - [ ] Selection start & end
-  - [ ] A* Shortest Path
+  - [x] Save & update functionality
+  - [ ] Management functionality
+- [x] Route-planning
+  - [x] Selection start & end
+  - [x] A* Shortest Path
 
 ---
 
