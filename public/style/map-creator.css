@@ -22,22 +22,39 @@ html .canvas-wrapper,
 body .canvas-wrapper {
   width: 100%;
   height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
   justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
   user-select: none;
+  -ms-touch-action: none;
   touch-action: none;
 }
 html .nav,
 body .nav {
   border: 2px solid #f2f2f2;
+  -webkit-box-shadow: 1px 1px 5px #f2f2f2;
   box-shadow: 1px 1px 5px #f2f2f2;
   position: absolute;
   top: 10px;
   left: 10px;
   padding: 5px 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: stretch;
+  -ms-flex-pack: stretch;
   justify-content: stretch;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
   align-items: stretch;
   color: #444;
   border-radius: 4px;
@@ -50,9 +67,14 @@ body .nav a {
 }
 html .nav .icon,
 body .nav .icon {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
   font-size: 1.4em;
+  -webkit-transition: 0.3s ease;
   transition: 0.3s ease;
 }
 html .nav .icon:hover,
@@ -72,9 +94,17 @@ body .nav > *:last-child {
 }
 html .nav .title,
 body .nav .title {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
   justify-content: flex-start;
+  -webkit-box-align: end;
+  -ms-flex-align: end;
   align-items: flex-end;
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
   flex-grow: 1;
 }
 html .nav .title #map-name,
@@ -107,6 +137,7 @@ body .dialogue-back .dialogue {
   width: 60%;
   margin: 0 auto;
   margin-top: 25px;
+  -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
 html .dialogue-back .dialogue .close-dialogue,
@@ -116,10 +147,17 @@ body .dialogue-back .dialogue .close-dialogue {
   right: -0.45em;
   background: radial-gradient(#fff, rgba(0, 0, 0, 0));
   border-radius: 50%;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
   justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
   font-size: 1.8em;
+  -webkit-transition: 0.3s ease;
   transition: 0.3s ease;
   color: #222;
 }
@@ -127,16 +165,25 @@ html .dialogue-back .dialogue .close-dialogue:hover,
 body .dialogue-back .dialogue .close-dialogue:hover {
   cursor: pointer;
   color: #f22;
+  -webkit-transform: rotate(180deg);
   transform: rotate(180deg);
 }
 html .dialogue-back .dialogue .dialogue-sub-btn,
 body .dialogue-back .dialogue .dialogue-sub-btn {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
   justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
   padding: 2.5px 5px;
   border-radius: 4px;
+  -webkit-transition: 0.3s ease;
   transition: 0.3s ease;
+  background: -webkit-gradient(linear, left top, right top, from(#fff), color-stop(50%, #fff), color-stop(50%, #622dff), to(#622dff));
   background: linear-gradient(to right, #fff 0%, #fff 50%, #622dff 50%, #622dff 100%);
   background-size: 200% 100%;
   background-position: 0 0;
@@ -167,11 +214,18 @@ body #map-opener-back .map-opener #map-opener-items {
 }
 html #map-opener-back .map-opener #map-opener-items .map-opener-item,
 body #map-opener-back .map-opener #map-opener-items .map-opener-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
   justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
   padding: 4px 5px;
   border-left: 1.5px solid #fff;
+  -webkit-transition: 0.3s ease;
   transition: 0.3s ease;
 }
 html #map-opener-back .map-opener #map-opener-items .map-opener-item:not(:nth-child(even)),
@@ -201,8 +255,15 @@ body #map-opener-back .map-opener #map-opener-items .map-opener-item.selected {
 }
 html #map-opener-back .map-opener .btn-container,
 body #map-opener-back .map-opener .btn-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
   justify-content: flex-end;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
   user-select: none;
   margin-top: 10px;
 }
@@ -222,6 +283,7 @@ body #map-saver-back .map-saver #map-saver-items > span {
   border-radius: 4px;
   color: #444;
   background-color: #fafafa;
+  -webkit-transition: 0.3s ease;
   transition: 0.3s ease;
 }
 html #map-saver-back .map-saver #map-saver-items > span:last-child,
@@ -235,25 +297,50 @@ body #map-saver-back .map-saver #map-saver-items > span:hover {
 }
 html #map-saver-back .map-saver .btn-container,
 body #map-saver-back .map-saver .btn-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: stretch;
+  -ms-flex-pack: stretch;
   justify-content: stretch;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
   align-items: stretch;
   margin-top: 10px;
 }
 html #map-saver-back .map-saver .btn-container .input-group,
 body #map-saver-back .map-saver .btn-container .input-group {
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
   flex-grow: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
   flex-direction: column;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
   justify-content: space-between;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
   align-items: stretch;
   padding-right: 7.5px;
 }
 html #map-saver-back .map-saver .btn-container .input-group .input-group-inputs,
 body #map-saver-back .map-saver .btn-container .input-group .input-group-inputs {
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
   flex-grow: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: stretch;
+  -ms-flex-pack: stretch;
   justify-content: stretch;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
 }
 html #map-saver-back .map-saver .btn-container .input-group .input-group-inputs #map-saver-name, html #map-saver-back .map-saver .btn-container .input-group .input-group-inputs #map-saver-version,
@@ -286,13 +373,19 @@ body #map-saver-back .map-saver .btn-container .input-group .input-group-inputs 
 }
 html #map-saver-back .map-saver .btn-container .input-group .input-group-inputs #map-saver-name,
 body #map-saver-back .map-saver .btn-container .input-group .input-group-inputs #map-saver-name {
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
   flex-grow: 1;
   margin-right: 5px;
 }
 html #map-saver-back .map-saver .btn-container .input-group .map-saver-err-msg, html #map-saver-back .map-saver .btn-container .input-group .map-saver-wrn-msg,
 body #map-saver-back .map-saver .btn-container .input-group .map-saver-err-msg,
 body #map-saver-back .map-saver .btn-container .input-group .map-saver-wrn-msg {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
   margin-top: 5px;
   padding: 5px;
@@ -314,6 +407,7 @@ body #map-saver-back .map-saver .btn-container .input-group .map-saver-wrn-msg {
 }
 html #map-saver-back .map-saver .btn-container #map-saver-save.warning,
 body #map-saver-back .map-saver .btn-container #map-saver-save.warning {
+  background: -webkit-gradient(linear, left top, right top, from(#fff), color-stop(50%, #fff), color-stop(50%, #fb4), to(#fb4)) !important;
   background: linear-gradient(to right, #fff 0%, #fff 50%, #fb4 50%, #fb4 100%) !important;
   background-size: 200% 100% !important;
   border: 2px solid #fb4 !important;
@@ -335,22 +429,55 @@ body #loading-back {
   background-color: rgba(0, 0, 0, 0.25);
   z-index: 2;
   display: none;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
   justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
 }
 html #loading-back #loading,
 body #loading-back #loading {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
   flex-direction: column;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
   justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
 }
-@keyframes rect-rotate {
+@-webkit-keyframes rect-rotate {
   0% {
+    -webkit-transform: rotate(0);
     transform: rotate(0);
   }
   50%, 100% {
+    -webkit-transform: rotate(180deg);
     transform: rotate(180deg);
+  }
+}
+@keyframes rect-rotate {
+  0% {
+    -webkit-transform: rotate(0);
+    transform: rotate(0);
+  }
+  50%, 100% {
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+  }
+}
+@-webkit-keyframes fill-rect {
+  0%, 50% {
+    height: 0;
+  }
+  100% {
+    height: inherit;
   }
 }
 @keyframes fill-rect {
@@ -370,6 +497,7 @@ body #loading-back #loading .loading-anim {
   position: relative;
   border: 4px solid;
   display: inline-block;
+  -webkit-animation: rect-rotate 1s linear infinite;
   animation: rect-rotate 1s linear infinite;
 }
 html #loading-back #loading .loading-anim::after,
@@ -379,6 +507,7 @@ body #loading-back #loading .loading-anim::after {
   width: inherit;
   display: block;
   background: rgba(255, 255, 255, 0.5);
+  -webkit-animation: fill-rect 1s linear infinite;
   animation: fill-rect 1s linear infinite;
 }
 html #loading-back #loading span,
@@ -414,6 +543,7 @@ body #node-info #node-info-desc {
 }
 html #node-info > div,
 body #node-info > div {
+  -webkit-transition: 0.3s ease;
   transition: 0.3s ease;
 }
 html #node-info > div:hover,
@@ -423,6 +553,7 @@ body #node-info > div:hover {
 html #node-info > div:focus,
 body #node-info > div:focus {
   outline: none;
+  -webkit-transform: scale(1.03);
   transform: scale(1.03);
 }
 html #stairs-info,
@@ -438,8 +569,14 @@ body #stairs-info {
 }
 html #stairs-info div,
 body #stairs-info div {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: stretch;
+  -ms-flex-pack: stretch;
   justify-content: stretch;
+  -webkit-box-align: baseline;
+  -ms-flex-align: baseline;
   align-items: baseline;
   width: 100%;
 }
@@ -456,6 +593,7 @@ body #stairs-info div input {
   margin: 2.5px 0;
   border: none;
   font-size: 0.9em;
+  -webkit-transition: 0.3s ease;
   transition: 0.3s ease;
 }
 html #stairs-info div input:hover,
@@ -465,6 +603,7 @@ body #stairs-info div input:hover {
 html #stairs-info div input:focus,
 body #stairs-info div input:focus {
   outline: none;
+  -webkit-transform: scale(1.03);
   transform: scale(1.03);
 }
 html #key-code-wrapper,
@@ -478,14 +617,20 @@ body #key-code-wrapper {
   background-color: rgba(0, 0, 0, 0.3);
   display: none;
   width: 100%;
+  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   height: 100%;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
   justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
 }
 html #key-code-wrapper .key-codes,
 body #key-code-wrapper .key-codes {
   display: block;
+  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   width: 65%;
   height: 85%;
@@ -495,21 +640,30 @@ html #key-code-wrapper .key-codes .close-wrapper,
 body #key-code-wrapper .key-codes .close-wrapper {
   width: 100%;
   height: 10%;
+  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   font-size: 1.6em;
   padding: 15px;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
   justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
 }
 html #key-code-wrapper .key-codes .close-wrapper i,
 body #key-code-wrapper .key-codes .close-wrapper i {
+  -webkit-transition: 0.3s ease;
   transition: 0.3s ease;
 }
 html #key-code-wrapper .key-codes .close-wrapper i:hover,
 body #key-code-wrapper .key-codes .close-wrapper i:hover {
   cursor: pointer;
   color: #FF2A19;
+  -webkit-transform: rotate(180deg) scale(1.1);
   transform: rotate(180deg) scale(1.1);
 }
 html #key-code-wrapper .key-codes .shortcut-div,
@@ -521,9 +675,14 @@ body #key-code-wrapper .key-codes .shortcut-div {
 html #key-code-wrapper .key-codes .shortcut-div > div,
 body #key-code-wrapper .key-codes .shortcut-div > div {
   width: 100%;
+  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   padding: 15px;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
   justify-content: space-between;
 }
 html #key-code-wrapper .key-codes .shortcut-div > div > div,
@@ -550,6 +709,7 @@ body .side-bar {
   background-color: rgba(255, 255, 255, 0.95);
   border: 2.5px solid #f2f2f2;
   max-width: 175px;
+  -webkit-box-shadow: 1px 1px 5px #f2f2f2;
   box-shadow: 1px 1px 5px #f2f2f2;
 }
 html .side-bar .debug,
@@ -565,15 +725,21 @@ body .side-bar .debug span {
 }
 html .side-bar .tools,
 body .side-bar .tools {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   padding: 15px;
   font-family: "Ubuntu Mono", monospace;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
   justify-content: space-between;
+  -ms-flex-wrap: wrap;
   flex-wrap: wrap;
 }
 html .side-bar .tools div,
 body .side-bar .tools div {
   display: inline-block;
+  -webkit-transition: 0.25s ease;
   transition: 0.25s ease;
   color: #000;
   font-size: 2em;
@@ -584,6 +750,7 @@ body .side-bar .tools div {
 html .side-bar .tools div:hover,
 body .side-bar .tools div:hover {
   cursor: pointer;
+  -webkit-transform: scale(1.2) rotate(7.5deg);
   transform: scale(1.2) rotate(7.5deg);
   opacity: 0.7;
 }
@@ -593,10 +760,17 @@ body .side-bar .tools div.active-tool {
 }
 html .side-bar .floor-tools,
 body .side-bar .floor-tools {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
   justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
   padding: 15px;
+  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   width: 100%;
   border-top: 2px solid #f2f2f2;
@@ -605,12 +779,14 @@ html .side-bar .floor-tools div:not(#floor-out),
 body .side-bar .floor-tools div:not(#floor-out) {
   display: inline-block;
   font-size: 1.6em;
+  -webkit-transition: 0.3s ease;
   transition: 0.3s ease;
 }
 html .side-bar .floor-tools div:not(#floor-out):hover,
 body .side-bar .floor-tools div:not(#floor-out):hover {
   cursor: pointer;
   opacity: 0.7;
+  -webkit-transform: scale(1.15);
   transform: scale(1.15);
 }
 html .side-bar .floor-tools div:not(#floor-out).disabled,
@@ -621,6 +797,7 @@ html .side-bar .floor-tools div:not(#floor-out).disabled:hover,
 body .side-bar .floor-tools div:not(#floor-out).disabled:hover {
   cursor: default;
   opacity: 0.4;
+  -webkit-transform: scale(1);
   transform: scale(1);
 }
 html .side-bar .floor-tools #floor-out,
@@ -632,7 +809,12 @@ body .side-bar .floor-tools #floor-out {
 
 @media only screen and (max-width: 1000px) {
   .map-saver .btn-container {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
     flex-direction: column;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
     justify-content: space-between;
   }
   .map-saver .btn-container #map-saver-save {

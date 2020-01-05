@@ -67,7 +67,7 @@ html .labelled-input .clear-input:hover, body .labelled-input .clear-input:hover
   color: #f44;
   cursor: pointer;
 }
-html .nav-container, body .nav-container {
+html .overlays .nav-container, body .overlays .nav-container {
   position: fixed;
   left: 25px;
   top: 25px;
@@ -77,67 +77,67 @@ html .nav-container, body .nav-container {
   border-radius: 4px;
   box-shadow: 1px 1px 5px #f2f2f2;
 }
-html .nav-container .nav, html .nav-container #nav-from, body .nav-container .nav, body .nav-container #nav-from {
+html .overlays .nav-container .nav, html .overlays .nav-container #nav-from, body .overlays .nav-container .nav, body .overlays .nav-container #nav-from {
   display: flex;
   justify-content: stretch;
   align-items: stretch;
   user-select: none;
   border-bottom: 1.5px solid #f2f2f2;
 }
-html .nav-container .nav > *, html .nav-container #nav-from > *, body .nav-container .nav > *, body .nav-container #nav-from > * {
+html .overlays .nav-container .nav > *, html .overlays .nav-container #nav-from > *, body .overlays .nav-container .nav > *, body .overlays .nav-container #nav-from > * {
   padding: 0 10px;
   border-right: 1.5px solid #fafafa;
   color: #444;
 }
-html .nav-container .nav *:last-child, html .nav-container #nav-from *:last-child, body .nav-container .nav *:last-child, body .nav-container #nav-from *:last-child {
+html .overlays .nav-container .nav *:last-child, html .overlays .nav-container #nav-from *:last-child, body .overlays .nav-container .nav *:last-child, body .overlays .nav-container #nav-from *:last-child {
   border: none;
 }
-html .nav-container .nav > i, html .nav-container #nav-from > i, body .nav-container .nav > i, body .nav-container #nav-from > i {
+html .overlays .nav-container .nav > i, html .overlays .nav-container #nav-from > i, body .overlays .nav-container .nav > i, body .overlays .nav-container #nav-from > i {
   transition: 0.3s ease;
   display: flex;
   align-items: center;
   width: 15px;
 }
-html .nav-container .nav > i:hover, html .nav-container #nav-from > i:hover, body .nav-container .nav > i:hover, body .nav-container #nav-from > i:hover {
+html .overlays .nav-container .nav > i:hover, html .overlays .nav-container #nav-from > i:hover, body .overlays .nav-container .nav > i:hover, body .overlays .nav-container #nav-from > i:hover {
   cursor: pointer;
   color: #622dff;
 }
-html .nav-container #nav-from, body .nav-container #nav-from {
+html .overlays .nav-container #nav-from, body .overlays .nav-container #nav-from {
   display: none;
 }
-html .nav-container #nav-results, body .nav-container #nav-results {
+html .overlays .nav-container #nav-results, body .overlays .nav-container #nav-results {
   max-width: 325px;
   max-height: 0;
   overflow: hidden;
 }
-html .nav-container #nav-results .nav-res, body .nav-container #nav-results .nav-res {
+html .overlays .nav-container #nav-results .nav-res, body .overlays .nav-container #nav-results .nav-res {
   color: #444;
   padding: 5px 15px;
   border-bottom: 1.4px solid #f2f2f2;
 }
-html .nav-container #nav-results .nav-res h3, body .nav-container #nav-results .nav-res h3 {
+html .overlays .nav-container #nav-results .nav-res h3, body .overlays .nav-container #nav-results .nav-res h3 {
   margin: 0;
   font-size: 1em;
   transition: 0.3s ease;
   font-weight: bold;
 }
-html .nav-container #nav-results .nav-res h3 .match, body .nav-container #nav-results .nav-res h3 .match {
+html .overlays .nav-container #nav-results .nav-res h3 .match, body .overlays .nav-container #nav-results .nav-res h3 .match {
   text-decoration: underline;
 }
-html .nav-container #nav-results .nav-res p, body .nav-container #nav-results .nav-res p {
+html .overlays .nav-container #nav-results .nav-res p, body .overlays .nav-container #nav-results .nav-res p {
   margin: 0;
   font-size: 0.8em;
 }
-html .nav-container #nav-results .nav-res:last-child, body .nav-container #nav-results .nav-res:last-child {
+html .overlays .nav-container #nav-results .nav-res:last-child, body .overlays .nav-container #nav-results .nav-res:last-child {
   border-bottom: none;
 }
-html .nav-container #nav-results .nav-res:hover, body .nav-container #nav-results .nav-res:hover {
+html .overlays .nav-container #nav-results .nav-res:hover, body .overlays .nav-container #nav-results .nav-res:hover {
   cursor: pointer;
 }
-html .nav-container #nav-results .nav-res:hover > h3, body .nav-container #nav-results .nav-res:hover > h3 {
+html .overlays .nav-container #nav-results .nav-res:hover > h3, body .overlays .nav-container #nav-results .nav-res:hover > h3 {
   color: #622dff;
 }
-html #point-container, body #point-container {
+html .overlays #point-container, body .overlays #point-container {
   position: absolute;
   top: 0;
   left: 0;
@@ -150,35 +150,36 @@ html #point-container, body #point-container {
   flex-direction: column;
   justify-content: stretch;
 }
-html #point-container #point-img, body #point-container #point-img {
+html .overlays #point-container #point-img, body .overlays #point-container #point-img {
   width: 100%;
   height: 200px;
   background-image: url(/media/logo.png);
   background-position: center;
   border-bottom: 1.5px solid #f2f2f2;
 }
-html #point-container .point-info, body #point-container .point-info {
+html .overlays #point-container .point-info, body .overlays #point-container .point-info {
   position: relative;
   flex-grow: 1;
   padding: 0 15px;
   z-index: 2;
+  background-color: #fff;
 }
-html #point-container .point-info .point-head-container, body #point-container .point-info .point-head-container {
+html .overlays #point-container .point-info .point-head-container, body .overlays #point-container .point-info .point-head-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 15px 0;
   border-bottom: 1.5px solid #f2f2f2;
 }
-html #point-container .point-info .point-head-container div #point-title, body #point-container .point-info .point-head-container div #point-title {
+html .overlays #point-container .point-info .point-head-container div #point-title, body .overlays #point-container .point-info .point-head-container div #point-title {
   font-size: 1.7em;
   margin: 0;
 }
-html #point-container .point-info .point-head-container div #point-floor, body #point-container .point-info .point-head-container div #point-floor {
+html .overlays #point-container .point-info .point-head-container div #point-floor, body .overlays #point-container .point-info .point-head-container div #point-floor {
   margin: 0;
   font-size: 1em;
 }
-html #point-container .point-info .point-head-container #route, body #point-container .point-info .point-head-container #route {
+html .overlays #point-container .point-info .point-head-container #route, body .overlays #point-container .point-info .point-head-container #route {
   color: #fff;
   background-color: #622dff;
   font-size: 2em;
@@ -186,12 +187,12 @@ html #point-container .point-info .point-head-container #route, body #point-cont
   border-radius: 50%;
   transition: 0.3s ease;
 }
-html #point-container .point-info .point-head-container #route:hover, body #point-container .point-info .point-head-container #route:hover {
+html .overlays #point-container .point-info .point-head-container #route:hover, body .overlays #point-container .point-info .point-head-container #route:hover {
   cursor: pointer;
   transform: rotate(360deg) scale(1.1);
   box-shadow: 0 0 5px #f2f2f2;
 }
-html #point-container .point-info #close-point-container, body #point-container .point-info #close-point-container {
+html .overlays #point-container .point-info #close-point-container, body .overlays #point-container .point-info #close-point-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -207,11 +208,11 @@ html #point-container .point-info #close-point-container, body #point-container 
   border: 1.5px solid #f2f2f2;
   transition: 0.3s ease;
 }
-html #point-container .point-info #close-point-container:hover, body #point-container .point-info #close-point-container:hover {
+html .overlays #point-container .point-info #close-point-container:hover, body .overlays #point-container .point-info #close-point-container:hover {
   cursor: pointer;
   transform: rotate(360deg) scale(1.1);
 }
-html .bottom-controls-container, body .bottom-controls-container {
+html .overlays .bottom-controls-container, body .overlays .bottom-controls-container {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -221,7 +222,7 @@ html .bottom-controls-container, body .bottom-controls-container {
   justify-content: space-between;
   align-items: bottom;
 }
-html .bottom-controls-container #point-container-mb, body .bottom-controls-container #point-container-mb {
+html .overlays .bottom-controls-container #point-container-mb, body .overlays .bottom-controls-container #point-container-mb {
   width: 375px;
   display: none;
   justify-content: stretch;
@@ -232,22 +233,22 @@ html .bottom-controls-container #point-container-mb, body .bottom-controls-conta
   box-shadow: 0 0 5px #f2f2f2;
   box-sizing: border-box;
 }
-html .bottom-controls-container #point-container-mb .point-info-mb, body .bottom-controls-container #point-container-mb .point-info-mb {
+html .overlays .bottom-controls-container #point-container-mb .point-info-mb, body .overlays .bottom-controls-container #point-container-mb .point-info-mb {
   flex-grow: 1;
   display: flex;
   justify-content: flex-start;
   align-items: baseline;
 }
-html .bottom-controls-container #point-container-mb .point-info-mb #point-title-mb, body .bottom-controls-container #point-container-mb .point-info-mb #point-title-mb {
+html .overlays .bottom-controls-container #point-container-mb .point-info-mb #point-title-mb, body .overlays .bottom-controls-container #point-container-mb .point-info-mb #point-title-mb {
   font-size: 1.3em;
   margin: 0;
   margin-right: 5px;
 }
-html .bottom-controls-container #point-container-mb .point-info-mb #point-floor-mb, body .bottom-controls-container #point-container-mb .point-info-mb #point-floor-mb {
+html .overlays .bottom-controls-container #point-container-mb .point-info-mb #point-floor-mb, body .overlays .bottom-controls-container #point-container-mb .point-info-mb #point-floor-mb {
   font-size: 0.8em;
   margin: 0;
 }
-html .bottom-controls-container #point-container-mb #route-mb, body .bottom-controls-container #point-container-mb #route-mb {
+html .overlays .bottom-controls-container #point-container-mb #route-mb, body .overlays .bottom-controls-container #point-container-mb #route-mb {
   color: #fff;
   background-color: #622dff;
   font-size: 2em;
@@ -255,15 +256,15 @@ html .bottom-controls-container #point-container-mb #route-mb, body .bottom-cont
   border-radius: 50%;
   transition: 0.3s ease;
 }
-html .bottom-controls-container #point-container-mb #route-mb:hover, body .bottom-controls-container #point-container-mb #route-mb:hover {
+html .overlays .bottom-controls-container #point-container-mb #route-mb:hover, body .overlays .bottom-controls-container #point-container-mb #route-mb:hover {
   cursor: pointer;
   transform: rotate(360deg) scale(1.1);
   box-shadow: 0 0 5px #f2f2f2;
 }
-html .bottom-controls-container #point-container-mb:hover, body .bottom-controls-container #point-container-mb:hover {
+html .overlays .bottom-controls-container #point-container-mb:hover, body .overlays .bottom-controls-container #point-container-mb:hover {
   cursor: pointer;
 }
-html .bottom-controls-container #floors-container, body .bottom-controls-container #floors-container {
+html .overlays .bottom-controls-container #floors-container, body .overlays .bottom-controls-container #floors-container {
   margin-left: auto;
   display: flex;
   flex-direction: column;
@@ -271,7 +272,7 @@ html .bottom-controls-container #floors-container, body .bottom-controls-contain
   align-items: center;
   padding: 15px;
 }
-html .bottom-controls-container #floors-container i, body .bottom-controls-container #floors-container i {
+html .overlays .bottom-controls-container #floors-container i, body .overlays .bottom-controls-container #floors-container i {
   background-color: #fff;
   border: 2.4px solid #444;
   color: #444;
@@ -281,19 +282,19 @@ html .bottom-controls-container #floors-container i, body .bottom-controls-conta
   margin-bottom: 5px;
   transition: 0.3s ease;
 }
-html .bottom-controls-container #floors-container i:last-child, body .bottom-controls-container #floors-container i:last-child {
+html .overlays .bottom-controls-container #floors-container i:last-child, body .overlays .bottom-controls-container #floors-container i:last-child {
   margin: 0;
 }
-html .bottom-controls-container #floors-container i.current, body .bottom-controls-container #floors-container i.current {
+html .overlays .bottom-controls-container #floors-container i.current, body .overlays .bottom-controls-container #floors-container i.current {
   border-color: #622dff;
   background-color: #f8f6ff;
 }
-html .bottom-controls-container #floors-container i:not(.current):hover, body .bottom-controls-container #floors-container i:not(.current):hover {
+html .overlays .bottom-controls-container #floors-container i:not(.current):hover, body .overlays .bottom-controls-container #floors-container i:not(.current):hover {
   cursor: pointer;
   border-color: #7a4eff;
   transform: scale(1.1);
 }
-html #sb-back, body #sb-back {
+html .overlays #sb-back, body .overlays #sb-back {
   position: absolute;
   left: 0;
   top: 0;
@@ -305,7 +306,7 @@ html #sb-back, body #sb-back {
   justify-content: center;
   align-items: center;
 }
-html #sb-back #loading, body #sb-back #loading {
+html .overlays #sb-back #loading, body .overlays #sb-back #loading {
   display: none;
   flex-direction: column;
   justify-content: space-between;
@@ -327,7 +328,7 @@ html #sb-back #loading, body #sb-back #loading {
     height: inherit;
   }
 }
-html #sb-back #loading .loading-anim, body #sb-back #loading .loading-anim {
+html .overlays #sb-back #loading .loading-anim, body .overlays #sb-back #loading .loading-anim {
   z-index: 3;
   color: #fff;
   height: 48px;
@@ -337,7 +338,7 @@ html #sb-back #loading .loading-anim, body #sb-back #loading .loading-anim {
   display: inline-block;
   animation: rect-rotate 1s linear infinite;
 }
-html #sb-back #loading .loading-anim::after, body #sb-back #loading .loading-anim::after {
+html .overlays #sb-back #loading .loading-anim::after, body .overlays #sb-back #loading .loading-anim::after {
   content: "";
   height: 0;
   width: inherit;
@@ -345,11 +346,11 @@ html #sb-back #loading .loading-anim::after, body #sb-back #loading .loading-ani
   background: rgba(255, 255, 255, 0.5);
   animation: fill-rect 1s linear infinite;
 }
-html #sb-back #loading span, body #sb-back #loading span {
+html .overlays #sb-back #loading span, body .overlays #sb-back #loading span {
   margin-top: 15px;
   color: #fff;
 }
-html #sidebar, body #sidebar {
+html .overlays #sidebar, body .overlays #sidebar {
   position: absolute;
   height: 100%;
   top: 0;
@@ -360,7 +361,7 @@ html #sidebar, body #sidebar {
   width: 400px;
   display: none;
 }
-html #sidebar #close-sidebar, body #sidebar #close-sidebar {
+html .overlays #sidebar #close-sidebar, body .overlays #sidebar #close-sidebar {
   position: absolute;
   right: -30px;
   bottom: 15px;
@@ -373,11 +374,11 @@ html #sidebar #close-sidebar, body #sidebar #close-sidebar {
   color: #444;
   transition: 0.3s ease;
 }
-html #sidebar #close-sidebar:hover, body #sidebar #close-sidebar:hover {
+html .overlays #sidebar #close-sidebar:hover, body .overlays #sidebar #close-sidebar:hover {
   cursor: pointer;
   color: #f44;
 }
-html #sidebar .sb-login, body #sidebar .sb-login {
+html .overlays #sidebar .sb-login, body .overlays #sidebar .sb-login {
   width: 100%;
   min-height: 100px;
   position: relative;
@@ -388,7 +389,7 @@ html #sidebar .sb-login, body #sidebar .sb-login {
   align-items: center;
   border-bottom: 2px solid #f2f2f2;
 }
-html #sidebar .sb-login .sb-title, body #sidebar .sb-login .sb-title {
+html .overlays #sidebar .sb-login .sb-title, body .overlays #sidebar .sb-login .sb-title {
   width: 100%;
   font-size: 10em;
   position: absolute;
@@ -398,7 +399,7 @@ html #sidebar .sb-login .sb-title, body #sidebar .sb-login .sb-title {
   z-index: 0;
   background-color: #f2f2f2;
 }
-html #sidebar .sb-login .sb-login-back, body #sidebar .sb-login .sb-login-back {
+html .overlays #sidebar .sb-login .sb-login-back, body .overlays #sidebar .sb-login .sb-login-back {
   position: relative;
   width: 100%;
   min-height: 100px;
@@ -408,7 +409,7 @@ html #sidebar .sb-login .sb-login-back, body #sidebar .sb-login .sb-login-back {
   background: linear-gradient(to right, rgba(0, 0, 0, 0), white);
   z-index: 1;
 }
-html #sidebar .sb-login .sb-login-back #login, body #sidebar .sb-login .sb-login-back #login {
+html .overlays #sidebar .sb-login .sb-login-back #login, body .overlays #sidebar .sb-login .sb-login-back #login {
   display: inline-block;
   padding: 5px;
   border-radius: 3.5px;
@@ -423,16 +424,16 @@ html #sidebar .sb-login .sb-login-back #login, body #sidebar .sb-login .sb-login
   background-position: 0 0;
   transition: 0.3s ease;
 }
-html #sidebar .sb-login .sb-login-back #login:hover, body #sidebar .sb-login .sb-login-back #login:hover {
+html .overlays #sidebar .sb-login .sb-login-back #login:hover, body .overlays #sidebar .sb-login .sb-login-back #login:hover {
   cursor: pointer;
   background-position: 100% 0;
   color: #fff;
 }
-html #sidebar .sb-login .sb-login-back .sb-uname, body #sidebar .sb-login .sb-login-back .sb-uname {
+html .overlays #sidebar .sb-login .sb-login-back .sb-uname, body .overlays #sidebar .sb-login .sb-login-back .sb-uname {
   font-family: "Open Sans", sans-serif;
   padding: 10px;
 }
-html #sidebar .sb-items .sb-item, body #sidebar .sb-items .sb-item {
+html .overlays #sidebar .sb-items .sb-item, body .overlays #sidebar .sb-items .sb-item {
   padding: 10px;
   display: flex;
   justify-content: space-between;
@@ -441,13 +442,13 @@ html #sidebar .sb-items .sb-item, body #sidebar .sb-items .sb-item {
   text-decoration: none;
   transition: 0.3s ease;
 }
-html #sidebar .sb-items .sb-item:hover, body #sidebar .sb-items .sb-item:hover {
+html .overlays #sidebar .sb-items .sb-item:hover, body .overlays #sidebar .sb-items .sb-item:hover {
   color: #622dff;
 }
-html #sidebar .sb-items .sb-item span, body #sidebar .sb-items .sb-item span {
+html .overlays #sidebar .sb-items .sb-item span, body .overlays #sidebar .sb-items .sb-item span {
   position: relative;
 }
-html #sidebar .sb-items .sb-item span:after, body #sidebar .sb-items .sb-item span:after {
+html .overlays #sidebar .sb-items .sb-item span:after, body .overlays #sidebar .sb-items .sb-item span:after {
   content: "";
   position: absolute;
   z-index: -1;
@@ -458,7 +459,7 @@ html #sidebar .sb-items .sb-item span:after, body #sidebar .sb-items .sb-item sp
   height: 2px;
   transition: 0.3s ease;
 }
-html #sidebar .sb-items .sb-item:hover > span:after, body #sidebar .sb-items .sb-item:hover > span:after {
+html .overlays #sidebar .sb-items .sb-item:hover > span:after, body .overlays #sidebar .sb-items .sb-item:hover > span:after {
   left: 0;
   width: 100%;
 }

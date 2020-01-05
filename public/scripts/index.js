@@ -7,7 +7,7 @@ window.onload = () => {
             }).clear().type('KainPlan').pause(10000).clear();
     
     document.getElementById('scroll-top-main').onclick = () => {
-        document.getElementById('top-quote').scrollIntoView({
+        document.getElementsByTagName('main')[0].scrollIntoView({
             behavior: 'smooth',
         });
     };

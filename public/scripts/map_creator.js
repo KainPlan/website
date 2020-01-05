@@ -882,7 +882,9 @@ window.onload = () => {
                     } else if (in_name.value.length > 64) {
                         show_err_msg(`Kartenname darf aus maximal 64 Zeichen bestehen!`, in_name);
                         return;
-                    } 
+                    } else if (mnames.includes(in_name.value.toLowerCase())) {
+                        show_wrn_msg(`Kartenname existiert bereits!`, in_name);
+                    }
                     
                     if (in_vers.value.match(/[^\d.]/g)) {
                         show_err_msg(`Version darf nur aus Zahlen und Punkten bestehen!`, in_vers);
@@ -894,7 +896,7 @@ window.onload = () => {
                         show_err_msg(`Version darf nicht mit einem Punkt beginnen oder enden!`, in_vers);
                         return;
                     }
-
+                    
                     let actually_save = () => {
                         conf.map.version = in_vers.value;
                         update_map_description(in_name.value);
@@ -926,6 +928,9 @@ window.onload = () => {
                         } else {
                             sv_bt.onclick = actually_save;
                         }
+                    } else {
+                        sv_bt.classList.remove('warning');
+                        sv_bt.classList.add('disabled');
                     }
                 };
                     

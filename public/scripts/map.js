@@ -6,7 +6,8 @@ window.onload = () => {
 
     let si = document.getElementById('search-in'),
         clear_si = document.getElementById('clear-search-in'),
-        suggs = document.getElementById('nav-results');
+        suggs = document.getElementById('nav-results'),
+        nav_container = document.getElementsByClassName('nav-container')[0];
 
     si.value = '';
 
@@ -64,6 +65,7 @@ window.onload = () => {
         mapi.pan_into_view(n);
         pcm.style.display = 'none';
         pc.style.display = 'flex';
+        pc.style.width = nav_container.getBoundingClientRect().width + 50 + 'px';
         pt.innerHTML = n.title;
         pf.innerHTML = get_floor_name(n.z);
         pd.innerHTML = n.desc;
@@ -387,6 +389,9 @@ window.onload = () => {
         
             document.getElementById('search').onclick = () => {
                 si.focus();
+            };
+
+            pick_from.onclick = () => {
             };
         }, 150);
     });

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'>
+<svg clip-rule="evenodd" fill-rule="evenodd" image-rendering="optimizeQuality" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" viewBox="0 0 1920 1500" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+ <defs>
+  <style type="text/css">
+    .fil3 {fill:#2B2A29}
+    .fil0 {fill:#434242}
+    .fil5 {fill:#898989}
+    .fil2 {fill:#C5C6C6}
+    .fil6 {fill:#FEFEFE}
+    .fil4 {fill:black}
+    .fil7 {fill:url(#c)}
+    .fil1 {fill:url(#d)}
+  </style>
+  <linearGradient id="c" x1="958.17" x2="958.17" y1="1398.6" y2="1483.2" gradientUnits="userSpaceOnUse">
+   <stop stop-color="#C5C6C6" offset="0"/>
+   <stop stop-color="#727271" offset="1"/>
+  </linearGradient>
+  <linearGradient id="d" x1="960" x2="960" y1="1164" y2="1324.8" gradientUnits="userSpaceOnUse">
+   <stop stop-color="#727271" offset="0"/>
+   <stop stop-color="#C5C6C6" offset="1"/>
+  </linearGradient>
+ </defs>
+  <rect class="fil0" width="1920" height="1186" rx="66" ry="66"/>
+  <path class="fil1" d="m1092 1084h-264c0 52 8 105-5 155-13 54-45 103-59 155 65-1 129-2 194-2h194c-14-51-43-100-56-154-12-50-4-103-4-154z"/>
+  <rect class="fil2" x="2" y="2" width="1916" height="1182" rx="66" ry="66"/>
+  <path class="fil3" d="m69 2h1780c38 0 69 31 69 69v939h-1918v-939c0-38 31-69 69-69z"/>
+  <rect class="fil4" x="50" y="51" width="1820" height="909"/>
+  <rect class="fil5" x="54" y="55" width="1816" height="905"/>
+  <rect class="fil6" x="54" y="55" width="1812" height="901"/>
+  <path class="fil7" d="m765 1388h386c16 16 49 31 81 47 31 16 61 32 81 47h-714c29-16 58-32 89-47 31-16 63-32 77-47z"/>
+  <path class="fil3" d="m600 1483h713v7c0 6-4 10-10 10h-693c-6 0-10-4-10-10v-7z"/>
+</svg>

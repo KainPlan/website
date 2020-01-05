@@ -5,6 +5,8 @@ _Mapping the HTBLA Kaindorf_
 
 ![Banner](public/media/logo-banner.png)
 
+![...](https://img.shields.io/github/stars/KainPlan/website?style=social) ![...](https://img.shields.io/github/watchers/KainPlan/website?style=social) ![...](https://img.shields.io/github/languages/count/KainPlan/website) ![...](https://img.shields.io/github/languages/top/KainPlan/website) ![...](https://img.shields.io/github/last-commit/KainPlan/website)
+
 ## About
 
 "KainPlan" is a tool for navigation in the HTBLA Kaindorf. This website will contain both a detailed map of the school and some route-planning functionality. However, we'll also release an app with a positioning system in the near future.
