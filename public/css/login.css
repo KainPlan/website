@@ -1,0 +1,105 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Open+Sans&display=swap");
+html, body {
+  margin: 0px;
+  padding: 0px;
+}
+html *, body * {
+  font-family: "Roboto", sans-serif;
+}
+html h1, html h2, html h3, html h4, html h5, html h6, body h1, body h2, body h3, body h4, body h5, body h6 {
+  font-family: "Open Sans", sans-serif;
+}
+html #login-form, body #login-form {
+  width: 20%;
+  margin-left: 40%;
+  margin-top: 12.5%;
+  border-radius: 49% 51% 76% 24%/42% 40% 60% 58%;
+  text-align: center;
+  padding: 35px;
+  height: 300px;
+  background-image: -webkit-gradient(linear, left top, right bottom, from(#5601c5), to(#9250FF));
+  background-image: linear-gradient(to bottom right, #5601c5, #9250FF);
+  -webkit-box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.75);
+}
+html #login-form h1, body #login-form h1 {
+  font-size: 50px;
+  color: white;
+  letter-spacing: 5px;
+  margin: 0;
+  margin-bottom: 40px;
+}
+html #login-form input, body #login-form input {
+  border: none;
+  color: #cecece;
+  background-color: #ffffff00;
+  display: block;
+  font-size: 20px;
+  border-bottom: 1px solid #b3b3b3;
+  margin: 15px auto;
+  padding: 5px 2px;
+  padding-bottom: 1px;
+  -webkit-transition-duration: 0.2s;
+  transition-duration: 0.2s;
+  font-family: "Roboto", sans-serif;
+}
+html #login-form input:focus, body #login-form input:focus {
+  outline: none;
+  border-bottom: 1px solid #3b3b3b;
+}
+html #login-form input::-webkit-input-placeholder, body #login-form input::-webkit-input-placeholder {
+  color: #cecece;
+  font-size: 15px;
+  opacity: 1;
+}
+html #login-form input:-ms-input-placeholder, body #login-form input:-ms-input-placeholder {
+  color: #cecece;
+  font-size: 15px;
+  opacity: 1;
+}
+html #login-form input::-ms-input-placeholder, body #login-form input::-ms-input-placeholder {
+  color: #cecece;
+  font-size: 15px;
+  opacity: 1;
+}
+html #login-form input::placeholder, body #login-form input::placeholder {
+  color: #cecece;
+  font-size: 15px;
+  opacity: 1;
+}
+html #login-form #btn, body #login-form #btn {
+  margin-top: 20px;
+  background: none;
+  border: 1px solid white;
+  padding: 6px 24px;
+  border-radius: 3px;
+  color: white;
+  font-size: 20px;
+  mix-blend-mode: color-dodge;
+  -webkit-transition-duration: 0.2s;
+  transition-duration: 0.2s;
+}
+html #login-form #btn:focus, body #login-form #btn:focus {
+  outline: none;
+}
+html #login-form #btn:hover, body #login-form #btn:hover {
+  background-color: white;
+  color: black;
+  mix-blend-mode: screen;
+  cursor: pointer;
+}
+html .message, body .message {
+  text-align: center;
+  margin-top: 25px;
+}
+html .message span, body .message span {
+  font-size: 1.2em;
+}
+
+body {
+  background-image: url(/media/watercolour-1336856.jpg);
+  background-size: auto;
+  background-position: -80px -230px;
+}
+
+/*# sourceMappingURL=login.css.map */

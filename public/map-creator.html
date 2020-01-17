@@ -22,12 +22,14 @@
             <h3 id="map-name"></h3>
             <span id="map-version"></span>
         </div>
+        {{#if is_admin}}
         <div id="save-map" class="icon" title="Karte speichern [Strg + s]">
             <i class="far fa-save"></i>
         </div>
         <div id="save-map-as" class="icon" title="Karte speichern als [Strg + Umschalt + s]">
             <i class="fas fa-save"></i>
         </div>
+        {{/if}}
         <div id="open-map" class="icon" title="Karte öffnen [Strg + o]">
             <i class="far fa-folder-open"></i>
         </div>
@@ -47,6 +49,7 @@
         </div>
     </div>
 
+    {{#if is_admin}}
     <div id="map-saver-back" class="dialogue-back">
         <div class="map-saver dialogue">
             <i id="close-map-saver" class="far fa-times-circle close-dialogue"></i>
@@ -75,6 +78,7 @@
             </div>
         </div>
     </div>
+    {{/if}}
 
     <div id="loading-back">
         <div id="loading">
@@ -83,6 +87,7 @@
         </div>
     </div>
 
+    {{#if is_admin}}
     <div id="node-info">
         <div id="node-info-title" contenteditable="true" spellcheck="false">Titel</div>
         <div id="node-info-desc" contenteditable="true" spellcheck="false">Beschreibung</div>
@@ -233,7 +238,7 @@
                 <i class="fas fa-chevron-circle-down"></i>
             </div>
         </div>
-    </div>
+    </div> 
 
     <script src="/scripts/compare-versions.js"></script>
     <script src="/scripts/Edge.js"></script>
@@ -242,7 +247,36 @@
     <script src="/scripts/StairsNode.js"></script>
     <script src="/scripts/BeaconNode.js"></script>
     <script src="/scripts/mapi.js"></script>
-    <script src="/scripts/map_creator.js"></script>
+    <script src="/scripts/map_creator.js"></script>   
+
+    {{else}}
+    <script src="/scripts/mapi.js"></script>
+    <script>
+        window.onload = () => {
+            let mapi = getMapi();
+
+            mapi.can = document.getElementById('main-canvas');
+            mapi.ctx = mapi.can.getContext('2d');
+            mapi.cab = mapi.can.getBoundingClientRect();
+
+            let cpa = mapi.can.parentElement,
+                cpb = cpa.getBoundingClientRect();
+
+            window.onresize = () => {
+                mapi.can.width = cpb.width - 2;
+                mapi.can.height = Math.min(cpb.height - 2, mapi.conf.map.height * mapi.conf.m2px);
+
+                mapi.conf.ox = 0;
+                mapi.conf.oy = 0;
+
+                mapi.cab = mapi.can.getBoundingClientRect();
+                mapi.refresh();
+            };
+
+            mapi.init();
+        };
+    </script>
+    {{/if}}
 </body>
 
 </html>

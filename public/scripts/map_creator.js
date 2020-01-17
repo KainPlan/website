@@ -1,4 +1,6 @@
 window.onload = () => {
+    let mapi = getMapi();
+
     let can = document.getElementById('main-canvas'),
         cab = can.getBoundingClientRect(),
         ctx = can.getContext('2d'),

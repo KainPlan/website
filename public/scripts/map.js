@@ -1,4 +1,6 @@
 window.onload = () => {
+    let mapi = getMapi();
+
     let sb = document.getElementById('sidebar'),
         sbb = document.getElementById('sb-back'),
         sb_intval = null, 

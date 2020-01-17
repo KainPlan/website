@@ -35,7 +35,15 @@ function err_msg(res, code, opts = { err: undefined, msg: undefined }) {
     let code_dict = {
         400: 'Bad request!',
         401: 'Unauthorized access!',
+        402: 'Payment required!',
+        403: 'Forbidden!',
         404: 'Resource not found!',
+        405: 'Method not allowed!',
+        406: 'Not acceptable!',
+        407: 'Proxy Authentication Required!',
+        408: 'Request Timeout!',
+        409: 'Conflict!',
+        410: 'Gone!',
         418: 'I\'m a teapot!',
         500: 'Internal server error!',
     };
@@ -161,43 +169,58 @@ function write_map(m_name, map, res) {
 }
 
 app.put('/api/map/:m_name', (req, res) => {
-    sess.verify_request(req, res, err => {
+    sess.get(req.connection.remoteAddress, req.cookies['token'], (err, s) => {
         if (err) {
-            if (err.message !== 'error 500') {
-                err_msg(res, 401);
-            }
+            e500(err, res);
+        } else if (!s) {
+            err_msg(res, 401);
         } else {
-            if (!req.body.map) {
-                err_msg(res, 400, { msg: 'Missing map!' });
-            } else if (!req.params.m_name) {
-                err_msg(res, 400, { msg: 'Missing map name!' });
-            } else {
-                let m_path = path.join(__dirname, path.normalize(`res/maps/${req.params.m_name}.map.json`)
-                    .replace(/^(\.\.(\/|\\|$))+/, ''));
-
-                if (!valid_map(req.body.map)) {
-                    err_msg(res, 400, { msg: 'Invalid map!' });
+            sess.use(s);
+            db.get_user(s.uname, (err, user) => {
+                if (err || !user) {
+                    e500(err, res);
                 } else {
-                    if (fs.existsSync(m_path)) {
-                        fs.readFile(m_path, (err, data) => {
-                            if (err) {
-                                e500(err, res);
+                    db.get_priv(user.priv, (err, p) => {
+                        if (err || !p) {
+                            e500(err, res);
+                        } else if (!p.admin) {
+                            err_msg(res, 403);
+                        } else {
+                            if (!req.body.map) {
+                                err_msg(res, 400, { msg: 'Missing map!' });
+                            } else if (!req.params.m_name) {
+                                err_msg(res, 400, { msg: 'Missing map name!' });
                             } else {
-                                let prev_map = JSON.parse(data);
-                                if (cv(prev_map.version, req.body.map.version) >= 0) {
-                                    err_msg(res, 400, { msg: 'Version can\'t be older than existent one!' });
+                                let m_path = path.join(__dirname, path.normalize(`res/maps/${req.params.m_name}.map.json`)
+                                    .replace(/^(\.\.(\/|\\|$))+/, ''));
+                
+                                if (!valid_map(req.body.map)) {
+                                    err_msg(res, 400, { msg: 'Invalid map!' });
                                 } else {
-                                    write_map(req.params.m_name, req.body.map, res);
+                                    if (fs.existsSync(m_path)) {
+                                        fs.readFile(m_path, (err, data) => {
+                                            if (err) {
+                                                e500(err, res);
+                                            } else {
+                                                let prev_map = JSON.parse(data);
+                                                if (cv(prev_map.version, req.body.map.version) >= 0) {
+                                                    err_msg(res, 400, { msg: 'Version can\'t be older than existent one!' });
+                                                } else {
+                                                    write_map(req.params.m_name, req.body.map, res);
+                                                }
+                                            }
+                                        });
+                                    } else {
+                                        write_map(req.params.m_name, req.body.map, res);
+                                    }
                                 }
                             }
-                        });
-                    } else {
-                        write_map(req.params.m_name, req.body.map, res);
-                    }
+                        }
+                    });
                 }
-            }
+            });
         }
-    }, e500);
+    });
 });
 
 app.get('/api/maps/', (req, res) => {
@@ -279,7 +302,6 @@ app.get(['/map', '/map.html'], (req, res) => {
             e500(err, res);
         } else {
             let temp = handlebars.compile(data.toString());
-
             sess.get(req.connection.remoteAddress, req.cookies['token'], (err, s) => {
                 if (err) {
                     e500(err, res);
@@ -293,16 +315,9 @@ app.get(['/map', '/map.html'], (req, res) => {
                         if (err) {
                             e500(err, res);
                         } else {
-                            db.get_priv(u.priv, (err, p) => {
-                                if (err) {
-                                    e500(err, res);
-                                } else {
-                                    res.send(temp({
-                                        uname: u.uname,
-                                        is_admin: p.admin, 
-                                    }));
-                                }
-                            });
+                            res.send(temp({
+                                uname: u.uname,
+                            }));
                         }
                     });
                 } 
@@ -322,15 +337,37 @@ app.get(['/login', '/login.html'], (req, res) => {
 });
 
 app.get(['/map-creator', '/map-creator.html'], (req, res) => {
-    sess.verify_request(req, res, err => {
+    fs.readFile(path.join(__dirname, 'public/map-creator.html'), (err, data) => {
         if (err) {
-            if (err.message !== 'error 500') {
-                res.redirect('/login');
-            }
+            e500(err, res);
         } else {
-            res.sendFile(path.join(__dirname, 'public/map-creator.html'));
+            let temp = handlebars.compile(data.toString());
+            sess.get(req.connection.remoteAddress, req.cookies['token'], (err, s) => {
+                if (err) {
+                    e500(err, res);
+                } else if (!s) {
+                    res.redirect('/login');
+                } else {
+                    sess.use(s);
+                    db.get_user(s.uname, (err, u) => {
+                        if (err) {
+                            e500(err, res);
+                        } else {
+                            db.get_priv(u.priv, (err, p) => {
+                                if (err) {
+                                    e500(err, res);
+                                } else {
+                                    res.send(temp({
+                                        is_admin: p.admin,
+                                    }));
+                                }
+                            });
+                        }
+                    });
+                } 
+            });
         }
-    }, e500);
+    });
 });
 
 app.use('/', express.static('public/'));
