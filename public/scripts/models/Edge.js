@@ -1,7 +1,6 @@
 class Edge {
-    constructor(to, length=null) {
+    constructor(to) {
         this.to = to;
-        this.length = length;
         this.color = '#FF5F1F';
     }
 }
