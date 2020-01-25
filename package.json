@@ -15,13 +15,18 @@
     "bcrypt": "^3.0.7",
     "chalk": "^3.0.0",
     "compare-versions": "^3.5.1",
+    "compression": "^1.7.4",
+    "connect-redis": "^4.0.3",
     "cookie-parser": "^1.4.4",
     "express": "^4.17.1",
+    "express-session": "^1.17.0",
     "handlebars": "^4.5.3",
     "mysql": "^2.17.1",
     "next": "^9.2.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
+    "redis": "^2.8.0",
+    "spdy": "^4.0.1",
     "typescript": "^3.7.5",
     "winston": "^3.2.1"
   },
@@ -33,8 +38,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
-    "dev": "node ssr-server.js"
+    "dev": "nodemon ssr-server.js"
   },
   "repository": {
     "type": "git",
