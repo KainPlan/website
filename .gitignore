@@ -1,7 +1,4 @@
 node_modules/*
-conf.json
 lib/*.json
-*.log
-server.log
 public/media/*.mp4
 .next/*

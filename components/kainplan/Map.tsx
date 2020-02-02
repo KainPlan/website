@@ -1,5 +1,5 @@
 import React from 'react';
-import KPMap from '../../models/KPMap';
+import KPMap from '../../lib/models/KPMap';
 
 interface MapProps {
   children?: React.ReactNode;
