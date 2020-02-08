@@ -26,6 +26,10 @@ export default class KPMap {
    */
   height: number;
   /**
+   * The map's scale (m/pixel)
+   */
+  scale: number;
+  /**
    * The background images URIs. (all images should be of the same size)
    */
   background: string[];
@@ -45,15 +49,17 @@ export default class KPMap {
    * @param version The map's version.
    * @param width The map's width.
    * @param height The map's height.
+   * @param scale The map's scale.
    * @param background The map's background sources.
    * @param nodes The map's nodes.
    * @param beacons The map's beacons.
    */
-  constructor(version: string, width: number, height: number, background: string[], nodes?: KPNode[][], beacons?: KPBeacon[][]) {
+  constructor(version: string, width: number, height: number, scale: number, background: string[], nodes?: KPNode[][], beacons?: KPBeacon[][]) {
     if (version == null) throw new InvalidMapFormatError();
     this.version = version;
     this.width = width;
     this.height= height;
+    this.scale = scale;
     this.background = background;
     this.nodes = nodes || background && new Array(background.length).fill(null).map(() => []) || null;
     this.beacons = beacons || background && new Array(background.length).fill(null).map(() => []) || null;
@@ -71,6 +77,7 @@ export default class KPMap {
     if (
       typeof json.width !== 'number'
       || typeof json.height !== 'number'
+      || typeof json.scale !== 'number'
       || !Array.isArray(json.background)
       || !json.background.every((s: string) => typeof s === 'string')
       || !Array.isArray(json.nodes)
@@ -80,7 +87,7 @@ export default class KPMap {
       || json.background.length !== json.nodes.length
       || json.background.length !== json.beacons.length
     ) throw new InvalidMapFormatError();
-    const retMap = new KPMap(json.version, json.width, json.height, json.background);
+    const retMap = new KPMap(json.version, json.width, json.scale, json.height, json.background);
     try {
       for (let l: number = 0; l < json.background.length; l++) {
         json.nodes[l].forEach((n: any) => {

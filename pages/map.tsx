@@ -4,6 +4,7 @@ import fetch from 'isomorphic-unfetch';
 import KPMap from '../lib/models/KPMap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faMapMarkerAlt, faBars, faSearch, faRoute, faChevronDown, faAngleDoubleLeft } from '@fortawesome/free-solid-svg-icons';
+import FlareComponent from 'flare-react';
 
 import '../style/map.scss';
 
@@ -47,46 +48,54 @@ class Map extends React.Component<MapProps, MapState> {
   };
   private sidebar: HTMLDivElement;
 
-  constructor(props) {
+  public constructor(props) {
     super(props);
     this.state = {
       map: props.map,
     };
   }
 
-  componentDidMount() {
+  public componentDidMount() {
     if (!this.state.map) window.location.assign('/');
     console.log(this.state.map);
   }
 
-  onCloseNavFrom() {
+  private onCloseNavFrom() {
   }
 
-  onClearFromIn() {
+  private onClearFromIn() {
   }
 
-  onSelectStartPoint() {
+  private onSelectStartPoint() {
   }
 
-  onOpenSidebar() {
+  private onOpenSidebar() {
   }
 
-  onClearToIn() {
+  private onClearToIn() {
   }
 
-  onSearch() {
+  private onSearch() {
   }
 
-  onShowRoute() {
+  private onShowRoute() {
   }
 
-  onClosePointContainer() {
+  private onClosePointContainer() {
   }
 
-  onCloseSidebar() {
+  private onCloseSidebar() {
   }
 
-  render() {
+  private showLoading(start: boolean) {
+    if (start) {
+
+    } else {
+
+    }
+  }
+
+  public render() {
     return (
       <>
         <MapComponent fullscreen map={this.state.map}>
@@ -142,7 +151,9 @@ class Map extends React.Component<MapProps, MapState> {
             </div>
             <div id="sb-back">
               <div id="loading">
-                <div className="loading-anim"></div>
+                <div className="loading-anim">
+
+                </div>
                 <span>Lädt ...</span>
               </div>
             </div>
@@ -476,12 +487,12 @@ class Map extends React.Component<MapProps, MapState> {
               height: 100%;
               background-color: rgba(0,0,0,.25);
               z-index: 10;
-              display: none;
+              display: flex;
               justify-content: center;
               align-items: center;
                 
               #loading {
-                display: none;
+                display: flex;
                 flex-direction: column;
                 justify-content: space-between;
                 align-items: center;
@@ -506,12 +517,12 @@ class Map extends React.Component<MapProps, MapState> {
               
                 .loading-anim {
                   z-index: 3;
-                  color: #fff;
+                  display: inline-block;
+                  /*color: #fff;
                   height: 48px;
                   width: 48px;
                   position: relative;
                   border: 4px solid;
-                  display: inline-block;
                   animation: rect-rotate 1s linear infinite;
               
                   &::after {
@@ -521,7 +532,7 @@ class Map extends React.Component<MapProps, MapState> {
                     display: block;
                     background: rgba(255,255,255,.5);
                     animation: fill-rect 1s linear infinite;
-                  }
+                  } */
                 }
               
                 span {

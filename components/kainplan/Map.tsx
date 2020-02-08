@@ -1,5 +1,7 @@
-import React, { ReactComponentElement } from 'react';
+import React from 'react';
 import KPMap from '../../lib/models/KPMap';
+
+type LoadingFunction = (start: boolean) => void;
 
 interface MapProps {
   children?: React.ReactNode;
@@ -9,6 +11,7 @@ interface MapProps {
   map: KPMap;
   clockRate?: number;
   animTime?: number;
+  loadingFn?: LoadingFunction;
 }
 
 interface MapState {
@@ -23,10 +26,11 @@ interface MapState {
   clockRate: number;
   animTime: number;
   animIntval: number;
+  loadingFn: LoadingFunction;
 }
 
 class Map extends React.Component<MapProps, MapState> {
-  constructor(props) {
+  public constructor(props) {
     super(props);
     this.state = {
       children: props.children,
@@ -41,10 +45,11 @@ class Map extends React.Component<MapProps, MapState> {
       clockRate: props.clockRate || 10,
       animTime: props.animTime || 100,
       animIntval: props.animIntval || null,
+      loadingFn: props.loadingFn || (() => undefined),
     };
   }
 
-  componentDidMount() {
+  public componentDidMount() {
     if (this.state.fullscreen) {
       window.onresize = this.onWindowResize.bind(this);
       this.onWindowResize();
@@ -62,48 +67,61 @@ class Map extends React.Component<MapProps, MapState> {
     });
   }
 
-  onWindowResize() {
+  private onWindowResize() {
     this.setState({
       width: window.innerWidth,
       height: window.innerHeight,
     });
   }
 
-  onMouseDown() {
+  private onMouseDown() {
 
   }
 
-  onMouseMove() {
+  private onMouseMove() {
 
   }
 
-  onMouseZoom() {
+  private onMouseZoom() {
 
   }
 
-  onMouseUp() {
+  private onMouseUp() {
 
   }
 
-  onTouchDown() {
+  private onTouchDown() {
 
   }
 
-  onTouchMove() {
+  private onTouchMove() {
 
   }
 
-  onTouchUp() {
+  private onTouchUp() {
 
   }
 
-  onSwitchFloor(fid) {
-    this.state.ctx.drawImage(this.state.background[fid], 
-                              0, 0, 
-                              this.state.map.width, this.state.map.height);
+  private onSwitchFloor(fid) {
+    let draw_floor = () => {
+      this.state.ctx.drawImage(this.state.background[fid], 0, 0, 
+        this.state.map.width, this.state.map.height);
+    };
+    if (!this.state.background[fid].complete) {
+      this.state.loadingFn(true);
+      return this.state.background[fid].onload = () => {
+        this.state.loadingFn(false);
+        draw_floor();
+      };
+    }
+    draw_floor();
   }
 
-  render() {
+  public switchFloor(fid) {
+    this.onSwitchFloor(fid);
+  }
+
+  public render() {
     return (
       <>
         <canvas 
