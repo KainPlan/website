@@ -4,7 +4,6 @@ import fetch from 'isomorphic-unfetch';
 import KPMap from '../lib/models/KPMap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faMapMarkerAlt, faBars, faSearch, faRoute, faChevronDown, faAngleDoubleLeft } from '@fortawesome/free-solid-svg-icons';
-import FlareComponent from 'flare-react';
 
 import '../style/map.scss';
 
@@ -47,6 +46,13 @@ class Map extends React.Component<MapProps, MapState> {
     results: null,
   };
   private sidebar: HTMLDivElement;
+  private loader: {
+    background: HTMLDivElement;
+    foreground: HTMLDivElement;
+  } = {
+    background: null,
+    foreground: null,
+  };
 
   public constructor(props) {
     super(props);
@@ -66,13 +72,16 @@ class Map extends React.Component<MapProps, MapState> {
   private onClearFromIn() {
   }
 
+  private onClearToIn() {
+  }
+
   private onSelectStartPoint() {
   }
 
   private onOpenSidebar() {
   }
 
-  private onClearToIn() {
+  private onCloseSidebar() {
   }
 
   private onSearch() {
@@ -84,21 +93,24 @@ class Map extends React.Component<MapProps, MapState> {
   private onClosePointContainer() {
   }
 
-  private onCloseSidebar() {
-  }
-
-  private showLoading(start: boolean) {
+  public showLoading(start: boolean) {
     if (start) {
-
+      this.loader.background.style.display = 'flex';
+      this.loader.foreground.style.display = 'flex';
     } else {
-
+      this.loader.background.style.display = 'none';
+      this.loader.foreground.style.display = 'none';
     }
   }
 
   public render() {
     return (
       <>
-        <MapComponent fullscreen map={this.state.map}>
+        <MapComponent 
+          fullscreen 
+          map={this.state.map}
+          loadingFn={this.showLoading.bind(this)}
+        >
           <div className="overlays">
             <div className="nav-container">
               <div id="nav-from" ref={nf => this.nav.from._ = nf}>
@@ -149,10 +161,9 @@ class Map extends React.Component<MapProps, MapState> {
                 <i className="current"></i>
               </div>
             </div>
-            <div id="sb-back">
-              <div id="loading">
+            <div id="sb-back" ref={e => this.loader.background=e}>
+              <div id="loading" ref={e => this.loader.foreground=e}>
                 <div className="loading-anim">
-
                 </div>
                 <span>Lädt ...</span>
               </div>
@@ -487,12 +498,12 @@ class Map extends React.Component<MapProps, MapState> {
               height: 100%;
               background-color: rgba(0,0,0,.25);
               z-index: 10;
-              display: flex;
+              display: none;
               justify-content: center;
               align-items: center;
                 
               #loading {
-                display: flex;
+                display: none;
                 flex-direction: column;
                 justify-content: space-between;
                 align-items: center;
@@ -518,7 +529,7 @@ class Map extends React.Component<MapProps, MapState> {
                 .loading-anim {
                   z-index: 3;
                   display: inline-block;
-                  /*color: #fff;
+                  color: #fff;
                   height: 48px;
                   width: 48px;
                   position: relative;
@@ -532,7 +543,7 @@ class Map extends React.Component<MapProps, MapState> {
                     display: block;
                     background: rgba(255,255,255,.5);
                     animation: fill-rect 1s linear infinite;
-                  } */
+                  }
                 }
               
                 span {
