@@ -51,10 +51,11 @@ class Map extends React.Component<MapProps, MapState> {
   }
 
   private onWindowResize() {
-    this.controller.resize(window.innerWidth, window.innerHeight);
     this.setState({
-      width: this.controller.width,
-      height: this.controller.height,
+      width: window.innerWidth,
+      height: window.innerHeight,
+    }, () => {
+      this.controller.resize(window.innerWidth, window.innerHeight);
     });
   }
 
@@ -166,23 +167,8 @@ class Map extends React.Component<MapProps, MapState> {
     }
   }
 
-  private onSwitchFloor(fid) {
-    // let draw_floor = () => {
-    //   this.state.ctx.drawImage(this.state.background[fid], 0, 0, 
-    //     this.state.map.width, this.state.map.height);
-    // };
-    // if (!this.state.background[fid].complete) {
-    //   this.state.loadingFn(true);
-    //   return this.state.background[fid].onload = () => {
-    //     this.state.loadingFn(false);
-    //     draw_floor();
-    //   };
-    // }
-    // draw_floor();
-  }
-
   public switchFloor(fid) {
-    this.onSwitchFloor(fid);
+    this.controller.switchFloor(fid);
   }
   
   private renderMap() {

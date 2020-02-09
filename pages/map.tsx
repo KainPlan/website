@@ -26,6 +26,7 @@ class Map extends React.Component<MapProps, MapState> {
     };
   };
 
+  private map: MapComponent;
   private nav: {
     from: {
       _: HTMLDivElement,
@@ -92,6 +93,12 @@ class Map extends React.Component<MapProps, MapState> {
   private onClosePointContainer() {
   }
 
+  private onSwitchFloor(fid: number): void {
+    this.map.switchFloor(fid);
+    document.getElementById('floors-container').getElementsByClassName('current')[0].classList.remove('current');
+    document.getElementById('floors-container').getElementsByClassName(fid+"")[0].classList.add('current');
+  }
+
   public showLoading(start: boolean) {
     if (start) {
       this.loader.background.style.display = 'flex';
@@ -107,6 +114,7 @@ class Map extends React.Component<MapProps, MapState> {
       <>
         <MapComponent 
           fullscreen 
+          ref={e => this.map = e}
           map={this.state.map}
           loadingFn={this.showLoading.bind(this)}
         >
@@ -156,8 +164,8 @@ class Map extends React.Component<MapProps, MapState> {
                 <i onClick={this.onShowRoute.bind(this)} id="route-mb"><FontAwesomeIcon icon={faRoute} title="Route anzeigen" /></i>
               </div>
               <div id="floors-container">
-                <i></i>
-                <i className="current"></i>
+                {this.state.map.background.slice(0,-1).map((e, i) => <i key={i} onClick={() => this.onSwitchFloor(this.state.map.background.length-1-i)} className={this.state.map.background.length-1-i+""}></i>)}
+                <i className="current 0" onClick={() => this.onSwitchFloor(0)}></i>
               </div>
             </div>
             <div id="sb-back" ref={e => this.loader.background=e}>

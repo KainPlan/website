@@ -1,5 +1,4 @@
 import { KPMap, KPNode, KPBeacon, KPEndNode } from ".";
-import { InvalidMapFormatError } from "../errors";
 
 type LoadingFunction = (start: boolean) => void;
 
@@ -26,7 +25,7 @@ export default class MapController {
   currentFloor: number = 0;
   magnifiy: number = 1;
   minMagnify: number = .75;
-  maxMagnify: number = 2;
+  maxMagnify: number = 10;
   offsetX: number = 0;
   offsetY: number = 0;
 
@@ -75,6 +74,8 @@ export default class MapController {
   public resize(width: number, height: number): void {
     this.width = width;
     this.height = height;
+    this.ctx.translate(this.offsetX, this.offsetY);
+    this.render();
   }
 
   public switchFloor(fid: number) {
@@ -133,10 +134,9 @@ export default class MapController {
 
     let animTime: number = time || this.panTime;
     let i: number = 0;
-    let sum: number = Math.abs(deltaX) + Math.abs(deltaY);
-    let xv: number = deltaX * this.panScale;
+    let xv: number = deltaX * this.panScale * (1/Math.max(1, this.magnifiy));
     let xa: number = -xv / animTime;
-    let yv: number = deltaY * this.panScale;
+    let yv: number = deltaY * this.panScale * (1/Math.max(1, this.magnifiy));
     let ya: number = -yv / animTime;
 
     this.staticPan(deltaX, deltaY);
