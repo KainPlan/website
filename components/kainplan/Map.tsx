@@ -25,10 +25,8 @@ interface MapState {
 class Map extends React.Component<MapProps, MapState> {
   canvas: HTMLCanvasElement;
   controller: MapController;
-
   clicks: any[] = [];
   lastTime: number = new Date().getTime();
-
   minTimeDiff: number = 10;
   scrollMultiplier: number = 0.005;
 
@@ -103,7 +101,22 @@ class Map extends React.Component<MapProps, MapState> {
         this.clicks[0] = {...e};
         this.lastTime = new Date().getTime();
       } else if (this.clicks.length === 2) {
+        let otherIndex: number = this.clicks[0].pointerId===e.pointerId ? 1 : 0;
+        let dX: number = Math.abs(e.clientX-this.clicks[otherIndex].clientX);
+        let dY: number = Math.abs(e.clientY-this.clicks[otherIndex].clientY);
+        let currDiff: number = Math.max(dX, dY);
+        let prevDiff: number = Math.max(
+          Math.abs(this.clicks[1-otherIndex].clientX-this.clicks[otherIndex].clientX),
+          Math.abs(this.clicks[1-otherIndex].clientY-this.clicks[otherIndex].clientY),
+        );
+        let compDiff: number = prevDiff-currDiff;
+        let cab: DOMRect = this.canvas.getBoundingClientRect();
+        this.controller.zoom(compDiff * 0.02,
+          Math.min(e.clientX, this.clicks[otherIndex].clientX) - cab.left + dX / 2,
+          Math.min(e.clientY, this.clicks[otherIndex].clientY) - cab.top + dY / 2);
 
+        this.clicks[1-otherIndex] = {...e};
+        this.lastTime = new Date().getTime();
       }
     }
   }

@@ -19,10 +19,10 @@ class Map extends React.Component<MapProps, MapState> {
   static getInitialProps = async function () {
     if (process.env.NODE_ENV === 'development') process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
     const res = await fetch('https://localhost:42069/map');
-    const data = await res.json();
+    const data = await res.text();
 
     return {
-      map: data.map,
+      map: JSON.parse(data).map,
     };
   };
 
@@ -57,13 +57,12 @@ class Map extends React.Component<MapProps, MapState> {
   public constructor(props) {
     super(props);
     this.state = {
-      map: props.map,
+      map: KPMap.parse(props.map),
     };
   }
 
   public componentDidMount() {
     if (!this.state.map) window.location.assign('/');
-    console.log(this.state.map);
   }
 
   private onCloseNavFrom() {

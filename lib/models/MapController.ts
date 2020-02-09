@@ -1,4 +1,5 @@
-import { KPMap, KPNode, KPBeacon } from ".";
+import { KPMap, KPNode, KPBeacon, KPEndNode } from ".";
+import { InvalidMapFormatError } from "../errors";
 
 type LoadingFunction = (start: boolean) => void;
 
@@ -30,6 +31,7 @@ export default class MapController {
   offsetY: number = 0;
 
   public constructor(map: KPMap, width: number, height: number, can?: HTMLCanvasElement, loadingFn?: LoadingFunction) {
+    // if (!(map instanceof KPMap)) throw new InvalidMapFormatError('Not a `KPMap`');
     this.map = map;
     this.width = width; 
     this.height = height;
@@ -40,6 +42,8 @@ export default class MapController {
   public init(can?: HTMLCanvasElement, loadingFn?: LoadingFunction) {
     if (can) this.can = can;
     if (loadingFn) this.loadingFn = loadingFn;
+
+    console.log(this.map);
 
     this.ctx = can.getContext('2d');
     this.background = this.map.background
@@ -161,6 +165,12 @@ export default class MapController {
       this.staticPan(this.m2px(stepX), this.m2px(stepY));
       i++;
     }, 1);
+  }
+
+  public findEndNodes(query: string): KPEndNode[] {
+    let endNodes: KPEndNode[] = [];
+    for (let floor of this.map.nodes) endNodes = [...endNodes, ... floor.filter(n => n instanceof KPEndNode) as KPEndNode[]];
+    return endNodes.filter(n => n.title.toLowerCase().includes(query.toLowerCase()) || n.description.toLowerCase().includes(query.toLowerCase()));
   }
 
   public render(): void {

@@ -87,7 +87,7 @@ export default class KPMap {
       || json.background.length !== json.nodes.length
       || json.background.length !== json.beacons.length
     ) throw new InvalidMapFormatError();
-    const retMap = new KPMap(json.version, json.width, json.scale, json.height, json.background);
+    const retMap = new KPMap(json.version, json.width, json.height, json.scale, json.background);
     try {
       for (let l: number = 0; l < json.background.length; l++) {
         json.nodes[l].forEach((n: any) => {
