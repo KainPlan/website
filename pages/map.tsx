@@ -1,11 +1,11 @@
+import '../style/map.scss';
 import React from 'react';
+import Head from 'next/head';
 import MapComponent from '../components/kainplan/Map';
 import fetch from 'isomorphic-unfetch';
 import KPMap from '../lib/models/KPMap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faMapMarkerAlt, faBars, faSearch, faRoute, faChevronDown, faAngleDoubleLeft } from '@fortawesome/free-solid-svg-icons';
-
-import '../style/map.scss';
 
 interface MapProps {
   map: KPMap;
@@ -112,6 +112,12 @@ class Map extends React.Component<MapProps, MapState> {
   public render() {
     return (
       <>
+        <Head>
+          <meta 
+            name='viewport' 
+            content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' 
+          />
+        </Head>
         <MapComponent 
           fullscreen 
           ref={e => this.map = e}

@@ -37,17 +37,24 @@ class TenFingers extends React.Component<TenFingersProps, TenFingersState> {
     };
   }
 
+  setStateAsync(state) {
+    return new Promise(resolve => {
+      this.setState(state, resolve);
+    })
+  }
+
   async componentDidMount() {
     do {
       for (let v of this.state.values) {
-        for (let i: number = this.state.text.length-1; i >= 0; i--) {
-          this.setState({
+        let i: number = this.state.text.length-1;
+        for (; !v.startsWith(this.state.text) && i >= 0; i--) {
+          await this.setStateAsync({
             text: this.state.text.substr(0,i),
           });
           await new Promise(resolve => window.setTimeout(resolve, this.state.delInterval));
         }
-        for (let i: number = 0; i < v.length; i++) {
-          this.setState({
+        for (; i < v.length; i++) {
+          await this.setStateAsync({
             text: v.substr(0,i+1),
           });
           await new Promise(resolve => window.setTimeout(resolve, this.state.typeInterval));

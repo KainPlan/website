@@ -12,6 +12,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.12.0",
     "@fortawesome/react-fontawesome": "^0.1.8",
     "@zeit/next-sass": "^1.0.1",
+    "animejs": "^3.1.0",
     "bcrypt": "^3.0.7",
     "chalk": "^3.0.0",
     "compare-versions": "^3.5.1",
@@ -27,6 +28,7 @@
     "next": "^9.2.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
+    "react-top-loading-bar": "^1.2.0",
     "redis": "^2.8.0",
     "spdy": "^4.0.1",
     "typescript": "^3.7.5",
@@ -37,7 +39,8 @@
     "@types/react": "^16.9.19",
     "cross-env": "^7.0.0",
     "node-sass": "^4.13.1",
-    "styled-jsx-plugin-sass": "^1.0.0"
+    "styled-jsx-plugin-sass": "^1.0.0",
+    "@types/animejs": "^3.1.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

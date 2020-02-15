@@ -77,6 +77,7 @@ class Map extends React.Component<MapProps, MapState> {
   }
 
   private onMouseZoom(e: WheelEvent) {
+    e.preventDefault();
     let cab: DOMRect = this.canvas.getBoundingClientRect();
     this.controller.zoom(e.deltaY*this.scrollMultiplier, 
       e.clientX - cab.left, e.clientY - cab.top);

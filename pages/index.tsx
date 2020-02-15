@@ -1,6 +1,6 @@
 import '../style/global.scss';
-import Header from '../components/landing/Header';
-import Footer from '../components/landing/Footer';
+import Header from '../components/kainplan/landing/Header';
+import Footer from '../components/kainplan/landing/Footer';
 import React from 'react';
 import Head from 'next/head';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
