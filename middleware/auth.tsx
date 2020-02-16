@@ -1,7 +1,6 @@
 import React from 'react';
 import cookies from 'next-cookies';
 import fetch from 'isomorphic-unfetch';
-import Router from 'next/router';
 
 export interface AuthProps {
   loggedIn: boolean;
@@ -11,7 +10,7 @@ export interface AuthProps {
   };
 }
 
-function withAuth(Component: React.ComponentType, strict?: boolean): React.ComponentType {
+function withAuth(Component: React.ComponentType, strict?: boolean, adminOnly?: boolean): React.ComponentType {
   return class WithAuth extends React.Component<AuthProps> {
     static async getInitialProps(ctx) {
       let notLoggedIn: AuthProps = {
@@ -37,13 +36,14 @@ function withAuth(Component: React.ComponentType, strict?: boolean): React.Compo
     }
 
     componentDidMount() {
-      if (strict && !this.props.loggedIn) window.location.assign('/login');
+      if (strict && !this.props.loggedIn) return window.location.assign('/login');
+      if (adminOnly && !this.props.user.isAdmin) return window.location.assign('/dashboard');
     }
 
     render() {
       return (
         <>
-          {strict && !this.props.loggedIn ? <div>Umleiten ... </div> : <Component {...this.props} />}
+          {(strict && !this.props.loggedIn) || (adminOnly && !this.props.user.isAdmin) ? <div>Umleiten ... </div> : <Component {...this.props} />}
         </>
       );
     }

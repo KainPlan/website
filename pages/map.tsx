@@ -4,7 +4,7 @@ import Head from 'next/head';
 import MapComponent from '../components/kainplan/Map';
 import fetch from 'isomorphic-unfetch';
 import KPMap from '../lib/models/KPMap';
-import { faBars, faSearch, faHome, faTimes, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faSearch, faHome, faTimes, faMapMarkerAlt, faDraftingCompass } from '@fortawesome/free-solid-svg-icons';
 import SearchBox from '../components/kainplan/SearchBox';
 import Sidebar from '../components/kainplan/Sidebar';
 import Link from 'next/link';
@@ -133,7 +133,7 @@ class Map extends React.Component<MapProps, MapState> {
               ref={e => this.sidebar = e}
               links={[
                 { icon: faHome, title: 'Home', href: '/', },
-                { icon: faReact, title: 'Test', href: '/test' },
+                ... this.props.user.isAdmin ? [{ icon: faDraftingCompass, title: 'Atelier', href: '/atelier', }] : [],
               ]}
               north={
                 <Link href={ this.props.loggedIn ? '/dashboard' : '/login' }>

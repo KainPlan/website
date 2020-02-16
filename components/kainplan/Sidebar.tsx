@@ -47,7 +47,8 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
       }, () => anime({
         targets: this.sidebar,
         translateX: -this.sidebar.getBoundingClientRect().width,
-        easing: 'spring(1, 100, 20, 0)',
+        easing: 'linear',
+        duration: 200,
       }).finished.then(() => this.setState({ visible: false, block: false, })));
     }
   }

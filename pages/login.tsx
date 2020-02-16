@@ -81,7 +81,7 @@ class Login extends React.Component<LoginProps, LoginState> {
           <title>KainPlan ; Login</title>
         </Head>
         <main>
-          <WaveBackground position={WaveBackgroundPosition.BOTTOM} animated={true} />
+          <WaveBackground animated position={WaveBackgroundPosition.BOTTOM} />
           <form onSubmit={this.onSubmit.bind(this)}>
             <h1>Anmelden</h1>
             <ResponsiveInputBox label="Nutzername" ref={e => this.usernameIn = e} />

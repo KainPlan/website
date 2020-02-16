@@ -79,7 +79,7 @@ class Loading extends React.Component<LoadingProps, LoadingState> {
           ${this.state.width/2+15} ${this.state.height/2-5}`,
       ],
       opacity: [1, 0],
-      easing: 'spring(1, 80, 15, 0)',
+      easing: 'linear',
       duration: 300,
       loop: false,
     }).finished.then(() => this.setState({
