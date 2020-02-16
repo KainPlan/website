@@ -1,5 +1,7 @@
 import React from 'react';
 import TenFingers from '../tenfingers/TenFingers';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 interface ResponsiveInputBoxProps {
   label: string|string[];
@@ -11,6 +13,7 @@ interface ResponsiveInputBoxProps {
 
 interface ResponsiveInputBoxState extends ResponsiveInputBoxProps {
   active: boolean;
+  block: boolean;
   content: string;
 }
 
@@ -21,6 +24,7 @@ class ResponsiveInputBox extends React.Component<ResponsiveInputBoxProps, Respon
       label: props.label,
       type: props.type || 'text',
       active: false,
+      block: false,
       content: '',
       onFocus: props.onFocus || (() => undefined),
       onBlur: props.onBlur || (() => undefined),
@@ -31,7 +35,7 @@ class ResponsiveInputBox extends React.Component<ResponsiveInputBoxProps, Respon
   input: HTMLInputElement;
 
   focus() {
-    this.input.focus();
+    if (!this.state.block) this.input.focus();
   }
 
   onFocus(e: FocusEvent) {
@@ -55,6 +59,34 @@ class ResponsiveInputBox extends React.Component<ResponsiveInputBoxProps, Respon
     }
   }
 
+  sleep(timeout: number) {
+    return new Promise(resolve => window.setTimeout(resolve, timeout));
+  }
+
+  quadFunc(len: number, mul: number) {
+    return function(n: number) {
+      return mul * Math.pow(n/len - 0.5, 2);
+    }
+  }
+
+  clear() {
+    this.input.blur();
+    this.setState({
+      content: '',
+      block: true,
+    }, async () => {
+      let f = this.quadFunc(this.input.value.length, 5);
+      while (this.input.value.length > 0) {
+        this.input.value = this.input.value.substr(0, this.input.value.length-1);
+        await this.sleep(25*f(this.input.value.length));
+      }
+      this.setState({
+        block: false,
+      });
+      this.input.focus();
+    });
+  }
+
   render() {
     return (
       <>
@@ -72,6 +104,14 @@ class ResponsiveInputBox extends React.Component<ResponsiveInputBoxProps, Respon
               spellCheck="false"
               autoComplete="off"
             />
+            <i 
+              style={{
+                opacity: this.state.content.length > 0 ? "1" : "0",
+              }}
+              onClick={this.clear.bind(this)}
+            >
+              <FontAwesomeIcon icon={faTrashAlt} />
+            </i>
             <label style={{
               color: this.state.active ? "#afafaf" : "#ababab",
               fontSize: this.state.active ? ".8em" : "inherit",
@@ -79,7 +119,11 @@ class ResponsiveInputBox extends React.Component<ResponsiveInputBoxProps, Respon
             }}>
               {
                 Array.isArray(this.state.label) 
-                  ? <TenFingers values={this.state.label} endEndTimeout={500} />
+                  ? <TenFingers 
+                      values={this.state.label} 
+                      endEndTimeout={500} 
+                      cursorColor="#dadada"
+                    />
                   : this.state.label
               }
             </label>
@@ -128,6 +172,20 @@ class ResponsiveInputBox extends React.Component<ResponsiveInputBoxProps, Respon
                 &::selection {
                   background-color: #622dff;
                   color: #fff;
+                }
+              }
+
+              i {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 0 10px;
+                color: #acacac;
+                transition: .2s ease;
+
+                &:hover {
+                  cursor: pointer;
+                  color: #FF2D61;
                 }
               }
 

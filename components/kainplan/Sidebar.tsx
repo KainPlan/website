@@ -114,6 +114,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                   font-weight: bold;
                   color: #fff;
                   background-color: #f2f2f2;
+                  box-shadow: inset 0 0 10px #ababab;
                 }
 
                 & > div {

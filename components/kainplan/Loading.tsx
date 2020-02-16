@@ -7,7 +7,6 @@ interface LoadingProps {
 interface LoadingState extends LoadingProps {
   visible: boolean;
   anim: boolean;
-  block: boolean;
   width: number;
   height: number;
 }
@@ -18,7 +17,6 @@ class Loading extends React.Component<LoadingProps, LoadingState> {
     this.state = {
       visible: false,
       anim: false,
-      block: false,
       width: 0,
       height: 0,
     };
@@ -39,60 +37,54 @@ class Loading extends React.Component<LoadingProps, LoadingState> {
   }
 
   show() {
-    if (!this.state.block) {
-      this.setState({
+    anime.remove(this.backPoly);
+    this.setState({
+      visible: true,
+    }, () => anime({
+      targets: this.backPoly,
+      points: [
+        `${this.state.width/2-30} ${this.state.height/2-30} ${this.state.width/2} ${this.state.height/2-10} ${this.state.width/2} ${this.state.height/2} 
+          ${this.state.width/2-25} ${this.state.height/2} ${this.state.width/2+25} ${this.state.height/2+10} 
+          ${this.state.width/2-5} ${this.state.height/2+30} ${this.state.width/2-20} ${this.state.height/2+10} 
+          ${this.state.width/2+15} ${this.state.height/2-5}`,
+        `0 0 ${this.state.width/2} 0 ${this.state.width} 0 
+          ${this.state.width} ${this.state.height/2} ${this.state.width} ${this.state.height}
+          ${this.state.width/2} ${this.state.height} 0 ${this.state.height}
+          0 ${this.state.height/2}`,
+      ],
+      opacity: [0, 1],
+      easing: 'cubicBezier(.2, .3, .6, .3)',
+      duration: 400,
+      loop: false,
+    }).finished.then(() => this.setState({ 
         visible: true,
-        block: true,
-      }, () => anime({
-        targets: this.backPoly,
-        points: [
-          `${this.state.width/2-30} ${this.state.height/2-30} ${this.state.width/2} ${this.state.height/2-10} ${this.state.width/2} ${this.state.height/2} 
-           ${this.state.width/2-25} ${this.state.height/2} ${this.state.width/2+25} ${this.state.height/2+10} 
-           ${this.state.width/2-5} ${this.state.height/2+30} ${this.state.width/2-20} ${this.state.height/2+10} 
-           ${this.state.width/2+15} ${this.state.height/2-5}`,
-          `0 0 ${this.state.width/2} 0 ${this.state.width} 0 
-           ${this.state.width} ${this.state.height/2} ${this.state.width} ${this.state.height}
-           ${this.state.width/2} ${this.state.height} 0 ${this.state.height}
-           0 ${this.state.height/2}`,
-        ],
-        opacity: [0, 1],
-        easing: 'cubicBezier(.2, .3, .6, .3)',
-        duration: 400,
-        loop: false,
-      }).finished.then(() => this.setState({ 
-          visible: true,
-          block: false, 
-          anim: true, 
-      })));
-    }
+        anim: true, 
+    })));
   }
 
   hide() {
-    if (!this.state.block) {
-      this.setState({
-        block: true,
-        anim: false,
-      }, () => anime({
-        targets: this.backPoly,
-        points: [
-          `0 0 ${this.state.width/2} 0 ${this.state.width} 0 
-           ${this.state.width} ${this.state.height/2} ${this.state.width} ${this.state.height}
-           ${this.state.width/2} ${this.state.height} 0 ${this.state.height}
-           0 ${this.state.height/2}`,
-          `${this.state.width/2-30} ${this.state.height/2-30} ${this.state.width/2} ${this.state.height/2-10} ${this.state.width/2} ${this.state.height/2} 
-           ${this.state.width/2-25} ${this.state.height/2} ${this.state.width/2+25} ${this.state.height/2+10} 
-           ${this.state.width/2-5} ${this.state.height/2+30} ${this.state.width/2-20} ${this.state.height/2+10} 
-           ${this.state.width/2+15} ${this.state.height/2-5}`,
-        ],
-        opacity: [1, 0],
-        easing: 'spring(1, 80, 15, 0)',
-        duration: 300,
-        loop: false,
-      }).finished.then(() => this.setState({
-        visible: false,
-        block: false,
-      })));
-    }
+    anime.remove(this.backPoly);
+    this.setState({
+      anim: false,
+    }, () => anime({
+      targets: this.backPoly,
+      points: [
+        `0 0 ${this.state.width/2} 0 ${this.state.width} 0 
+          ${this.state.width} ${this.state.height/2} ${this.state.width} ${this.state.height}
+          ${this.state.width/2} ${this.state.height} 0 ${this.state.height}
+          0 ${this.state.height/2}`,
+        `${this.state.width/2-30} ${this.state.height/2-30} ${this.state.width/2} ${this.state.height/2-10} ${this.state.width/2} ${this.state.height/2} 
+          ${this.state.width/2-25} ${this.state.height/2} ${this.state.width/2+25} ${this.state.height/2+10} 
+          ${this.state.width/2-5} ${this.state.height/2+30} ${this.state.width/2-20} ${this.state.height/2+10} 
+          ${this.state.width/2+15} ${this.state.height/2-5}`,
+      ],
+      opacity: [1, 0],
+      easing: 'spring(1, 80, 15, 0)',
+      duration: 300,
+      loop: false,
+    }).finished.then(() => this.setState({
+      visible: false,
+    })));
   }
 
   render() {
@@ -110,7 +102,7 @@ class Loading extends React.Component<LoadingProps, LoadingState> {
             <polygon
               ref={e => this.backPoly = e} 
               points={
-                this.state.visible && !this.state.block
+                this.state.visible
                 ? `0 0 ${this.state.width/2} 0 ${this.state.width} 0 
                    ${this.state.width} ${this.state.height/2} ${this.state.width} ${this.state.height}
                    ${this.state.width/2} ${this.state.height} 0 ${this.state.height}

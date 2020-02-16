@@ -8,18 +8,12 @@ interface MapProps {
   fullscreen?: boolean;
   width?: number;
   height?: number;
-  map: KPMap;
-  clockRate?: number;
+  map?: KPMap;
   animTime?: number;
   loadingFn?: LoadingFunction;
 }
 
-interface MapState {
-  children?: React.ReactNode;
-  fullscreen?: boolean;
-  width: number;
-  height: number;
-  loadingFn: LoadingFunction;
+interface MapState extends MapProps {
 }
 
 class Map extends React.Component<MapProps, MapState> {
@@ -39,15 +33,22 @@ class Map extends React.Component<MapProps, MapState> {
       height: props.height||600,
       loadingFn: props.loadingFn || (() => undefined),
     };
-    this.controller = new MapController(props.map, this.state.width, this.state.height);
+    if (props.map) this.controller = new MapController(props.map, this.state.width, this.state.height);
   }
 
   public componentDidMount() {
-    this.controller.init(this.canvas, this.state.loadingFn);
+    if (this.controller) this.controller.init(this.canvas, this.state.loadingFn);
     if (this.state.fullscreen) {
       window.onresize = this.onWindowResize.bind(this);
       this.onWindowResize();
     }
+  }
+
+  public provideMap(map: KPMap) {
+    this.setState({ map, }, () => {
+      this.controller = new MapController(map, this.state.width, this.state.height)
+      this.controller.init(this.canvas, this.state.loadingFn);
+    });
   }
 
   private onWindowResize() {
@@ -55,16 +56,16 @@ class Map extends React.Component<MapProps, MapState> {
       width: window.innerWidth,
       height: window.innerHeight,
     }, () => {
-      this.controller.resize(window.innerWidth, window.innerHeight);
+      if (this.controller) this.controller.resize(window.innerWidth, window.innerHeight);
     });
   }
 
-  private onMouseDown(e: PointerEvent) {
+  private onMouseDown(e: React.PointerEvent) {
     this.clicks.push({...e});
     this.lastTime = new Date().getTime();
   }
 
-  private onMouseMove(e: PointerEvent) {
+  private onMouseMove(e: React.PointerEvent) {
     if (this.clicks.length === 1 && new Date().getTime() - this.lastTime > this.minTimeDiff) {
       this.controller.pan(
         this.clicks[0].clientX - e.clientX,
@@ -76,23 +77,23 @@ class Map extends React.Component<MapProps, MapState> {
     }
   }
 
-  private onMouseZoom(e: WheelEvent) {
+  private onMouseZoom(e: React.WheelEvent) {
     e.preventDefault();
     let cab: DOMRect = this.canvas.getBoundingClientRect();
     this.controller.zoom(e.deltaY*this.scrollMultiplier, 
       e.clientX - cab.left, e.clientY - cab.top);
   }
 
-  private onMouseUp(e: PointerEvent) {
+  private onMouseUp(e: React.PointerEvent) {
     this.clicks.pop();
   }
 
-  private onTouchDown(e: PointerEvent) {
+  private onTouchDown(e: React.PointerEvent) {
     this.clicks.push({...e});
     this.lastTime = new Date().getTime();
   }
 
-  private onTouchMove(e: PointerEvent) {
+  private onTouchMove(e: React.PointerEvent) {
     if (new Date().getTime() - this.lastTime > this.minTimeDiff) {
       if (this.clicks.length === 1) {
         this.controller.pan(
@@ -123,7 +124,7 @@ class Map extends React.Component<MapProps, MapState> {
     }
   }
 
-  private onTouchUp(e: PointerEvent) {
+  private onTouchUp(e: React.PointerEvent) {
     for (let i = 0; i < this.clicks.length; i++) {
       if ((this.clicks[i] as PointerEvent).pointerId === e.pointerId) {
         this.clicks.splice(i,1);
@@ -132,7 +133,7 @@ class Map extends React.Component<MapProps, MapState> {
     }
   }
 
-  private onDown(e: PointerEvent) {
+  private onDown(e: React.PointerEvent) {
     e.preventDefault();
     switch(e.pointerType) {
       case 'mouse':
@@ -144,7 +145,7 @@ class Map extends React.Component<MapProps, MapState> {
     }
   }
 
-  private onMove(e: PointerEvent) {
+  private onMove(e: React.PointerEvent) {
     e.preventDefault();
     switch(e.pointerType) {
       case 'mouse':
@@ -156,7 +157,7 @@ class Map extends React.Component<MapProps, MapState> {
     }
   }
 
-  private onUp(e: PointerEvent) {
+  private onUp(e: React.PointerEvent) {
     e.preventDefault();
     switch(e.pointerType) {
       case 'mouse':
@@ -183,13 +184,13 @@ class Map extends React.Component<MapProps, MapState> {
           ref={e => this.canvas = e} 
           width={this.state.width} 
           height={this.state.height}
-          onWheel={this.onMouseZoom.bind(this)}
-          onPointerDown={this.onDown.bind(this)}
-          onPointerMove={this.onMove.bind(this)}
-          onPointerUp={this.onUp.bind(this)}
-          onPointerCancel={this.onUp.bind(this)}
-          onPointerOut={this.onUp.bind(this)}
-          onPointerLeave={this.onUp.bind(this)}  
+          onWheel={e => this.controller ? this.onMouseZoom(e) : undefined}
+          onPointerDown={e => this.controller ? this.onDown(e) : undefined}
+          onPointerMove={e => this.controller ? this.onMove(e) : undefined}
+          onPointerUp={e => this.controller ? this.onUp(e) : undefined}
+          onPointerCancel={e => this.controller ? this.onUp(e) : undefined}
+          onPointerOut={e => this.controller ? this.onUp(e) : undefined}
+          onPointerLeave={e => this.controller ? this.onUp(e) : undefined}  
         ></canvas>
         <div>
           {this.state.children}

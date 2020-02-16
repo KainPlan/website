@@ -70,6 +70,8 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
               padding: 0 10px;
               color: #dadada;
               transition: .2s ease;
+              min-width: 16px;
+              text-align: center;
 
               &:hover {
                 cursor: pointer;

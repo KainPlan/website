@@ -4,14 +4,23 @@ import SearchBox from "../components/kainplan/SearchBox";
 import { faBars, faSearch, faFootballBall } from "@fortawesome/free-solid-svg-icons";
 import Sidebar from "../components/kainplan/Sidebar";
 import Loading from '../components/kainplan/Loading';
+import Toast, { ToastType, ToastPosition } from '../components/kainplan/Toast';
+import ToastHandler from '../components/kainplan/ToastHandler';
+import WaveBackground, { WaveBackgroundPosition } from '../components/kainplan/WaveBackground';
+import Head from 'next/head';
 
 export default () => {
   let sidebar: Sidebar;
   let loading: Loading;
+  let toastHandler;
 
   return (
     <>
+      <Head>
+        <title>KainPlan ; Test</title>
+      </Head>
       <section>
+        <WaveBackground position={WaveBackgroundPosition.TOP} animated={true} />
         <div>
           <SearchBox 
             label={[
@@ -60,6 +69,8 @@ export default () => {
             onContentChange={sname => console.log(`Welcome back, ${sname}!`)}
           />
         </div>
+        <ToastHandler ref={e => toastHandler = e} position={ToastPosition.BOTTOM_RIGHT} />
+        <button onClick={() => toastHandler.showInfo('Hello!', 5)}>Click me!</button>
       </section>
       <style jsx>{`
         section {

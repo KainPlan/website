@@ -9,35 +9,34 @@ interface HeaderProps {
 }
 
 interface HeaderState {
-  header: React.RefObject<HTMLElement>;
 }
 
 class Header extends React.Component<HeaderProps, HeaderState> {
   constructor(props) {
     super(props);
     this.state = {
-      header: React.createRef(),
     };
   }
+
+  header: HTMLElement;
 
   componentDidMount() {
     let prev: number = window.scrollY;
     window.onscroll = () => {
+      if (!this.header) return;
       let diff: number = window.scrollY - prev;
-
       if (diff < 0 || window.scrollY === 0 || window.scrollY + window.innerHeight >= window.document.body.offsetHeight) {
-        this.state.header.current.style.top = '0px';
+        this.header.style.top = '0px';
       } else {
-        this.state.header.current.style.top = +this.state.header.current.style.top.replace('px', '') - diff + 'px';
+        this.header.style.top = +this.header.style.top.replace('px', '') - diff + 'px';
       }
-
       prev = window.scrollY;
     };
   }
 
   render() {
     return (
-      <header ref={this.state.header}>
+      <header ref={e => this.header = e}>
         <h1>
           <TenFingers
             values={['KainPlan']}
