@@ -2,6 +2,8 @@ import React from 'react';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileAlt, faSave, faFolder, faFolderOpen } from '@fortawesome/free-solid-svg-icons';
+import DropdownGroup from '../DropdownGroup';
+import DropdownItem, { DropdownAction } from '../DropdownItem';
 
 interface MapOverview {
   name: string;
@@ -9,6 +11,7 @@ interface MapOverview {
 }
 
 interface NavbarProps {
+  actionHandler: (action: DropdownAction) => void;
   map?: MapOverview;
 }
 
@@ -46,23 +49,27 @@ class Navbar extends React.Component<NavbarProps, NavbarState> {
                 <span>{ this.state.map.name }</span>
                 <span>{ this.state.map.version }</span>
               </div>
-              <div>
-                <i title="Neue Karte [Strg + N]">
-                  <FontAwesomeIcon icon={faFileAlt} />
-                </i>
-                <i title="Karte speichern [Strg + S]">
-                  <FontAwesomeIcon icon={faSave} />
-                </i>
-                <i title="Karte speichern als [Strg + Umschalt + S]">
-                  <FontAwesomeIcon icon={faFolder} />
-                </i>
-                <i title="Karte öffnen [Strg + O]">
-                  <FontAwesomeIcon icon={faFolderOpen} />
-                </i>
-              </div>
+              <i title="Neue Karte [Strg + N]">
+                <FontAwesomeIcon icon={faFileAlt} />
+              </i>
+              <i title="Karte speichern [Strg + S]">
+                <FontAwesomeIcon icon={faSave} />
+              </i>
+              <i title="Karte speichern als [Strg + Umschalt + S]">
+                <FontAwesomeIcon icon={faFolder} />
+              </i>
+              <i title="Karte öffnen [Strg + O]">
+                <FontAwesomeIcon icon={faFolderOpen} />
+              </i>
             </div>
             <div>
-
+              <DropdownGroup
+                actionHandler={this.props.actionHandler}
+                items={[
+                  { label: 'Karte', children: [ ], },
+                  { label: 'Tools', children: [ ], },
+                ]}
+              />
             </div>
           </div>
         </div>
@@ -92,13 +99,14 @@ class Navbar extends React.Component<NavbarProps, NavbarState> {
               flex-grow: 1;
               display: flex;
               justify-content: stretch;
-              align-items: center;
+              align-items: stretch;
               margin-left: 10px;
               border-left: 1.5px solid #f2f2f2;
               padding-left: 10px;
 
               & > div:first-child {
                 display: flex;
+                align-items: center;
 
                 & > div:first-child {
                   padding-right: 10px;
@@ -117,20 +125,18 @@ class Navbar extends React.Component<NavbarProps, NavbarState> {
                   }
                 }
 
-                & > div:last-child {
-                  & > i {
-                    font-size: 1.4em;
-                    transition: .2s ease;
+                & > i {
+                  font-size: 1.4em;
+                  transition: .2s ease;
 
-                    &:not(:last-child) {
-                      margin-right: 10px;
-                    }
+                  &:not(:last-child) {
+                    margin-right: 10px;
+                  }
 
-                    &:hover {
-                      cursor: pointer;
-                      transform: scale(1.1);
-                      color: #622dff;
-                    }
+                  &:hover {
+                    cursor: pointer;
+                    transform: scale(1.1);
+                    color: #622dff;
                   }
                 }
               }

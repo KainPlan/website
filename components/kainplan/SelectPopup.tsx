@@ -43,9 +43,12 @@ class SelectPopup extends React.Component<SelectPopupProps, SelectPopupState> {
   }
 
   onSubmit(selected: SelectItem|SelectItem[]) {
-    if (typeof selected !== "undefined" || (Array.isArray(selected) && selected.length > 0)) {
+    if ((Array.isArray(selected) && selected.length > 0)
+        || (!Array.isArray(selected) && typeof selected !== "undefined")) {
       this.hide();
       this.state.onSubmit(selected);  
+    } else {
+      this.popup.wiggle();
     }
   }
 

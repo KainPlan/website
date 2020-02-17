@@ -48,8 +48,7 @@ class Popup extends React.Component<PopupProps, PopupState> {
     }));
   }
 
-  onHide() {
-    if (!this.state.unCloseable) return this.hide();
+  wiggle() {
     anime({
       targets: this.window,
       translateX: [0, -25],
@@ -66,6 +65,11 @@ class Popup extends React.Component<PopupProps, PopupState> {
       duration: 300,
       easing: 'easeOutElastic',
     })));
+  }
+
+  onHide() {
+    if (!this.state.unCloseable) return this.hide();
+    this.wiggle();
   }
 
   hide() {

@@ -11,6 +11,7 @@ import { Cookie } from 'universal-cookie';
 import Loading from '../components/kainplan/Loading';
 import { SelectItem } from '../components/kainplan/Select';
 import Navbar from '../components/kainplan/atelier/Navbar';
+import { DropdownAction } from '../components/kainplan/DropdownItem';
 
 if (process.env.NODE_ENV === 'development') process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
@@ -116,6 +117,10 @@ class Atelier extends React.Component<AtelierProps, AtelierState> {
     this.map.resize(window.innerWidth, window.innerHeight-this.navContainer.getBoundingClientRect().height);
   }
 
+  onNavbarAction(action: DropdownAction) {
+    console.log(action);
+  }
+
   render() {
     return (
       <>
@@ -129,7 +134,7 @@ class Atelier extends React.Component<AtelierProps, AtelierState> {
           </title>
         </Head>
         <nav ref={e => this.navContainer = e}>
-          <Navbar />
+          <Navbar actionHandler={this.onNavbarAction.bind(this)} />
         </nav>
         <MapComponent 
           loadingFn={this.showLoading.bind(this)}
