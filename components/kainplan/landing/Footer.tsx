@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelopeSquare, faSchool } from '@fortawesome/free-solid-svg-icons';
-import { faTwitterSquare, faInstagram } from '@fortawesome/free-brands-svg-icons';
+import { faTwitterSquare, faInstagram, faReddit } from '@fortawesome/free-brands-svg-icons';
 
 const Footer = () => (
   <footer>
@@ -21,9 +21,14 @@ const Footer = () => (
             <FontAwesomeIcon icon={faSchool} />
           </i>
         </a>
-        <a className="icon-link" href="//twitter.com/kainplan" target="_blank" rel="noreferrer">
+        <a className="icon-link" href="//twitter.com/k41npl4n" target="_blank" rel="noreferrer">
           <i>
             <FontAwesomeIcon icon={faTwitterSquare} />
+          </i>
+        </a>
+        <a className="icon-link" href="//reddit.com/user/k41npl4n" target="_blank" rel="noreferrer">
+          <i>
+            <FontAwesomeIcon icon={faReddit} />
           </i>
         </a>
         <a className="icon-link" href="//instagram.com/kainplan" target="_blank" rel="noreferrer">
@@ -36,6 +41,9 @@ const Footer = () => (
       <div className="footer-part">
         <Link href="/map">
           <a>Karte</a>
+        </Link>
+        <Link href="/team">
+          <a>Team</a>
         </Link>
         <Link href="/login">
           <a>Login</a>
@@ -98,7 +106,7 @@ const Footer = () => (
               text-decoration: none;
 
               i {
-                font-size: 1.8em;
+                font-size: 1.6em;
                 transition: .3s ease;
 
                 &:hover {
@@ -161,7 +169,13 @@ const Footer = () => (
               padding-top: 15px;
               border-top: 2px dashed #e6f2ff;
             }
-        }
+
+            .icon-link {
+              i {
+                font-size: 2em !important;
+              }
+            }
+          }
         }
       }
     `}</style>

@@ -8,9 +8,10 @@ import { faBars, faSearch, faHome, faTimes, faMapMarkerAlt, faDraftingCompass } 
 import SearchBox from '../components/kainplan/SearchBox';
 import Sidebar from '../components/kainplan/Sidebar';
 import Link from 'next/link';
-import { faReact } from '@fortawesome/free-brands-svg-icons';
 import Loading from '../components/kainplan/Loading';
 import withAuth, { AuthProps } from '../middleware/auth';
+
+if (process.env.NODE_ENV === 'development') process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 interface MapProps extends AuthProps {
 };
@@ -40,7 +41,6 @@ class Map extends React.Component<MapProps, MapState> {
 
   async loadMap() {
     this.showLoading();
-    if (process.env.NODE_ENV === 'development') process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
     const res = await fetch('https://localhost:42069/map');
     const data = await res.text();
 

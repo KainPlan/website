@@ -1,11 +1,9 @@
-import Link from 'next/link';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
-
 import TenFingers from '../../tenfingers/TenFingers';
+import Link from 'next/link';
 
 interface HeaderProps {
+  children?: React.ReactNode;
 }
 
 interface HeaderState {
@@ -37,15 +35,15 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   render() {
     return (
       <header ref={e => this.header = e}>
-        <h1>
-          <TenFingers
-            values={['KainPlan']}
-          />
-        </h1>
+        <Link href="/">
+          <h1>
+            <TenFingers
+              values={['KainPlan']}
+            />
+          </h1>
+        </Link>
         <div>
-          <Link href="/map">
-            <a>Los geht's! <i><FontAwesomeIcon icon={faExternalLinkAlt} /></i></a>
-          </Link>
+          {this.props.children}
         </div>
         <style jsx>{`
           header {
@@ -61,41 +59,26 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             padding: 5px 25px;
             align-items: center;
             justify-content: space-between;
-            align-items: center;
+            align-items: stretch;
             overflow: hidden;
             box-shadow: 0px 2px 4px #cecece;
             transition: .2s ease;
-          
-            div {
-              display: inline-block;
-              min-width: 110px;
-              background-size: 200% 100%;
-              background-image: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0,0,0,0) 50%, #622dff 50%, #622dff 100%);
-              background-position: 0 0;
-              transition: .15s ease;
-              padding: 5px;
-              border-radius: 3px;
-              box-sizing: border-box;
-            
+
+            h1 {
+              display: flex;
+              align-items: center;
+              transition: .2s ease;
+
               &:hover {
                 cursor: pointer;
-                background-position: 100% 0;
-                color: #fff;
-                transform: scale(1.1);
+                opacity: .7;
               }
-            
-              &:focus {
-                outline: none;
-              }
-            
-              i {
-                margin-left: 5px;
-              }
-            
-              a {
-                text-decoration: none;
-                color: inherit;
-              }
+            }
+
+            div {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
             }
           }
         `}</style>

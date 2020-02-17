@@ -4,7 +4,8 @@ import Footer from '../components/kainplan/landing/Footer';
 import React from 'react';
 import Head from 'next/head';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDoubleDown, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
+import HypedLink from '../components/kainplan/HypedLink';
 
 class Index extends React.Component {
   onScrollClick() {
@@ -19,7 +20,13 @@ class Index extends React.Component {
         <Head>
           <title>KainPlan</title>
         </Head>
-        <Header />
+        <Header>
+          <HypedLink
+            label="Los geht's!"
+            href="/map"
+            icon={faExternalLinkAlt}
+          />
+        </Header>
         <article>
           <div className="top-main">
             <div className="top-main-inner">

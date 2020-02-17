@@ -10,6 +10,9 @@ import { withCookies, Cookies } from 'react-cookie';
 import { Cookie } from 'universal-cookie';
 import WaveBackground, { WaveBackgroundPosition } from '../components/kainplan/WaveBackground';
 import Head from 'next/head';
+import Header from '../components/kainplan/landing/Header';
+import HypedLink, { HypedIconPosition } from '../components/kainplan/HypedLink';
+import { faChevronLeft, faAngleDoubleLeft, faMap } from '@fortawesome/free-solid-svg-icons';
 
 interface LoginProps {
   cookies: Cookies;
@@ -80,13 +83,21 @@ class Login extends React.Component<LoginProps, LoginState> {
         <Head>
           <title>KainPlan ; Login</title>
         </Head>
+        <Header>
+          <HypedLink
+            label="Home"
+            href="/"
+            icon={faAngleDoubleLeft}
+            position={HypedIconPosition.BEFORE}
+          />
+        </Header>
         <main>
           <WaveBackground animated position={WaveBackgroundPosition.BOTTOM} />
           <form onSubmit={this.onSubmit.bind(this)}>
             <h1>Anmelden</h1>
             <ResponsiveInputBox label="Nutzername" ref={e => this.usernameIn = e} />
             <ResponsiveInputBox label="Passwort" type="password" ref={e => this.passwordIn = e} />
-            <input type="submit" value="Bestätigen" />
+            <input type="submit" value="Login" />
           </form>
           <ToastHandler 
             position={ToastPosition.BOTTOM_RIGHT} 
@@ -94,7 +105,7 @@ class Login extends React.Component<LoginProps, LoginState> {
           />
           <footer>
             <a onClick={() => Router.back()}>
-              Back
+              Zurück
             </a>
             <span>
               design &copy; KainPlan
@@ -122,7 +133,7 @@ class Login extends React.Component<LoginProps, LoginState> {
                 border: none;
                 margin-top: 1.2em;
                 background-image: linear-gradient(to right, rgba(255,255,255,.2) 0%, rgba(255,255,255,.2) 50%, #622dff 50%, #622dff 100%);
-                background-size: 200% 100%;
+                background-size: 205% 100%;
                 background-position: 0 0;
                 border: 1.5px solid #622dff;
                 border-radius: 25px;

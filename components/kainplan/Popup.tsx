@@ -13,6 +13,7 @@ export interface PopupProps {
 }
 
 export interface PopupState {
+  unCloseable: boolean;
   visible: boolean;
   onHide: () => void;
 }
@@ -21,12 +22,19 @@ class Popup extends React.Component<PopupProps, PopupState> {
   constructor(props) {
     super(props);
     this.state = {
+      unCloseable: props.unCloseable,
       visible: props.visible,
       onHide: props.onHide || (() => undefined),
     };
   }
 
   window: HTMLDivElement;
+
+  setCloseable(closeable: boolean) {
+    this.setState({
+      unCloseable: !closeable,
+    });
+  }
 
   show() {
     anime.remove(this.window);
@@ -40,35 +48,36 @@ class Popup extends React.Component<PopupProps, PopupState> {
     }));
   }
 
+  onHide() {
+    if (!this.state.unCloseable) return this.hide();
+    anime({
+      targets: this.window,
+      translateX: [0, -25],
+      duration: 100,
+      easing: 'linear',
+    }).finished.then(() => anime({
+      targets: this.window,
+      translateX: [-25, 25],
+      duration: 150,
+      easing: 'linear',
+    }).finished.then(() => anime({
+      targets: this.window,
+      translateX: [25, 0],
+      duration: 300,
+      easing: 'easeOutElastic',
+    })));
+  }
+
   hide() {
-    if (!this.props.unCloseable) {
-      anime.remove(this.window);
-      anime({
-        targets: this.window,
-        scale: [1, 0],
-        duration: 400,
-        easing: 'easeInBack',
-      }).finished.then(() => this.setState({
-        visible: false,
-      }, () => this.state.onHide()));
-    } else {
-      anime({
-        targets: this.window,
-        translateX: [0, -25],
-        duration: 100,
-        easing: 'linear',
-      }).finished.then(() => anime({
-        targets: this.window,
-        translateX: [-25, 25],
-        duration: 150,
-        easing: 'linear',
-      }).finished.then(() => anime({
-        targets: this.window,
-        translateX: [25, 0],
-        duration: 300,
-        easing: 'easeOutElastic',
-      })));
-    }
+    anime.remove(this.window);
+    anime({
+      targets: this.window,
+      scale: [1, 0],
+      duration: 400,
+      easing: 'easeInBack',
+    }).finished.then(() => this.setState({
+      visible: false,
+    }, () => this.state.onHide()));
   }
 
   render() {
@@ -79,9 +88,15 @@ class Popup extends React.Component<PopupProps, PopupState> {
           style={{
             display: this.state.visible ? 'block' : 'none',
           }}
-          onClick={() => this.hide()}
+          onClick={() => this.onHide()}
         >
-          <div ref={e => this.window = e}>
+          <div 
+            ref={e => this.window = e}
+            onClick={e => {
+              e.stopPropagation();
+              return true;
+            }}
+          >
             <div>
               <label>
                 <i>
@@ -90,8 +105,8 @@ class Popup extends React.Component<PopupProps, PopupState> {
                 {this.props.title}
               </label>
               {
-                !this.props.unCloseable && 
-                <i onClick={() => this.hide()}>
+                !this.state.unCloseable && 
+                <i onClick={() => this.onHide()}>
                   <FontAwesomeIcon icon={faTimes} />
                 </i>
               }
@@ -146,6 +161,14 @@ class Popup extends React.Component<PopupProps, PopupState> {
 
               & > div:not(:first-child) {
                 padding: 25px 10px;
+              }
+            }
+          }
+
+          @media only screen and (max-width: 600px) {
+            .popup-root {
+              & > div {
+                width: 90%;
               }
             }
           }

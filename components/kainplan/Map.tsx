@@ -1,6 +1,8 @@
 import React from 'react';
 import { KPMap, MapController } from '../../lib/models';
 
+if (process.env.NODE_ENV === 'development') process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 type LoadingFunction = (start: boolean) => void;
 
 interface MapProps {
@@ -17,13 +19,6 @@ interface MapState extends MapProps {
 }
 
 class Map extends React.Component<MapProps, MapState> {
-  canvas: HTMLCanvasElement;
-  controller: MapController;
-  clicks: any[] = [];
-  lastTime: number = new Date().getTime();
-  minTimeDiff: number = 10;
-  scrollMultiplier: number = 0.005;
-
   public constructor(props) {
     super(props);
     this.state = {
@@ -36,12 +31,30 @@ class Map extends React.Component<MapProps, MapState> {
     if (props.map) this.controller = new MapController(props.map, this.state.width, this.state.height);
   }
 
+  canvas: HTMLCanvasElement;
+  controller: MapController;
+  clicks: any[] = [];
+  lastTime: number = new Date().getTime();
+  minTimeDiff: number = 10;
+  scrollMultiplier: number = 0.005;
+
   public componentDidMount() {
     if (this.controller) this.controller.init(this.canvas, this.state.loadingFn);
     if (this.state.fullscreen) {
-      window.onresize = this.onWindowResize.bind(this);
+      window.addEventListener('resize', this.onWindowResize.bind(this));
       this.onWindowResize();
     }
+  }
+
+  public loadMap(name?: string, tkn?: string) {
+    this.state.loadingFn(true);
+    fetch(`https://localhost:42069/map/${name ? name + '/' + tkn : ''}`)
+      .then(res => res.json())
+      .then(res => {
+        if (!res.success) return;
+        this.provideMap(res.map);
+        this.state.loadingFn(false);
+      });
   }
 
   public provideMap(map: KPMap) {

@@ -56,7 +56,7 @@ class WaveBackground extends React.Component<WaveBackgroundProps, WaveBackground
   wavePath: SVGPathElement;
 
   componentDidMount() {
-    window.onresize = this.onResize.bind(this);
+    window.addEventListener('resize', () => this.onResize());
     this.onResize();
     if (this.props.animated) {
       anime({

@@ -27,6 +27,7 @@ class MyApp extends App {
             top: 0,
             left: 0,
             width: '100%',
+            zIndex: 1000,
           }}
         >
           <LoadingBar 
