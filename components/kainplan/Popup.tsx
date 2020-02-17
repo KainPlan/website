@@ -127,6 +127,7 @@ class Popup extends React.Component<PopupProps, PopupState> {
 
             & > div {
               width: 60%;
+              max-width: 700px;
               background-color: white;
               margin: 1.5em auto;
               border-radius: 0 0 3px 3px;

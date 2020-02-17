@@ -42,7 +42,7 @@ export default class MapController {
     if (can) this.can = can;
     if (loadingFn) this.loadingFn = loadingFn;
 
-    console.log(this.map);
+    console.log(this);
 
     this.ctx = can.getContext('2d');
     this.background = this.map.background
@@ -54,6 +54,10 @@ export default class MapController {
 
     this.switchFloor(0);
     window.controller = this;
+  }
+
+  public del() {
+    this.ctx.translate(-this.offsetX, -this.offsetY);
   }
 
   private px2m(px: number): number {
@@ -74,7 +78,11 @@ export default class MapController {
   public resize(width: number, height: number): void {
     this.width = width;
     this.height = height;
-    this.ctx.translate(this.offsetX, this.offsetY);
+    let prevX: number = this.offsetX;
+    let prevY: number = this.offsetY;
+    this.offsetX = 0;
+    this.offsetY = 0;
+    this.staticPan(-prevX, -prevY);
     this.render();
   }
 

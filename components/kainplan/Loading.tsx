@@ -46,47 +46,50 @@ class Loading extends React.Component<LoadingProps, LoadingState> {
     this.setState({
       visible: true,
     }, () => {
-      anime({
-        targets: this.backPoly,
-        points: [
-          this.state.backFrom,
-          this.state.backTo,
-        ],
-        opacity: [0, 1],
-        easing: 'easeOutElastic',
-        duration: 400,
-      });
-      anime({
-        targets: this.svgText,
-        translateX: [-this.svgText.getBoundingClientRect().width, 0],
-        easing: 'easeOutElastic',
-        duration: 1000,
-      });
+      // anime({
+      //   targets: this.backPoly,
+      //   points: [
+      //     this.state.backFrom,
+      //     this.state.backTo,
+      //   ],
+      //   opacity: [0, 1],
+      //   easing: 'easeOutElastic',
+      //   duration: 400,
+      // });
+      // anime({
+      //   targets: this.svgText,
+      //   translateX: [-this.svgText.getBoundingClientRect().width, 0],
+      //   easing: 'easeOutElastic',
+      //   duration: 1000,
+      // });
     });
   }
 
   hide() {
     anime.remove(this.backPoly);
-    anime({
-      targets: this.svgText,
-      opacity: [1, 0],
-      translateX: [0, -this.svgText.getBoundingClientRect().width],
-      easing: 'linear',
-      duration: 150,
-      delay: 75,
-    });
-    anime({
-      targets: this.backPoly,
-      points: [
-        this.state.backTo,
-        this.state.backFrom,
-      ],
-      opacity: [1, 0],
-      easing: 'linear',
-      duration: 300,
-    }).finished.then(() => this.setState({
+    this.setState({
       visible: false,
-    }));
+    });
+    // anime({
+    //   targets: this.svgText,
+    //   opacity: [1, 0],
+    //   translateX: [0, -this.svgText.getBoundingClientRect().width],
+    //   easing: 'linear',
+    //   duration: 150,
+    //   delay: 75,
+    // });
+    // anime({
+    //   targets: this.backPoly,
+    //   points: [
+    //     this.state.backTo,
+    //     this.state.backFrom,
+    //   ],
+    //   opacity: [1, 0],
+    //   easing: 'linear',
+    //   duration: 300,
+    // }).finished.then(() => this.setState({
+    //   visible: false,
+    // }));
   }
 
   render() {

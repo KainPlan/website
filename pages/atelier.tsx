@@ -10,6 +10,7 @@ import { withCookies, Cookies } from 'react-cookie';
 import { Cookie } from 'universal-cookie';
 import Loading from '../components/kainplan/Loading';
 import { SelectItem } from '../components/kainplan/Select';
+import Navbar from '../components/kainplan/atelier/Navbar';
 
 if (process.env.NODE_ENV === 'development') process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
@@ -39,13 +40,16 @@ class Atelier extends React.Component<AtelierProps, AtelierState> {
     };
   }
 
+  navContainer: HTMLElement;
   map: MapComponent;
   loading: Loading;
   openPopup: SelectPopup;
 
   componentDidMount() {
     this.loadAvailableMaps(() => this.openPopup.show());
-    window.addEventListener('keyup', this.onKeyUp.bind(this));
+    window.document.addEventListener('keydown', this.onKeyDown.bind(this));
+    window.addEventListener('resize', this.onResize.bind(this));
+    this.onResize();
   }
 
   async loadAvailableMaps(cb?: () => void) {
@@ -96,16 +100,20 @@ class Atelier extends React.Component<AtelierProps, AtelierState> {
     this.map.loadMap(name, this.props.cookies.get('tkn'));
   }
 
-  onKeyUp(e: KeyboardEvent) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
-
-    if (e.keyCode === 79 && e.ctrlKey) {
-      this.openPopup.setCloseable(true);
-      this.openPopup.show();
+  onKeyDown(e: KeyboardEvent) {    
+    if (e.keyCode === 79 && e.ctrlKey) { // ctrl + o
+      e.preventDefault();
+      if (!this.openPopup) return;
+      if (!this.openPopup.popup.state.visible) {
+        this.openPopup.setCloseable(true);
+        this.openPopup.show();
+      }
     }
+  }
 
-    return false;
+  onResize() {
+    if (!this.navContainer || !this.map) return;
+    this.map.resize(window.innerWidth, window.innerHeight-this.navContainer.getBoundingClientRect().height);
   }
 
   render() {
@@ -120,8 +128,10 @@ class Atelier extends React.Component<AtelierProps, AtelierState> {
             KainPlan ; Atelier
           </title>
         </Head>
+        <nav ref={e => this.navContainer = e}>
+          <Navbar />
+        </nav>
         <MapComponent 
-          fullscreen
           loadingFn={this.showLoading.bind(this)}
           ref={e => this.map = e}>
           <Loading 

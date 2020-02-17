@@ -52,24 +52,28 @@ class Map extends React.Component<MapProps, MapState> {
       .then(res => res.json())
       .then(res => {
         if (!res.success) return;
-        this.provideMap(res.map);
         this.state.loadingFn(false);
+        this.provideMap(res.map);
       });
   }
 
   public provideMap(map: KPMap) {
     this.setState({ map, }, () => {
+      if (this.controller) this.controller.del();
       this.controller = new MapController(map, this.state.width, this.state.height)
       this.controller.init(this.canvas, this.state.loadingFn);
     });
   }
 
   private onWindowResize() {
+    this.resize(window.innerWidth, window.innerHeight);
+  }
+
+  public resize(width: number, height: number) {
     this.setState({
-      width: window.innerWidth,
-      height: window.innerHeight,
+      width, height,
     }, () => {
-      if (this.controller) this.controller.resize(window.innerWidth, window.innerHeight);
+      if (this.controller) this.controller.resize(width, height);
     });
   }
 
@@ -192,25 +196,36 @@ class Map extends React.Component<MapProps, MapState> {
   public render() {
     return (
       <>
-        <canvas 
-          ref={e => this.canvas = e} 
-          width={this.state.width} 
-          height={this.state.height}
-          onWheel={e => this.controller ? this.onMouseZoom(e) : undefined}
-          onPointerDown={e => this.controller ? this.onDown(e) : undefined}
-          onPointerMove={e => this.controller ? this.onMove(e) : undefined}
-          onPointerUp={e => this.controller ? this.onUp(e) : undefined}
-          onPointerCancel={e => this.controller ? this.onUp(e) : undefined}
-          onPointerOut={e => this.controller ? this.onUp(e) : undefined}
-          onPointerLeave={e => this.controller ? this.onUp(e) : undefined}  
-        ></canvas>
-        <div>
-          {this.state.children}
+        <div className="map-root">
+          <canvas 
+            ref={e => this.canvas = e} 
+            width={this.state.width} 
+            height={this.state.height}
+            onWheel={e => this.controller ? this.onMouseZoom(e) : undefined}
+            onPointerDown={e => this.controller ? this.onDown(e) : undefined}
+            onPointerMove={e => this.controller ? this.onMove(e) : undefined}
+            onPointerUp={e => this.controller ? this.onUp(e) : undefined}
+            onPointerCancel={e => this.controller ? this.onUp(e) : undefined}
+            onPointerOut={e => this.controller ? this.onUp(e) : undefined}
+            onPointerLeave={e => this.controller ? this.onUp(e) : undefined}  
+          ></canvas>
+          <div>
+            {this.state.children}
+          </div>
         </div>
         <style jsx>{`
-          canvas {
-            position: relative;
-            touch-action: none;
+          .map-root {
+            width: ${this.state.width}px;
+            height: ${this.state.height}px;
+            box-sizing: border-box;
+            margin: 0;
+
+            canvas {
+              position: relative;
+              touch-action: none;
+              width: 100%;
+              height: 100%;
+            }
           }
         `}</style>
       </>
