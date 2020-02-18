@@ -9,6 +9,7 @@ import ToastHandler from '../components/kainplan/ToastHandler';
 import WaveBackground, { WaveBackgroundPosition } from '../components/kainplan/WaveBackground';
 import Head from 'next/head';
 import ImageUpload from '../components/kainplan/ImageUpload';
+import BeautifulButton from '../components/kainplan/BeautifulButton';
 
 export default () => {
   let sidebar: Sidebar;
@@ -78,6 +79,9 @@ export default () => {
         margin: '0 auto',
       }}>
         <ImageUpload label="Hintergrund" />
+      </div>
+      <div>
+        <BeautifulButton label="Test" />
       </div>
       <style jsx>{`
         section {

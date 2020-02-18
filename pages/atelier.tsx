@@ -14,6 +14,10 @@ import Navbar from '../components/kainplan/atelier/Navbar';
 import { DropdownAction } from '../components/kainplan/DropdownItem';
 import Popup from '../components/kainplan/Popup';
 import ImageUpload from '../components/kainplan/ImageUpload';
+import ResponsiveInputBox from '../components/kainplan/ResponsiveInputBox';
+import BeautifulButton from '../components/kainplan/BeautifulButton';
+import ToastHandler from '../components/kainplan/ToastHandler';
+import { ToastPosition } from '../components/kainplan/Toast';
 
 if (process.env.NODE_ENV === 'development') process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
@@ -49,7 +53,11 @@ class Atelier extends React.Component<AtelierProps, AtelierState> {
   map: MapComponent;
   loading: Loading;
   newPopup: Popup;
+  newMapName: ResponsiveInputBox;
+  newMapVersion: ResponsiveInputBox;
+  newMapImage: ImageUpload;
   openPopup: SelectPopup;
+  toaster: ToastHandler;
 
   navbarEventMap = {
     "map": {
@@ -170,7 +178,15 @@ class Atelier extends React.Component<AtelierProps, AtelierState> {
     }
   }
 
-  onNewMap() {
+  onNewMap(e: React.FormEvent) {
+    e.preventDefault();
+    let name: string = this.newMapName.state.content.trim();
+    let version: string = this.newMapVersion.state.content.trim();
+    let image: File = this.newMapImage.state.file;
+    if (name === '' || version === '' || typeof image !== 'object') {
+      this.newPopup.wiggle();
+      this.toaster.showError('Bitte alles ausfüllen!', 3);
+    }
   }
 
   showSaveMapAs() {
@@ -217,7 +233,39 @@ class Atelier extends React.Component<AtelierProps, AtelierState> {
             title="Neu" 
             icon={faFileAlt}
           >
-            <ImageUpload label="Karten Hintergrund" />
+            <form 
+              style={{
+                padding: '0 25px',
+              }}
+              onSubmit={this.onNewMap.bind(this)}
+            >
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}>
+                <div>
+                  <ResponsiveInputBox ref={e => this.newMapName = e} label="Kartenname" />
+                  <ResponsiveInputBox ref={e => this.newMapVersion = e} label="Ausgangsversion" />
+                </div>
+                <div style={{
+                  flexGrow: 1,
+                  height: '200px',
+                }}>
+                  <ImageUpload ref={e => this.newMapImage = e} label="Kartenhintergrund" />
+                </div>
+              </div>
+              <div style={{
+                marginTop: '25px',
+                display: 'flex',
+                justifyContent: 'flex-end',
+              }}>
+                <BeautifulButton
+                  type="submit"
+                  label="Erstellen"
+                />
+              </div>
+            </form>
           </Popup>
           <SelectPopup
             ref={e => this.openPopup = e} 
@@ -226,6 +274,10 @@ class Atelier extends React.Component<AtelierProps, AtelierState> {
             icon={faFolderOpen}
             unCloseable
           >{[]}</SelectPopup>
+          <ToastHandler 
+            position={ToastPosition.BOTTOM_RIGHT}
+            ref={e => this.toaster = e}
+          />
         </MapComponent>
         <style jsx global>{`
           html, body, #__next {

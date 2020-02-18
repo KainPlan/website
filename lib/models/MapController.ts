@@ -212,11 +212,11 @@ export default class MapController {
     let prevStyle = this.ctx.strokeStyle;
     let prevFillStyle = this.ctx.fillStyle;
     let prevWidth = this.ctx.lineWidth;
-    this.ctx.lineWidth = 3;
     this.ctx.fillStyle = 'rgba(255, 45, 97, .4)';
     for (let i = 0; i < this.map.nodes[this.currentFloor].length; i++) {
       let n: KPNode = this.map.nodes[this.currentFloor][i];
       this.ctx.beginPath();
+      this.ctx.lineWidth = this.m2px(.1);
       this.ctx.strokeStyle = '#FF2D61';
       this.ctx.ellipse(this.m2px(n.x), this.m2px(n.y), 
         this.m2px(.5), this.m2px(.5), 0, 0, 2 * Math.PI);
@@ -225,6 +225,7 @@ export default class MapController {
       n.edges.filter(tn => !this.map.nodes[this.currentFloor].slice(0, i).includes(tn)).forEach(tn => {
         this.ctx.beginPath();
         this.ctx.strokeStyle = '#FF622D';
+        this.ctx.lineWidth = this.m2px(.25);
         this.ctx.moveTo(this.m2px(n.x), this.m2px(n.y));
         this.ctx.lineTo(this.m2px(tn.x), this.m2px(tn.y));
         this.ctx.stroke();

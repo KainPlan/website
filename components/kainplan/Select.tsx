@@ -1,4 +1,5 @@
 import React from 'react';
+import BeautifulButton from './BeautifulButton';
 
 export interface SelectItem {
   info: React.ReactNode|string;
@@ -107,9 +108,8 @@ class Select extends React.Component<SelectProps, SelectState> {
             }
           </div>
           <div>
-            <input 
-              type="button" 
-              value="Bestätigen" 
+            <BeautifulButton
+              label="Bestätigen"
               onClick={this.onSubmit.bind(this)}
             />
           </div>
@@ -185,31 +185,7 @@ class Select extends React.Component<SelectProps, SelectState> {
 
             & > div:last-child {
               display: flex;
-
-              input {
-                margin-left: auto;
-                background-color: #fff;
-                border: 1.5px solid #622dff;
-                border-radius: 15px;
-                font-family: 'Roboto', sans-serif;
-                text-transform: uppercase;
-                font-weight: lighter;
-                color: #622dff;
-                font-size: .9em;
-                padding: 5px 10px;
-                transition: .25s ease;
-                background-image: linear-gradient(to right, #fff 0%, #fff 50%, #622dff 50%, #622dff 100%);
-                background-size: 205% 100%;
-                background-position: 0 0;
-
-                &:hover, &:focus {
-                  outline: none;
-                  cursor: pointer;
-                  background-position: 100% 0;
-                  color: #fff;
-                  font-weight: normal;
-                }
-              }
+              justify-content: flex-end;
             }
           }
 

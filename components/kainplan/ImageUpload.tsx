@@ -1,4 +1,6 @@
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 interface ImageUploadProps {
   label: string;
@@ -51,6 +53,12 @@ class ImageUpload extends React.Component<ImageUploadProps, ImageUploadState> {
     reader.readAsDataURL(file);
   }
 
+  clearSelection() {
+    this.setState({
+      file: undefined,
+    });
+  }
+
   render() {
     return (
       <>
@@ -74,9 +82,14 @@ class ImageUpload extends React.Component<ImageUploadProps, ImageUploadState> {
               display: this.state.file ? 'block' : 'none',
             }}
           />
-          <span style={{
-            display: this.state.file ? 'block' : 'none',
-          }}>{ this.state.file && this.state.file.name }</span>
+          <div style={{
+            display: this.state.file ? 'flex' : 'none',
+          }}>
+            <i onClick={this.clearSelection.bind(this)}>
+              <FontAwesomeIcon icon={faTimes} />
+            </i>
+            <span>{ this.state.file && this.state.file.name }</span>
+          </div>
         </div>
         <style jsx>{`
           @import url('https://fonts.googleapis.com/css?family=Bebas+Neue&display=swap');
@@ -100,7 +113,7 @@ class ImageUpload extends React.Component<ImageUploadProps, ImageUploadState> {
               color: rgba(98, 45, 255, .6);
             }
 
-            & > div {
+            & > div:first-child {
               text-align: center;
 
               & > h3 {
@@ -118,15 +131,30 @@ class ImageUpload extends React.Component<ImageUploadProps, ImageUploadState> {
               opacity: .4;
             }
 
-            & > span {
+            & > div:last-child {
+              align-items: center;
               color: #303841;
-              font-family: 'Bebas Neue', sans-serif;
-              font-size: 3em;
               position: absolute;
               top: 50%;
               left: 50%;
               z-index: 1;
               transform: translate(-50%, -50%);
+
+              & > i {
+                font-size: 1.5em;
+                margin-right: 10px;
+                transition: .15s ease;
+
+                &:hover {
+                  cursor: pointer;
+                  color: #FF2D61;
+                }
+              }
+
+              & > span {
+                font-family: 'Bebas Neue', sans-serif;
+                font-size: 3em;
+              }
             }
           }
         `}</style>
