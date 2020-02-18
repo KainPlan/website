@@ -42,9 +42,22 @@ class Atelier extends React.Component<AtelierProps, AtelierState> {
   }
 
   navContainer: HTMLElement;
+  nav: Navbar;
   map: MapComponent;
   loading: Loading;
   openPopup: SelectPopup;
+
+  navbarEventMap = {
+    "map": {
+      "new": this.showNewMap.bind(this),
+      "save": this.showSaveMap.bind(this),
+      "save_as": this.showSaveMapAs.bind(this),
+      "open": this.showOpenMap.bind(this),
+    },
+    "tool": {
+
+    },
+  };
 
   componentDidMount() {
     this.loadAvailableMaps(() => this.openPopup.show());
@@ -97,18 +110,19 @@ class Atelier extends React.Component<AtelierProps, AtelierState> {
     this.loading.hide();
   }
 
-  openMap(name: string) {
-    this.map.loadMap(name, this.props.cookies.get('tkn'));
-  }
-
   onKeyDown(e: KeyboardEvent) {    
     if (e.keyCode === 79 && e.ctrlKey) { // ctrl + o
       e.preventDefault();
-      if (!this.openPopup) return;
-      if (!this.openPopup.popup.state.visible) {
-        this.openPopup.setCloseable(true);
-        this.openPopup.show();
-      }
+      this.showOpenMap();
+    } else if (e.keyCode === 78 && e.ctrlKey) { // ctrl + n
+      e.preventDefault();
+      this.showNewMap();
+    } else if (e.keyCode === 83 && e.shiftKey && e.ctrlKey) { // ctrl + shift + s
+      e.preventDefault();
+      this.showSaveMapAs();
+    } else if (e.keyCode === 83 && e.ctrlKey) { // ctrl + s
+      e.preventDefault();
+      this.showSaveMap();
     }
   }
 
@@ -118,7 +132,42 @@ class Atelier extends React.Component<AtelierProps, AtelierState> {
   }
 
   onNavbarAction(action: DropdownAction) {
-    console.log(action);
+    let parts: string[] = action.id.split("-");
+    let cu: any = this.navbarEventMap;
+    for (let i = 0; i < parts.length; i++) cu = cu[parts[i]];
+    (cu as ()=>void)();
+  }
+
+  showOpenMap() {
+    if (!this.openPopup) return;
+    if (!this.openPopup.popup.state.visible) {
+      this.openPopup.setCloseable(true);
+      this.openPopup.show();
+    }
+  }
+
+  onOpenMap(si: MapSelectItem) {
+    this.map.loadMap(si.mapInfo.name, this.props.cookies.get('tkn'), () => {
+      this.nav.setMap({ name: si.mapInfo.name, version: this.map.state.map.version, });
+    });
+  }
+
+  showNewMap() {
+  }
+
+  onNewMap() {
+  }
+
+  showSaveMapAs() {
+  }
+
+  onSaveMapAs() {
+  }
+
+  showSaveMap() {
+  }
+
+  onSaveMap() {
   }
 
   render() {
@@ -127,14 +176,17 @@ class Atelier extends React.Component<AtelierProps, AtelierState> {
         <Head>
           <meta
             name='viewport'
-            content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'
+            content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'
           />
           <title>
             KainPlan ; Atelier
           </title>
         </Head>
         <nav ref={e => this.navContainer = e}>
-          <Navbar actionHandler={this.onNavbarAction.bind(this)} />
+          <Navbar
+            ref={e => this.nav = e}
+            actionHandler={this.onNavbarAction.bind(this)} 
+          />
         </nav>
         <MapComponent 
           loadingFn={this.showLoading.bind(this)}
@@ -145,7 +197,7 @@ class Atelier extends React.Component<AtelierProps, AtelierState> {
           <SelectPopup
             ref={e => this.openPopup = e} 
             title="Öffnen"
-            onSubmit={si => this.openMap((si as MapSelectItem).mapInfo.name)}
+            onSubmit={this.onOpenMap.bind(this)}
             icon={faFolderOpen}
             unCloseable
           >{[

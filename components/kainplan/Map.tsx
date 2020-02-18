@@ -15,18 +15,19 @@ interface MapProps {
   loadingFn?: LoadingFunction;
 }
 
-interface MapState extends MapProps {
+interface MapState {
+  width: number;
+  height: number;
+  map: KPMap;
 }
 
 class Map extends React.Component<MapProps, MapState> {
   public constructor(props) {
     super(props);
     this.state = {
-      children: props.children,
-      fullscreen: props.fullscreen,
       width: props.width||800,
       height: props.height||600,
-      loadingFn: props.loadingFn || (() => undefined),
+      map: null,
     };
     if (props.map) this.controller = new MapController(props.map, this.state.width, this.state.height);
   }
@@ -39,33 +40,34 @@ class Map extends React.Component<MapProps, MapState> {
   scrollMultiplier: number = 0.005;
 
   public componentDidMount() {
-    if (this.controller) this.controller.init(this.canvas, this.state.loadingFn);
-    if (this.state.fullscreen) {
-      window.addEventListener('resize', this.onWindowResize.bind(this));
-      this.onWindowResize();
+    if (this.controller) this.controller.init(this.canvas, this.props.loadingFn);
+    if (this.props.fullscreen) {
+      window.addEventListener('resize', this.onResize.bind(this));
+      this.onResize();
     }
   }
 
-  public loadMap(name?: string, tkn?: string) {
-    this.state.loadingFn(true);
+  public loadMap(name?: string, tkn?: string, cb?: ()=>void) {
+    this.props.loadingFn(true);
     fetch(`https://localhost:42069/map/${name ? name + '/' + tkn : ''}`)
       .then(res => res.json())
       .then(res => {
         if (!res.success) return;
-        this.state.loadingFn(false);
-        this.provideMap(res.map);
+        this.props.loadingFn(false);
+        this.provideMap(res.map, cb);
       });
   }
 
-  public provideMap(map: KPMap) {
+  public provideMap(map: KPMap, cb?: ()=>void) {
     this.setState({ map, }, () => {
-      if (this.controller) this.controller.del();
+      if (this.controller) this.controller.reset();
       this.controller = new MapController(map, this.state.width, this.state.height)
-      this.controller.init(this.canvas, this.state.loadingFn);
+      this.controller.init(this.canvas, this.props.loadingFn);
+      if (cb) cb();
     });
   }
 
-  private onWindowResize() {
+  private onResize() {
     this.resize(window.innerWidth, window.innerHeight);
   }
 
@@ -188,10 +190,6 @@ class Map extends React.Component<MapProps, MapState> {
   public switchFloor(fid) {
     this.controller.switchFloor(fid);
   }
-  
-  private renderMap() {
-    
-  }
 
   public render() {
     return (
@@ -210,7 +208,7 @@ class Map extends React.Component<MapProps, MapState> {
             onPointerLeave={e => this.controller ? this.onUp(e) : undefined}  
           ></canvas>
           <div>
-            {this.state.children}
+            {this.props.children}
           </div>
         </div>
         <style jsx>{`

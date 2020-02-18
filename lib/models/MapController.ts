@@ -56,7 +56,7 @@ export default class MapController {
     window.controller = this;
   }
 
-  public del() {
+  public reset() {
     this.ctx.translate(-this.offsetX, -this.offsetY);
   }
 

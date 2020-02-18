@@ -9,12 +9,14 @@ interface WaveBackgroundProps {
   position: WaveBackgroundPosition;
   animated?: boolean;
   color?: string;
+  background?: string;
 }
 
 interface WaveBackgroundState {
   width: number;
   height: number;
   color?: string;
+  background?: string;
 }
 
 class WaveBackground extends React.Component<WaveBackgroundProps, WaveBackgroundState> {
@@ -24,6 +26,7 @@ class WaveBackground extends React.Component<WaveBackgroundProps, WaveBackground
       width: 0,
       height: 0,
       color: props.color || '#622dff',
+      background: props.background || 'rgba(0,0,0,0)',
     };
   }
 
@@ -98,7 +101,11 @@ class WaveBackground extends React.Component<WaveBackgroundProps, WaveBackground
         </div>
         <style jsx>{`
           .waveback-root {
+            position: fixed;
+            left: 0; right: 0;
+            top: 0; bottom: 0;
             z-index: -1;
+            background-color: ${this.state.background};
 
             & > svg {
               position: fixed;

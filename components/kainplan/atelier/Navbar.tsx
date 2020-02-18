@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFileAlt, faSave, faFolder, faFolderOpen } from '@fortawesome/free-solid-svg-icons';
+import { faFileAlt, faSave, faFolderOpen, faICursor, faMousePointer, faCircle, faArrowsAlt, faLandmark, faLongArrowAltRight, faEraser, faAngleDoubleUp, faPodcast, faPlus } from '@fortawesome/free-solid-svg-icons';
 import DropdownGroup from '../DropdownGroup';
 import DropdownItem, { DropdownAction } from '../DropdownItem';
 
@@ -49,25 +49,31 @@ class Navbar extends React.Component<NavbarProps, NavbarState> {
                 <span>{ this.state.map.name }</span>
                 <span>{ this.state.map.version }</span>
               </div>
-              <i title="Neue Karte [Strg + N]">
-                <FontAwesomeIcon icon={faFileAlt} />
-              </i>
-              <i title="Karte speichern [Strg + S]">
-                <FontAwesomeIcon icon={faSave} />
-              </i>
-              <i title="Karte speichern als [Strg + Umschalt + S]">
-                <FontAwesomeIcon icon={faFolder} />
-              </i>
-              <i title="Karte öffnen [Strg + O]">
-                <FontAwesomeIcon icon={faFolderOpen} />
-              </i>
             </div>
             <div>
               <DropdownGroup
                 actionHandler={this.props.actionHandler}
                 items={[
-                  { label: 'Karte', children: [ ], },
-                  { label: 'Tools', children: [ ], },
+                  { label: 'Karte', children: [
+                    { id: 'map-new', label: <span title="Strg + N"><FontAwesomeIcon icon={faFileAlt} /> Neue Karte</span>, },
+                    { label: <span><FontAwesomeIcon icon={faSave} /> Karte speichern</span>, children: [
+                      { id: 'map-save', label: <span title="Strg + S">Speichern</span>, },
+                      { id: 'map-save_as', label: <span title="Strg + Umschalt + S">Speichern als</span>, },
+                    ], },
+                    { id: 'map-open', label: <span title="Strg + O"><FontAwesomeIcon icon={faFolderOpen} />Karte öffnen</span>, },
+                   ], },
+                  { label: 'Tools', children: [
+                    { id: 'tool-default', label: <span title="d"><FontAwesomeIcon icon={faMousePointer} /> Standard</span>, },
+                    { id: 'tool-move', label: <span title="m"><FontAwesomeIcon icon={faArrowsAlt} /> Verschieben</span>, },
+                    { label: <span><FontAwesomeIcon icon={faPlus} /> Hinzufügen</span>, children: [
+                      { id: 'tool-node', label: <span title="n"><FontAwesomeIcon icon={faCircle} /> Knoten</span> },
+                      { id: 'tool-endpoint', label: <span title="p"><FontAwesomeIcon icon={faLandmark} /> Endpunkt</span> },
+                      { id: 'tool-beacon', label: <span title="b"><FontAwesomeIcon icon={faPodcast} /> BLE Beacon</span> },
+                      { id: 'tool-stairs', label: <span title="s"><FontAwesomeIcon icon={faAngleDoubleUp} /> Stiege</span> },
+                    ], },
+                    { id: 'tool-edge', label: <span title="e"><FontAwesomeIcon icon={faLongArrowAltRight} /> Verbinden</span> },
+                    { id: 'tool-remove', label: <span title="d"><FontAwesomeIcon icon={faEraser} /> Entfernen</span> },
+                   ], },
                 ]}
               />
             </div>
@@ -76,7 +82,7 @@ class Navbar extends React.Component<NavbarProps, NavbarState> {
         <style jsx>{`
           .navbar-root {
             width: 100%;
-            padding: 5px 10px;
+            padding: 0 10px;
             color: #303841;
             border-bottom: 2.5px solid #f2f2f2;
             box-shadow: 0 .5px 4px #cecece;
@@ -87,6 +93,7 @@ class Navbar extends React.Component<NavbarProps, NavbarState> {
 
             img {
               height: 40px;
+              margin: 5px 0 5px 0;
               transition: .2s ease;
 
               &:hover {
@@ -110,7 +117,6 @@ class Navbar extends React.Component<NavbarProps, NavbarState> {
 
                 & > div:first-child {
                   padding-right: 10px;
-                  border-right: 1.5px solid #f2f2f2;
                   margin-right: 10px;
 
                   & > span:first-child {
@@ -124,30 +130,13 @@ class Navbar extends React.Component<NavbarProps, NavbarState> {
                     color: #ababab;
                   }
                 }
-
-                & > i {
-                  font-size: 1.4em;
-                  transition: .2s ease;
-
-                  &:not(:last-child) {
-                    margin-right: 10px;
-                  }
-
-                  &:hover {
-                    cursor: pointer;
-                    transform: scale(1.1);
-                    color: #622dff;
-                  }
-                }
               }
 
               & > div:last-child {
                 flex-grow: 1;
                 display: flex;
                 justify-content: flex-end;
-                align-items: center;
-
-                
+                align-items: stretch;
               }
             }
           }
