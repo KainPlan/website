@@ -3,7 +3,7 @@ import React from 'react';
 import Head from 'next/head';
 import MapComponent from '../components/kainplan/Map';
 import withAuth, { AuthProps } from '../middleware/auth';
-import { faFolderOpen } from '@fortawesome/free-solid-svg-icons';
+import { faFolderOpen, faFileAlt } from '@fortawesome/free-solid-svg-icons';
 import SelectPopup from '../components/kainplan/SelectPopup';
 import TimeFormatter from '../lib/models/TimeFormatter';
 import { withCookies, Cookies } from 'react-cookie';
@@ -12,6 +12,8 @@ import Loading from '../components/kainplan/Loading';
 import { SelectItem } from '../components/kainplan/Select';
 import Navbar from '../components/kainplan/atelier/Navbar';
 import { DropdownAction } from '../components/kainplan/DropdownItem';
+import Popup from '../components/kainplan/Popup';
+import ImageUpload from '../components/kainplan/ImageUpload';
 
 if (process.env.NODE_ENV === 'development') process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
@@ -31,6 +33,7 @@ interface AtelierProps extends AuthProps {
 
 interface AtelierState {
   availableMaps: MapInfo[];
+  ready?: boolean;
 }
 
 class Atelier extends React.Component<AtelierProps, AtelierState> {
@@ -45,12 +48,13 @@ class Atelier extends React.Component<AtelierProps, AtelierState> {
   nav: Navbar;
   map: MapComponent;
   loading: Loading;
+  newPopup: Popup;
   openPopup: SelectPopup;
 
   navbarEventMap = {
     "map": {
       "new": this.showNewMap.bind(this),
-      "save": this.showSaveMap.bind(this),
+      "save": this.onSaveMap.bind(this),
       "save_as": this.showSaveMapAs.bind(this),
       "open": this.showOpenMap.bind(this),
     },
@@ -66,7 +70,7 @@ class Atelier extends React.Component<AtelierProps, AtelierState> {
     this.onResize();
   }
 
-  async loadAvailableMaps(cb?: () => void) {
+  loadAvailableMaps(cb?: () => void) {
     this.loading.show();
 
     fetch(`https://localhost:42069/maps/${this.props.cookies.get('tkn')}`)
@@ -111,10 +115,11 @@ class Atelier extends React.Component<AtelierProps, AtelierState> {
   }
 
   onKeyDown(e: KeyboardEvent) {    
+    if (!this.state.ready) return;
     if (e.keyCode === 79 && e.ctrlKey) { // ctrl + o
       e.preventDefault();
       this.showOpenMap();
-    } else if (e.keyCode === 78 && e.ctrlKey) { // ctrl + n
+    } else if (e.keyCode === 75 && e.ctrlKey) { // ctrl + k
       e.preventDefault();
       this.showNewMap();
     } else if (e.keyCode === 83 && e.shiftKey && e.ctrlKey) { // ctrl + shift + s
@@ -122,7 +127,7 @@ class Atelier extends React.Component<AtelierProps, AtelierState> {
       this.showSaveMapAs();
     } else if (e.keyCode === 83 && e.ctrlKey) { // ctrl + s
       e.preventDefault();
-      this.showSaveMap();
+      this.onSaveMap();
     }
   }
 
@@ -141,18 +146,28 @@ class Atelier extends React.Component<AtelierProps, AtelierState> {
   showOpenMap() {
     if (!this.openPopup) return;
     if (!this.openPopup.popup.state.visible) {
-      this.openPopup.setCloseable(true);
-      this.openPopup.show();
+      this.loadAvailableMaps(() => {
+        this.openPopup.setCloseable(true);
+        this.openPopup.show();
+      });
     }
   }
 
   onOpenMap(si: MapSelectItem) {
+    if (!this.map) return;
     this.map.loadMap(si.mapInfo.name, this.props.cookies.get('tkn'), () => {
       this.nav.setMap({ name: si.mapInfo.name, version: this.map.state.map.version, });
+      this.setState({
+        ready: true,
+      });
     });
   }
 
   showNewMap() {
+    if (!this.newPopup) return;
+    if (!this.newPopup.state.visible) {
+      this.newPopup.show();
+    }
   }
 
   onNewMap() {
@@ -164,10 +179,11 @@ class Atelier extends React.Component<AtelierProps, AtelierState> {
   onSaveMapAs() {
   }
 
-  showSaveMap() {
-  }
-
   onSaveMap() {
+    if (!this.map) return;
+    this.map.saveMap(this.map.state.name, this.props.cookies.get('tkn'), null, () => {
+      this.nav.setMap({ name: this.map.state.name, version: this.map.state.map.version, });
+    });
   }
 
   render() {
@@ -189,19 +205,27 @@ class Atelier extends React.Component<AtelierProps, AtelierState> {
           />
         </nav>
         <MapComponent 
+          adminMode
           loadingFn={this.showLoading.bind(this)}
-          ref={e => this.map = e}>
+          ref={e => this.map = e}
+        >
           <Loading 
             ref={e => this.loading = e} 
           />
+          <Popup 
+            ref={e => this.newPopup = e}
+            title="Neu" 
+            icon={faFileAlt}
+          >
+            <ImageUpload label="Karten Hintergrund" />
+          </Popup>
           <SelectPopup
             ref={e => this.openPopup = e} 
             title="Öffnen"
             onSubmit={this.onOpenMap.bind(this)}
             icon={faFolderOpen}
             unCloseable
-          >{[
-          ]}</SelectPopup>
+          >{[]}</SelectPopup>
         </MapComponent>
         <style jsx global>{`
           html, body, #__next {

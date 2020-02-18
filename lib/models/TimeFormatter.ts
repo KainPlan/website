@@ -4,10 +4,10 @@ export default class TimeFormatter {
     let ret: string = 'vor ';
 
     if (diff < 1000) ret += 'weniger als einer Sekunde';
-    else if (diff < 60000) ret += `${Math.round(diff/1000)} Sekunden`;
-    else if (diff < 3600000) ret += `${Math.round(diff/1000/60)} Minuten`;
-    else if (diff < 86400000) ret += `${Math.round(diff/1000/60/60)} Stunden`;
-    else if (diff < 2592000000) ret += `${Math.round(diff/1000/60/60/24)} Tagen`;
+    else if (diff < 60000) ret += `${Math.floor(diff/1000)} Sekunde${Math.floor(diff/1000) > 1 ? 'n' : ''}`;
+    else if (diff < 3600000) ret += `${Math.floor(diff/1000/60)} Minute${Math.floor(diff/1000/60) > 1 ? 'n' : ''}`;
+    else if (diff < 86400000) ret += `${Math.floor(diff/1000/60/60)} Stunde${Math.floor(diff/1000/60/60) > 1 ? 'n' : ''}`;
+    else if (diff < 2592000000) ret += `${Math.floor(diff/1000/60/60/24)} Tag${Math.floor(diff/1000/60/60/24) > 1 ? 'en' : ''}`;
     else ret = `am ${TimeFormatter.formatDate(d1)}`;
 
     return ret;

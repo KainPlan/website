@@ -1,5 +1,7 @@
 import React from 'react';
 import { KPMap, MapController } from '../../lib/models';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 if (process.env.NODE_ENV === 'development') process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
@@ -11,6 +13,7 @@ interface MapProps {
   width?: number;
   height?: number;
   map?: KPMap;
+  adminMode?: boolean;
   animTime?: number;
   loadingFn?: LoadingFunction;
 }
@@ -19,6 +22,8 @@ interface MapState {
   width: number;
   height: number;
   map: KPMap;
+  name: string;
+  currentFloor: number;
 }
 
 class Map extends React.Component<MapProps, MapState> {
@@ -28,6 +33,8 @@ class Map extends React.Component<MapProps, MapState> {
       width: props.width||800,
       height: props.height||600,
       map: null,
+      name: '',
+      currentFloor: 0,
     };
     if (props.map) this.controller = new MapController(props.map, this.state.width, this.state.height);
   }
@@ -40,31 +47,55 @@ class Map extends React.Component<MapProps, MapState> {
   scrollMultiplier: number = 0.005;
 
   public componentDidMount() {
-    if (this.controller) this.controller.init(this.canvas, this.props.loadingFn);
+    if (this.controller) this.controller.init(this.canvas, this.props.loadingFn, this.props.adminMode);
     if (this.props.fullscreen) {
       window.addEventListener('resize', this.onResize.bind(this));
       this.onResize();
     }
   }
 
-  public loadMap(name?: string, tkn?: string, cb?: ()=>void) {
+  public loadMap(name: string, tkn: string, cb?: ()=>void) {
     this.props.loadingFn(true);
-    fetch(`https://localhost:42069/map/${name ? name + '/' + tkn : ''}`)
+    fetch(`https://localhost:42069/map/${name}/${tkn}`)
       .then(res => res.json())
       .then(res => {
         if (!res.success) return;
         this.props.loadingFn(false);
-        this.provideMap(res.map, cb);
+        this.setState({
+          name,
+          currentFloor: 0, 
+        }, () => this.provideMap(res.map, cb));
       });
   }
 
   public provideMap(map: KPMap, cb?: ()=>void) {
-    this.setState({ map, }, () => {
+    map = KPMap.parse(map);
+    this.setState({ 
+      map,
+    }, () => {
       if (this.controller) this.controller.reset();
-      this.controller = new MapController(map, this.state.width, this.state.height)
-      this.controller.init(this.canvas, this.props.loadingFn);
+      this.controller = new MapController(map, this.state.width, this.state.height);
+      this.controller.init(this.canvas, this.props.loadingFn, this.props.adminMode);
       if (cb) cb();
     });
+  }
+
+  public saveMap(name: string, tkn: string, newVersion?: string, cb?: ()=>void) {
+    this.props.loadingFn(true);
+    this.state.map.version = newVersion || this.state.map.version.substr(0,this.state.map.version.lastIndexOf('.') + 1) + (+this.state.map.version.split('.').slice(-1)[0] + 1);
+    fetch(`https://localhost:42069/map/${name}/${tkn}`, {
+      method: 'put',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(this.state.map.toJSON()),
+    }).then(res => res.json())
+      .then(res => {
+        console.log(res);
+        if (!res.success) return;
+        this.props.loadingFn(false);
+        if (cb) cb();
+      });
   }
 
   private onResize() {
@@ -187,7 +218,13 @@ class Map extends React.Component<MapProps, MapState> {
     }
   }
 
+  public onAddFloor() {
+  }
+
   public switchFloor(fid) {
+    this.setState({
+      currentFloor: fid,
+    });
     this.controller.switchFloor(fid);
   }
 
@@ -208,7 +245,30 @@ class Map extends React.Component<MapProps, MapState> {
             onPointerLeave={e => this.controller ? this.onUp(e) : undefined}  
           ></canvas>
           <div>
-            {this.props.children}
+            { this.props.children }
+          </div>
+          <div>
+            { this.props.adminMode && 
+              <div 
+                style={{
+                  borderColor: '#622dff',
+                  color: '#622dff',
+                }}
+                onClick={this.onAddFloor.bind(this)}
+              >
+                <FontAwesomeIcon icon={faPlus} />
+              </div> 
+            }
+            { this.state.map && 
+              this.state.map.background.map((_, i) => 
+                <div 
+                  style={{
+                    borderColor: this.state.currentFloor === this.state.map.background.length-i-1 ? '#622dff' : '#303841',
+                  }}
+                  onClick={() => this.switchFloor(this.state.map.background.length-i-1)}
+                ></div>
+              ) 
+            }
           </div>
         </div>
         <style jsx>{`
@@ -223,6 +283,36 @@ class Map extends React.Component<MapProps, MapState> {
               touch-action: none;
               width: 100%;
               height: 100%;
+            }
+
+            & > div:last-child {
+              position: absolute;
+              right: 7.5px;
+              bottom: 7.5px;
+              display: flex;
+              flex-direction: column;
+
+              & > div {
+                width: 1.1em;
+                height: 1.1em;
+                border-radius: 50%;
+                border: 2px solid #303841;
+                background-color: #fff;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                transition: .2s ease;
+
+                &:hover {
+                  cursor: pointer;
+                  opacity: .8;
+                  transform: scale(1.1);
+                }
+
+                &:not(:last-child) {
+                  margin-bottom: 2.5px;
+                }
+              }
             }
           }
         `}</style>

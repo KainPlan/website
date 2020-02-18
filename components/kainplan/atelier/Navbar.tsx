@@ -55,7 +55,7 @@ class Navbar extends React.Component<NavbarProps, NavbarState> {
                 actionHandler={this.props.actionHandler}
                 items={[
                   { label: 'Karte', children: [
-                    { id: 'map-new', label: <span title="Strg + N"><FontAwesomeIcon icon={faFileAlt} /> Neue Karte</span>, },
+                    { id: 'map-new', label: <span title="Strg + K"><FontAwesomeIcon icon={faFileAlt} /> Neue Karte</span>, },
                     { label: <span><FontAwesomeIcon icon={faSave} /> Karte speichern</span>, children: [
                       { id: 'map-save', label: <span title="Strg + S">Speichern</span>, },
                       { id: 'map-save_as', label: <span title="Strg + Umschalt + S">Speichern als</span>, },

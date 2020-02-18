@@ -70,10 +70,6 @@ class DropdownGroup extends React.Component<DropdownGroupProps, DropdownGroupSta
         <style jsx>{`
           .dropdowngroup-root {
             display: flex;
-
-            & > div:not(:last-child) {
-              margin-right: 7.5px;
-            }
           }  
         `}</style>
       </>

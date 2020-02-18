@@ -1,4 +1,5 @@
 import { KPMap, KPNode, KPBeacon, KPEndNode } from ".";
+import { InvalidMapFormatError } from "../errors";
 
 type LoadingFunction = (start: boolean) => void;
 
@@ -29,8 +30,10 @@ export default class MapController {
   offsetX: number = 0;
   offsetY: number = 0;
 
+  render: ()=>void;
+
   public constructor(map: KPMap, width: number, height: number, can?: HTMLCanvasElement, loadingFn?: LoadingFunction) {
-    // if (!(map instanceof KPMap)) throw new InvalidMapFormatError('Not a `KPMap`');
+    if (!(map instanceof KPMap)) throw new InvalidMapFormatError('Not a `KPMap`');
     this.map = map;
     this.width = width; 
     this.height = height;
@@ -38,12 +41,9 @@ export default class MapController {
     this.loadingFn = loadingFn || (() => undefined);
   }
 
-  public init(can?: HTMLCanvasElement, loadingFn?: LoadingFunction) {
+  public init(can?: HTMLCanvasElement, loadingFn?: LoadingFunction, adminMode?: boolean) {
     if (can) this.can = can;
     if (loadingFn) this.loadingFn = loadingFn;
-
-    console.log(this);
-
     this.ctx = can.getContext('2d');
     this.background = this.map.background
                       .map(b => {
@@ -51,7 +51,7 @@ export default class MapController {
                         im.src = b;
                         return im;
                       });
-
+    this.render = adminMode ? this.renderAdmin : this.renderNormal;
     this.switchFloor(0);
     window.controller = this;
   }
@@ -181,11 +181,63 @@ export default class MapController {
     return endNodes.filter(n => n.title.toLowerCase().includes(query.toLowerCase()) || n.description.toLowerCase().includes(query.toLowerCase()));
   }
 
-  public render(): void {
+  public renderNormal(): void {
     this.ctx.clearRect(0, 0, 
       this.width + this.m2px(this.map.width), 
       this.height + this.m2px(this.map.height));
     this.ctx.drawImage(this.background[this.currentFloor], 
       0, 0, this.m2px(this.map.width), this.m2px(this.map.height));
+  }
+
+  private drawGrid(): void {
+    let prevWidth = this.ctx.lineWidth;
+    let prevStyle = this.ctx.strokeStyle;
+    this.ctx.beginPath();
+    this.ctx.lineWidth = 2;
+    for (let y = 1; y < this.map.height; y+=5) {
+      this.ctx.moveTo(0, this.m2px(y));
+      this.ctx.lineTo(this.m2px(this.map.width), this.m2px(y));
+    }
+    for (let x = 1; x < this.map.width; x+=5) {
+      this.ctx.moveTo(this.m2px(x), 0);
+      this.ctx.lineTo(this.m2px(x), this.m2px(this.map.height));
+    }
+    this.ctx.strokeStyle = '#f2f2f2';
+    this.ctx.stroke();
+    this.ctx.strokeStyle = prevStyle;
+    this.ctx.lineWidth = prevWidth;
+  }
+
+  private drawNodes(): void {
+    let prevStyle = this.ctx.strokeStyle;
+    let prevFillStyle = this.ctx.fillStyle;
+    let prevWidth = this.ctx.lineWidth;
+    this.ctx.lineWidth = 3;
+    this.ctx.fillStyle = 'rgba(255, 45, 97, .4)';
+    for (let i = 0; i < this.map.nodes[this.currentFloor].length; i++) {
+      let n: KPNode = this.map.nodes[this.currentFloor][i];
+      this.ctx.beginPath();
+      this.ctx.strokeStyle = '#FF2D61';
+      this.ctx.ellipse(this.m2px(n.x), this.m2px(n.y), 
+        this.m2px(.5), this.m2px(.5), 0, 0, 2 * Math.PI);
+      this.ctx.stroke();
+      this.ctx.fill();
+      n.edges.filter(tn => !this.map.nodes[this.currentFloor].slice(0, i).includes(tn)).forEach(tn => {
+        this.ctx.beginPath();
+        this.ctx.strokeStyle = '#FF622D';
+        this.ctx.moveTo(this.m2px(n.x), this.m2px(n.y));
+        this.ctx.lineTo(this.m2px(tn.x), this.m2px(tn.y));
+        this.ctx.stroke();
+      });
+    }
+    this.ctx.lineWidth = prevWidth;
+    this.ctx.fillStyle = prevFillStyle;
+    this.ctx.strokeStyle = prevStyle;
+  }
+
+  public renderAdmin(): void {
+    this.renderNormal();
+    // this.drawGrid();
+    this.drawNodes();
   }
 };
