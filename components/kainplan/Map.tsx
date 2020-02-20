@@ -7,6 +7,11 @@ if (process.env.NODE_ENV === 'development') process.env.NODE_TLS_REJECT_UNAUTHOR
 
 type LoadingFunction = (start: boolean) => void;
 
+export interface MapInfo {
+  name: string;
+  timestamp: number;
+}
+
 interface MapProps {
   children?: React.ReactNode;
   fullscreen?: boolean;
@@ -52,6 +57,15 @@ class Map extends React.Component<MapProps, MapState> {
       window.addEventListener('resize', this.onResize.bind(this));
       this.onResize();
     }
+  }
+
+  public getAvailableMaps(tkn: string, cb: (avail: MapInfo[])=>void) {
+    this.props.loadingFn(true);
+    fetch(`https://localhost:42069/maps/${tkn}`)
+      .then(res => res.json())
+      .then(res => {
+        cb(res.maps);
+      });
   }
 
   public loadMap(name: string, tkn: string, cb?: ()=>void) {

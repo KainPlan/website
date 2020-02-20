@@ -1,7 +1,7 @@
 import '../style/global.scss';
 import React from 'react';
 import Head from 'next/head';
-import MapComponent from '../components/kainplan/Map';
+import MapComponent, { MapInfo } from '../components/kainplan/Map';
 import withAuth, { AuthProps } from '../middleware/auth';
 import { faFolderOpen, faFileAlt } from '@fortawesome/free-solid-svg-icons';
 import SelectPopup from '../components/kainplan/SelectPopup';
@@ -20,11 +20,6 @@ import ToastHandler from '../components/kainplan/ToastHandler';
 import { ToastPosition } from '../components/kainplan/Toast';
 
 if (process.env.NODE_ENV === 'development') process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
-interface MapInfo {
-  name: string;
-  timestamp: number;
-}
 
 interface MapSelectItem extends SelectItem {
   mapInfo: MapInfo;
@@ -79,42 +74,37 @@ class Atelier extends React.Component<AtelierProps, AtelierState> {
   }
 
   loadAvailableMaps(cb?: () => void) {
-    this.loading.show();
-
-    fetch(`https://localhost:42069/maps/${this.props.cookies.get('tkn')}`)
-      .then(res => res.json())
-      .then(res => {
-        if (!res.success) return;
-        this.setState({
-          availableMaps: res.maps,
-        }, () => {
-          this.loading.hide();
-          this.openPopup.setChildren(this.state.availableMaps.map(m => {
-            return {
-              info: <div style={{
-                flexGrow: 1,
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
+    this.map.getAvailableMaps(this.props.cookies.get('tkn'), avail => {
+      this.setState({
+        availableMaps: avail,
+      }, () => {
+        this.loading.hide();
+        this.openPopup.setChildren(this.state.availableMaps.map(m => {
+          return {
+            info: <div style={{
+              flexGrow: 1,
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
+              <span style={{
+                fontWeight: 'bold',
               }}>
-                <span style={{
-                  fontWeight: 'bold',
-                }}>
-                  { m.name }
-                </span>
-                <span style={{
-                  fontSize: '.9em',
-                  color: '#999',
-                }}>
-                  { TimeFormatter.getTimeDiff(new Date(m.timestamp), new Date()) }
-                </span>
-              </div>,
-              mapInfo: m,
-            };
-          }));
-          if (cb) cb();
-        });
+                { m.name }
+              </span>
+              <span style={{
+                fontSize: '.9em',
+                color: '#999',
+              }}>
+                { TimeFormatter.getTimeDiff(new Date(m.timestamp), new Date()) }
+              </span>
+            </div>,
+            mapInfo: m,
+          };
+        }));
+        if (cb) cb();
       });
+    });
   }
 
   showLoading(start: boolean) {
